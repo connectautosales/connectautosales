@@ -1,0 +1,165 @@
+.hero {
+  position: relative;
+  width: 100%;
+  /* match panoramic image ratio ~1920:750 */
+  aspect-ratio: 1920 / 750;
+  max-height: 620px;
+  min-height: 320px;
+  overflow: hidden;
+  background: #111;
+}
+
+/* ── Slides ──────────────────────────────────── */
+.slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(0,0,0,0.72) 0%,
+    rgba(0,0,0,0.35) 55%,
+    rgba(0,0,0,0.1) 100%
+  );
+}
+
+/* ── Content ──────────────────────────────────── */
+.content {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  max-width: 1490px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0 24px;
+}
+
+.redLine {
+  width: 40px;
+  height: 4px;
+  background: #e10001;
+  border-radius: 2px;
+  margin-bottom: 18px;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+  margin-bottom: 28px;
+}
+
+.title span {
+  font-size: clamp(36px, 5.5vw, 62px);
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  display: block;
+}
+
+.white { color: #ffffff; }
+.red   { color: #e10001; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #e10001;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  padding: 14px 28px;
+  border-radius: 4px;
+  text-decoration: none;
+  width: fit-content;
+  transition: background 0.2s;
+  text-transform: uppercase;
+}
+
+.btn:hover {
+  background: #c0152f;
+}
+
+/* ── Arrows ──────────────────────────────────── */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.4);
+  color: #fff;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+  backdrop-filter: blur(4px);
+}
+
+.arrow:hover {
+  background: #e10001;
+  border-color: #e10001;
+}
+
+.arrowLeft  { left: 20px; }
+.arrowRight { right: 20px; }
+
+/* ── Dots ──────────────────────────────────── */
+.dots {
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.6);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.dotActive {
+  background: #e10001;
+  border-color: #e10001;
+  width: 28px;
+  border-radius: 5px;
+}
+
+/* ── Responsive ──────────────────────────────── */
+@media (max-width: 768px) {
+  .hero { height: 420px; }
+  .content { padding: 0 48px; }
+  .arrow { display: none; }
+}
+
+@media (max-width: 480px) {
+  .hero { height: 360px; }
+  .content { padding: 0 24px; }
+}

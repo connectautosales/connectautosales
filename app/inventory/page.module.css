@@ -1,0 +1,282 @@
+/* ── Hero ───────────────────────────────────────── */
+.hero {
+  background: #020300;
+  padding: 52px 0 48px;
+  text-align: center;
+}
+
+.heroLabel {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #e10001;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.heroTitle {
+  font-size: clamp(28px, 4vw, 46px);
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 1px;
+  margin: 0 0 14px;
+}
+
+.heroSub {
+  font-size: 15px;
+  color: rgba(255,255,255,0.55);
+  margin: 0;
+}
+
+/* ── Search Bar ─────────────────────────────────── */
+.searchBar {
+  background: #fff;
+  padding: 24px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.searchWrap {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.searchInputWrap {
+  flex: 1;
+  min-width: 260px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 14px;
+  color: #9ca3af;
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  height: 48px;
+  padding: 0 44px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #020300;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.searchInput:focus {
+  border-color: #e10001;
+}
+
+.searchInput::placeholder {
+  color: #9ca3af;
+}
+
+.searchClear {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+}
+
+.searchClear:hover {
+  color: #e10001;
+}
+
+.filterGroup {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.filterSelect {
+  height: 48px;
+  padding: 0 14px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 13.5px;
+  font-family: inherit;
+  color: #020300;
+  background: #fff;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.filterSelect:focus {
+  border-color: #e10001;
+}
+
+/* ── Stats Bar ──────────────────────────────────── */
+.statsBar {
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 14px 0;
+}
+
+.statsInner {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+}
+
+.statItem {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 14px;
+  color: #4b5563;
+  padding: 6px 28px 6px 0;
+}
+
+.statItem svg {
+  color: #e10001;
+  flex-shrink: 0;
+}
+
+.statItem strong {
+  color: #020300;
+  font-weight: 800;
+}
+
+.statDivider {
+  width: 1px;
+  height: 22px;
+  background: #d1d5db;
+  margin-right: 28px;
+  flex-shrink: 0;
+}
+
+/* ── Inventory Grid ─────────────────────────────── */
+.inventorySection {
+  padding: 48px 0 64px;
+  background: #f9fafb;
+}
+
+.carsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+/* ── No Results ─────────────────────────────────── */
+.noResults {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 80px 0;
+  color: #9ca3af;
+  text-align: center;
+}
+
+.noResults p {
+  font-size: 16px;
+  color: #6b7280;
+}
+
+.clearBtn {
+  background: #e10001;
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+
+.clearBtn:hover {
+  background: #c0152f;
+}
+
+/* ── Rebuilt Banner ─────────────────────────────── */
+.rebuiltBanner {
+  background: #fff8f8;
+  border-top: 1px solid #fecdd3;
+  border-bottom: 1px solid #fecdd3;
+  padding: 28px 0;
+}
+
+.rebuiltInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.rebuiltLeft {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  flex: 1;
+  min-width: 260px;
+}
+
+.rebuiltIcon {
+  color: #e10001;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.rebuiltTitle {
+  font-size: 16px;
+  font-weight: 800;
+  color: #020300;
+  margin: 0 0 6px;
+}
+
+.rebuiltText {
+  font-size: 13.5px;
+  color: #4b5563;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.rebuiltBtn {
+  display: inline-block;
+  background: #e10001;
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 12px 24px;
+  border-radius: 5px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.rebuiltBtn:hover {
+  background: #c0152f;
+}
+
+/* ── Responsive ─────────────────────────────────── */
+@media (max-width: 1024px) {
+  .carsGrid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .searchWrap { flex-direction: column; align-items: stretch; }
+  .filterGroup { flex-direction: row; }
+  .filterSelect { flex: 1; }
+  .carsGrid { grid-template-columns: 1fr; }
+  .statsInner { gap: 10px; flex-direction: column; align-items: flex-start; }
+  .statDivider { display: none; }
+}

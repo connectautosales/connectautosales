@@ -1,0 +1,187 @@
+.footer {
+  background: #020300;
+  color: rgba(255,255,255,0.65);
+  padding: 56px 0 0;
+}
+
+/* ── Grid ─────────────────────────────────────────── */
+.footerGrid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.9fr 1.2fr 1fr;
+  gap: 48px;
+  padding-bottom: 48px;
+}
+
+/* ── Brand ────────────────────────────────────────── */
+.brand {}
+
+.logoWrap {
+  display: block;
+  margin-bottom: 16px;
+  text-decoration: none;
+}
+
+.brandDesc {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #ffffff;
+}
+
+/* ── Columns ──────────────────────────────────────── */
+.col {}
+
+.colTitle {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 20px;
+}
+
+/* ── Links ────────────────────────────────────────── */
+.linkList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.link {
+  font-size: 16px;
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.link:hover {
+  color: #ffffff;
+}
+
+.linkRed {
+  color: #e10001;
+}
+
+.linkRed:hover {
+  color: #ff3355;
+}
+
+/* ── Contact ──────────────────────────────────────── */
+.contactList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.contactItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #ffffff;
+}
+
+.contactIcon {
+  color: #e10001;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.contactLink {
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.contactLink:hover {
+  color: #ffffff;
+}
+
+/* ── Social ───────────────────────────────────────── */
+.socialRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.socialIcon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  text-decoration: none;
+  transition: transform 0.2s, opacity 0.2s;
+  flex-shrink: 0;
+}
+
+.socialIcon:hover {
+  transform: translateY(-3px);
+  opacity: 0.85;
+}
+
+/* ── Bottom Bar ───────────────────────────────────── */
+.footerBottom {
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: 18px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.copyright {
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.bottomLinks {
+  display: flex;
+  gap: 24px;
+}
+
+.bottomLink {
+  font-size: 16px;
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.bottomLink:hover {
+  color: #ffffff;
+}
+
+/* ── Responsive ───────────────────────────────────── */
+@media (max-width: 1024px) {
+  .footerGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+  }
+}
+
+@media (max-width: 600px) {
+  .footerGrid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .socialGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .footerBottom {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .bottomLinks {
+    gap: 16px;
+  }
+}

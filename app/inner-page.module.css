@@ -1,0 +1,265 @@
+﻿.pageHero {
+  background: linear-gradient(135deg, #24272c 0%, #16213e 100%);
+  padding: 50px 0;
+  color: #ffffff;
+}
+
+.pageHeroTitle {
+  font-size: 36px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.65);
+}
+
+.breadcrumb a { color: rgba(255,255,255,0.65); text-decoration: none; }
+.breadcrumb a:hover { color: #e74c3c; }
+
+/* Warranty Plans */
+.plansGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  margin-bottom: 60px;
+}
+
+.planCard {
+  border: 2px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 36px 28px;
+  position: relative;
+  transition: all 0.3s;
+  text-align: center;
+}
+
+.planCard:hover {
+  border-color: #24272c;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.planHighlight {
+  border-color: #c0392b;
+  background: #fff5f5;
+}
+
+.planBadge {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #c0392b;
+  color: #ffffff;
+  padding: 4px 20px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.planName {
+  font-size: 20px;
+  font-weight: 800;
+  color: #24272c;
+  margin-bottom: 12px;
+}
+
+.planPrice {
+  font-size: 28px;
+  font-weight: 900;
+  color: #c0392b;
+  margin-bottom: 24px;
+}
+
+.planFeatures {
+  list-style: none;
+  margin-bottom: 28px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.planFeatures li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #444;
+}
+
+.planFeatures li svg {
+  color: #27ae60;
+  flex-shrink: 0;
+}
+
+.planBtn {
+  display: block;
+  border: 2px solid #24272c;
+  color: #24272c;
+  padding: 11px 24px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 14px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.planBtn:hover {
+  background: #24272c;
+  color: #ffffff;
+}
+
+.planBtnHighlight {
+  display: block;
+  background: #c0392b;
+  color: #ffffff;
+  padding: 11px 24px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 14px;
+  text-align: center;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.planBtnHighlight:hover {
+  background: #a93226;
+}
+
+.infoBox {
+  background: #24272c;
+  color: #ffffff;
+  border-radius: 12px;
+  padding: 48px;
+  text-align: center;
+}
+
+.infoBox h3 {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+
+.infoBox p {
+  font-size: 16px;
+  color: rgba(255,255,255,0.75);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.8;
+}
+
+/* Content page shared styles */
+.contentPage {
+  padding: 80px 0;
+  background: #ffffff;
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.contentText h2 {
+  font-size: 32px;
+  font-weight: 800;
+  color: #24272c;
+  margin-bottom: 16px;
+}
+
+.contentText p {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+
+.featList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.featItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #c0392b;
+}
+
+.featItem svg {
+  color: #c0392b;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.featItem h4 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #24272c;
+  margin-bottom: 4px;
+}
+
+.featItem p {
+  font-size: 13px;
+  color: #666;
+  margin: 0;
+}
+
+.ctaBox {
+  background: linear-gradient(135deg, #c0392b, #a93226);
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.ctaBox h3 {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.ctaBox p {
+  font-size: 15px;
+  color: rgba(255,255,255,0.85);
+  margin-bottom: 24px;
+  line-height: 1.7;
+}
+
+.ctaBoxBtn {
+  display: inline-block;
+  background: #ffffff;
+  color: #c0392b;
+  padding: 13px 32px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.ctaBoxBtn:hover {
+  background: #24272c;
+  color: #ffffff;
+}
+
+@media (max-width: 900px) {
+  .plansGrid { grid-template-columns: 1fr; }
+  .contentGrid { grid-template-columns: 1fr; gap: 40px; }
+}

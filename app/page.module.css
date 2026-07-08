@@ -1,0 +1,341 @@
+/* ── Featured Vehicles ──────────────────────────── */
+.featuredSection {
+  padding: 64px 0 72px;
+  background: #f9fafb;
+}
+
+.featuredHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.featuredHeadLeft {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.featuredTitle {
+  font-size: 24px;
+  font-weight: 900;
+  color: #020300;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+}
+
+.titleLine {
+  display: inline-block;
+  width: 36px;
+  height: 3px;
+  background: #e10001;
+  border-radius: 2px;
+}
+
+.vehicleCount {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 16px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.vehicleCount svg {
+  color: #6b7280;
+}
+
+.viewAllLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #e10001;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.3px;
+  transition: gap 0.2s;
+}
+
+.viewAllLink:hover {
+  gap: 10px;
+}
+
+.carsGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 18px;
+}
+
+/* ── Why Choose ─────────────────────────────────── */
+.whySection {
+  background: #020300;
+  padding: 60px 0;
+}
+
+.whyTitle {
+  font-size: clamp(20px, 2.5vw, 26px);
+  font-weight: 900;
+  color: #fff;
+  text-align: center;
+  letter-spacing: 0.5px;
+  margin-bottom: 44px;
+}
+
+.whyTitle span {
+  color: #e10001;
+}
+
+.whyGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.whyItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 32px 16px;
+  border-right: 1px solid rgba(255,255,255,0.08);
+  text-align: center;
+  transition: background 0.2s;
+}
+
+.whyItem:last-child {
+  border-right: none;
+}
+
+.whyItem:hover {
+  background: rgba(255,255,255,0.04);
+}
+
+.whyIcon {
+  color: #e10001;
+}
+
+.whyDivider {
+  width: 28px;
+  height: 2px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 2px;
+}
+
+.whyLabel {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+/* ── Reviews ─────────────────────────────────────── */
+.reviewsSection {
+  padding: 64px 0 72px;
+  background: #fff;
+}
+
+.reviewsGrid {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 48px;
+  align-items: start;
+}
+
+.reviewsLeft {}
+
+.reviewsTitle {
+  font-size: 24px;
+  font-weight: 900;
+  color: #020300;
+  letter-spacing: 0.5px;
+  margin-bottom: 18px;
+}
+
+.reviewsDash {
+  color: #e10001;
+  margin-left: 8px;
+}
+
+.ratingRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.ratingNumber {
+  font-size: 52px;
+  font-weight: 900;
+  color: #020300;
+  line-height: 1;
+}
+
+.ratingStars {
+  display: flex;
+  gap: 3px;
+}
+
+.ratingCount {
+  font-size: 16px;
+  color: #6b7280;
+}
+
+.googleBadge {
+  display: flex;
+  align-items: center;
+}
+
+.googleReviewsBtn {
+  display: inline-block;
+  background: #e10001;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  padding: 10px 20px;
+  border-radius: 4px;
+  text-decoration: none;
+  margin-bottom: 28px;
+  transition: background 0.2s;
+}
+
+.googleReviewsBtn:hover {
+  background: #c0152f;
+}
+
+.reviewCards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.reviewCard {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reviewStars {
+  display: flex;
+  gap: 2px;
+}
+
+.reviewText {
+  font-size: 15px;
+  color: #4b5563;
+  line-height: 1.7;
+  flex: 1;
+}
+
+.reviewFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.reviewName {
+  font-size: 15px;
+  font-weight: 700;
+  color: #020300;
+}
+
+/* Right box */
+.reviewsRight {}
+
+.leaveReviewBox {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 28px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.leaveReviewTitle {
+  font-size: 16px;
+  font-weight: 800;
+  color: #020300;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.qrPlaceholder {
+  width: 120px;
+  height: 120px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qrSub {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+.leaveReviewBtn {
+  display: inline-block;
+  background: #e10001;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  padding: 11px 20px;
+  border-radius: 4px;
+  text-decoration: none;
+  width: 100%;
+  text-align: center;
+  transition: background 0.2s;
+}
+
+.leaveReviewBtn:hover {
+  background: #c0152f;
+}
+
+/* ── Responsive ──────────────────────────────────── */
+@media (max-width: 1200px) {
+  .carsGrid { grid-template-columns: repeat(3, 1fr); }
+  .whyGrid  { grid-template-columns: repeat(3, 1fr); }
+  .whyItem  { border-bottom: 1px solid rgba(255,255,255,0.08); }
+}
+
+@media (max-width: 900px) {
+  .reviewsGrid { grid-template-columns: 1fr; }
+  .reviewCards { grid-template-columns: 1fr; }
+  .reviewsRight { display: none; }
+}
+
+@media (max-width: 768px) {
+  .carsGrid  { grid-template-columns: repeat(2, 1fr); }
+  .whyGrid   { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .carsGrid { grid-template-columns: 1fr; }
+  .whyGrid  { grid-template-columns: repeat(2, 1fr); }
+  .featuredHead { flex-direction: column; align-items: flex-start; }
+}

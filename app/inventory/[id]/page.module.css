@@ -1,0 +1,235 @@
+.pageHero {
+  background: #24272c;
+  padding: 20px 0;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.65);
+}
+
+.breadcrumb a { color: rgba(255,255,255,0.65); text-decoration: none; }
+.breadcrumb a:hover { color: #e74c3c; }
+
+.carDetail {
+  padding: 50px 0 80px;
+  background: #f8f9fa;
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: start;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 40px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+  margin-bottom: 50px;
+}
+
+.imageSection {
+  position: relative;
+}
+
+.mainImage {
+  border-radius: 10px;
+  overflow: hidden;
+  background: #f0f2f5;
+}
+
+.imagePlaceholder {
+  height: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #e8edf2 0%, #d0d8e4 100%);
+}
+
+.imagePlaceholder p {
+  font-size: 16px;
+  font-weight: 600;
+  color: #8a9bb0;
+}
+
+.typeBadge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: #24272c;
+  color: #ffffff;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.infoSection {}
+
+.carTitle {
+  font-size: 30px;
+  font-weight: 800;
+  color: #24272c;
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+
+.carPrice {
+  font-size: 36px;
+  font-weight: 900;
+  color: #c0392b;
+  margin-bottom: 28px;
+}
+
+.specsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+
+.specItem {
+  padding: 14px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  border-right: 1px solid #f0f0f0;
+}
+
+.specItem:nth-child(even) { border-right: none; }
+.specItem:nth-last-child(-n+2) { border-bottom: none; }
+
+.specLabel {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #999;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.specValue {
+  font-size: 15px;
+  font-weight: 700;
+  color: #24272c;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.btnSecondary {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 24px;
+  border: 2px solid #24272c;
+  border-radius: 4px;
+  color: #24272c;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.btnSecondary:hover {
+  background: #24272c;
+  color: #ffffff;
+}
+
+.dealerInfo {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dealerInfoItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #555;
+}
+
+.relatedSection {
+  margin-top: 20px;
+}
+
+.relatedTitle {
+  font-size: 24px;
+  font-weight: 800;
+  color: #24272c;
+  margin-bottom: 20px;
+}
+
+.relatedGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.relatedCard {
+  background: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+  text-decoration: none;
+  border: 1px solid #e8e8e8;
+  transition: all 0.2s;
+}
+
+.relatedCard:hover {
+  border-color: #c0392b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+.relatedImage {
+  height: 120px;
+  background: #f0f2f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.relatedInfo {
+  padding: 12px 16px;
+}
+
+.relatedName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #24272c;
+  margin-bottom: 4px;
+}
+
+.relatedPrice {
+  font-size: 16px;
+  font-weight: 800;
+  color: #c0392b;
+}
+
+@media (max-width: 900px) {
+  .detailGrid { grid-template-columns: 1fr; gap: 30px; }
+  .relatedGrid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .detailGrid { padding: 24px; }
+  .relatedGrid { grid-template-columns: 1fr; }
+  .specsGrid { grid-template-columns: 1fr; }
+  .specItem { border-right: none; }
+}

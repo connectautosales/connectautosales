@@ -1,0 +1,443 @@
+/* ── Hero ───────────────────────────────────────── */
+.hero {
+  position: relative;
+  background: #020300;
+  padding: 80px 0 72px;
+  overflow: hidden;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: url('/images/banner-1.png') center/cover no-repeat;
+  opacity: 0.18;
+}
+
+.heroTitle {
+  position: relative;
+  font-size: clamp(48px, 7vw, 90px);
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 2px;
+  line-height: 1.05;
+  margin: 0;
+}
+
+.heroTitle span {
+  color: #e10001;
+}
+
+/* ── Contact Cards ──────────────────────────────── */
+.contactCards {
+  background: #fff;
+  padding: 0;
+  margin-top: -2px;
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+  transform: translateY(-32px);
+  background: #fff;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 32px 20px;
+  text-decoration: none;
+  color: #020300;
+  border-right: 1px solid #e5e7eb;
+  transition: background 0.2s;
+  gap: 10px;
+}
+
+.card:last-child {
+  border-right: none;
+}
+
+.card:hover {
+  background: #fff8f8;
+}
+
+.cardIcon {
+  color: #e10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #fff0f0;
+}
+
+.cardLabel {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #020300;
+}
+
+.cardValue {
+  font-size: 15px;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+/* ── Map Section ────────────────────────────────── */
+.mapSection {
+  padding: 0 0 56px;
+  background: #fff;
+}
+
+.mapGrid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 28px;
+  margin-bottom: 20px;
+  align-items: stretch;
+}
+
+/* Hours */
+.hoursCol {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.hoursBox {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 24px;
+}
+
+.hoursHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.hoursTitle {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #020300;
+}
+
+.hoursDivider {
+  height: 1px;
+  background: #e5e7eb;
+  margin-bottom: 16px;
+}
+
+.hoursRows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hoursRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.hoursRow span:first-child {
+  font-weight: 600;
+  color: #020300;
+}
+
+/* Follow */
+.followBox {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 24px;
+}
+
+.followTitle {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #020300;
+  margin-bottom: 14px;
+}
+
+.followIcons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.followIcon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-decoration: none;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.followIcon:hover {
+  transform: translateY(-2px);
+  opacity: 0.85;
+}
+
+/* Map */
+.mapCol {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  min-height: 320px;
+}
+
+.mapIframe {
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  border: none;
+  display: block;
+}
+
+/* Directions */
+.directionsBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  background: #e10001;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.directionsBtn:hover {
+  background: #c0152f;
+}
+
+/* ── Bottom Section ─────────────────────────────── */
+.bottomSection {
+  background: #fff;
+  padding: 56px 0 72px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.bottomGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.sectionHeading {
+  font-size: 22px;
+  font-weight: 900;
+  color: #020300;
+  letter-spacing: 0.5px;
+  margin: 0 0 10px;
+}
+
+.headingLine {
+  width: 40px;
+  height: 3px;
+  background: #e10001;
+  border-radius: 2px;
+  margin-bottom: 28px;
+}
+
+/* Form */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.inputWrap {
+  position: relative;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  pointer-events: none;
+}
+
+.textareaIcon {
+  top: 16px;
+  transform: none;
+}
+
+.input {
+  width: 100%;
+  padding: 13px 14px 13px 42px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 15px;
+  font-family: inherit;
+  color: #020300;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  border-color: #e10001;
+}
+
+.input::placeholder {
+  color: #9ca3af;
+}
+
+.select {
+  appearance: none;
+  cursor: pointer;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 130px;
+  padding-top: 13px;
+  line-height: 1.6;
+}
+
+.submitBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #e10001;
+  color: #fff;
+  border: none;
+  padding: 15px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+  width: 100%;
+}
+
+.submitBtn:hover {
+  background: #c0152f;
+}
+
+.secureNote {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #9ca3af;
+  margin-top: 4px;
+}
+
+.successMsg {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 20px;
+  font-size: 15px;
+  color: #16a34a;
+  font-weight: 600;
+}
+
+/* FAQ */
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.faqItem {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.faqItem:last-child {
+  border-bottom: none;
+}
+
+.faqQ {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  background: #fff;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: #020300;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.faqQ:hover {
+  background: #fff8f8;
+}
+
+.faqA {
+  padding: 0 20px 18px;
+  font-size: 15px;
+  color: #4b5563;
+  line-height: 1.7;
+  background: #fff;
+}
+
+/* ── Responsive ─────────────────────────────────── */
+@media (max-width: 1024px) {
+  .mapGrid { grid-template-columns: 1fr; }
+  .mapCol { min-height: 280px; }
+  .hoursCol { flex-direction: row; }
+}
+
+@media (max-width: 768px) {
+  .cardsGrid { grid-template-columns: repeat(2, 1fr); }
+  .card:nth-child(2) { border-right: none; }
+  .card:nth-child(1), .card:nth-child(2) { border-bottom: 1px solid #e5e7eb; }
+  .bottomGrid { grid-template-columns: 1fr; gap: 40px; }
+  .formRow { grid-template-columns: 1fr; }
+  .hoursCol { flex-direction: column; }
+}
+
+@media (max-width: 480px) {
+  .cardsGrid { grid-template-columns: 1fr; }
+  .card { border-right: none; border-bottom: 1px solid #e5e7eb; }
+  .card:last-child { border-bottom: none; }
+}
