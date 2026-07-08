@@ -1,0 +1,331 @@
+/* ── Hero ── */
+.hero {
+  position: relative;
+  background: #020300;
+  padding: 72px 0 64px;
+  overflow: hidden;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: url('/images/banner-1.png') center/cover no-repeat;
+  opacity: 0.25;
+}
+
+.heroTitle {
+  position: relative;
+  font-size: clamp(36px, 5.5vw, 70px);
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 1px;
+  line-height: 1.1;
+  margin: 0 0 20px;
+}
+
+.heroTitle span {
+  color: #e10001;
+}
+
+.heroLine {
+  width: 60px;
+  height: 4px;
+  background: #e10001;
+  border-radius: 2px;
+}
+
+/* ── Story + Why ── */
+.storySection {
+  background: #fff;
+  padding: 64px 0;
+}
+
+.storyGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.colHeading {
+  font-size: 18px;
+  font-weight: 900;
+  color: #020300;
+  letter-spacing: 0.5px;
+  margin: 0 0 10px;
+}
+
+.headingLine {
+  width: 40px;
+  height: 3px;
+  background: #e10001;
+  border-radius: 2px;
+  margin-bottom: 24px;
+}
+
+.storyLead {
+  font-size: 18px;
+  font-weight: 700;
+  color: #020300;
+  line-height: 1.6;
+  margin: 0 0 20px;
+}
+
+.storyBody {
+  font-size: 16px;
+  color: #4b5563;
+  line-height: 1.8;
+  margin: 0 0 16px;
+}
+
+.storyBody:last-child {
+  margin: 0;
+}
+
+/* Why list */
+.whyList {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin-bottom: 8px;
+}
+
+.whyItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.whyIcon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #fff0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.whyTitle {
+  font-size: 14px;
+  font-weight: 800;
+  color: #020300;
+  letter-spacing: 0.5px;
+  margin: 0 0 4px;
+}
+
+.whyDesc {
+  font-size: 15px;
+  color: #4b5563;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Social */
+.socialRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.socialIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.socialIcon:hover {
+  transform: translateY(-2px);
+  opacity: 0.85;
+}
+
+/* ── What We Offer ── */
+.offerSection {
+  background: #fff;
+  padding: 56px 0;
+  border-top: 1px solid #e5e7eb;
+}
+
+.sectionTitle {
+  font-size: 22px;
+  font-weight: 900;
+  color: #020300;
+  letter-spacing: 0.5px;
+  margin: 0 0 10px;
+}
+
+.offerGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.offerCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 32px 16px;
+  text-align: center;
+  border-right: 1px solid #e5e7eb;
+  transition: background 0.2s;
+}
+
+.offerCard:last-child {
+  border-right: none;
+}
+
+.offerCard:hover {
+  background: #fff8f8;
+}
+
+.offerIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 1.5px solid #e5e7eb;
+}
+
+.offerLabel {
+  font-size: 13px;
+  font-weight: 800;
+  color: #020300;
+  letter-spacing: 0.5px;
+  line-height: 1.5;
+}
+
+/* ── Visit Us ── */
+.visitSection {
+  background: #fff;
+  padding: 56px 0 72px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.visitGrid {
+  display: grid;
+  grid-template-columns: 380px 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.visitImg {
+  position: relative;
+  height: 280px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.visitTitle {
+  font-size: 20px;
+  font-weight: 900;
+  color: #020300;
+  letter-spacing: 0.5px;
+  margin: 0 0 10px;
+}
+
+.visitList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.visitList li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 15px;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.visitList li svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.visitCtaText {
+  font-size: 16px;
+  color: #4b5563;
+  line-height: 1.7;
+  margin: 0 0 24px;
+}
+
+.ctaBtns {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.btnCall {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #020300;
+  color: #fff;
+  padding: 14px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.btnCall:hover {
+  background: #333;
+}
+
+.btnText {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #e10001;
+  color: #fff;
+  padding: 14px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.btnText:hover {
+  background: #c0152f;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .storyGrid { grid-template-columns: 1fr; gap: 40px; }
+  .visitGrid { grid-template-columns: 1fr 1fr; }
+  .visitImg { grid-column: 1 / -1; }
+  .offerGrid { grid-template-columns: repeat(3, 1fr); }
+  .offerCard:nth-child(3) { border-right: none; }
+}
+
+@media (max-width: 768px) {
+  .offerGrid { grid-template-columns: repeat(2, 1fr); }
+  .visitGrid { grid-template-columns: 1fr; }
+  .socialRow { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 480px) {
+  .offerGrid { grid-template-columns: 1fr; }
+  .offerCard { border-right: none; border-bottom: 1px solid #e5e7eb; }
+}

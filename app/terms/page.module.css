@@ -1,0 +1,211 @@
+/* ── Hero ── */
+.hero {
+  position: relative;
+  background: #020300;
+  padding: 72px 0 64px;
+  overflow: hidden;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: url('/images/banner-1.png') center/cover no-repeat;
+  opacity: 0.22;
+}
+
+.heroTitle {
+  position: relative;
+  font-size: clamp(32px, 5vw, 64px);
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 2px;
+  margin: 0 0 16px;
+}
+
+.heroLine {
+  width: 60px;
+  height: 4px;
+  background: #e10001;
+  border-radius: 2px;
+  margin: 0 auto;
+}
+
+/* ── Content ── */
+.content {
+  background: #fff;
+  padding: 48px 0 72px;
+}
+
+.lastUpdated {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  color: #6b7280;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Sections */
+.sectionsList {
+  display: flex;
+  flex-direction: column;
+}
+
+.policyRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 24px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.policyIcon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #fff0f0;
+  border: 1px solid #fecaca;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.policyTitle {
+  font-size: 17px;
+  font-weight: 700;
+  color: #020300;
+  margin: 0 0 8px;
+  line-height: 1.4;
+}
+
+.policyText {
+  font-size: 16px;
+  color: #4b5563;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ── Contact Box ── */
+.contactBox {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 32px;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 32px 40px;
+  margin-top: 40px;
+}
+
+.contactLeft {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.contactIconWrap {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #e10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.contactIconWrap svg {
+  stroke: #fff;
+}
+
+.contactTitle {
+  font-size: 17px;
+  font-weight: 800;
+  color: #020300;
+  margin: 0 0 4px;
+}
+
+.contactBrand {
+  font-size: 15px;
+  font-weight: 700;
+  color: #020300;
+  margin: 0 0 4px;
+}
+
+.contactAddr {
+  font-size: 15px;
+  color: #4b5563;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.contactDivider {
+  width: 1px;
+  height: 80px;
+  background: #e5e7eb;
+}
+
+.contactRight {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  color: #4b5563;
+  font-weight: 600;
+}
+
+.contactLink {
+  color: #e10001;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.contactLink:hover {
+  text-decoration: underline;
+}
+
+/* ── Notice Box ── */
+.noticeBox {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-top: 20px;
+}
+
+.noticeIcon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #fff0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.noticeText {
+  font-size: 15px;
+  color: #4b5563;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .contactBox { grid-template-columns: 1fr; }
+  .contactDivider { width: 100%; height: 1px; }
+}
