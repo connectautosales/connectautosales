@@ -88,11 +88,9 @@ export default function SalvageInspectionsPage() {
       <section className={styles.hero}>
         <div className={styles.heroOverlay} />
         <div className="container">
-          <h1 className={styles.heroTitle}>
-            MICHIGAN<br />
-            <span>SALVAGE VEHICLE</span><br />
-            INSPECTIONS
-          </h1>
+          <p className={styles.heroLabel}>CONNECT AUTO SALES</p>
+          <h1 className={styles.heroTitle}>SALVAGE VEHICLE <span>INSPECTIONS</span></h1>
+          <p className={styles.heroSub}>Michigan state-certified salvage inspections — $250 total fee.</p>
         </div>
       </section>
 

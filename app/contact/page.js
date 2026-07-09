@@ -50,9 +50,9 @@ export default function ContactPage() {
       <section className={styles.hero}>
         <div className={styles.heroOverlay} />
         <div className="container">
-          <h1 className={styles.heroTitle}>
-            CONTACT<br/><span>US</span>
-          </h1>
+          <p className={styles.heroLabel}>CONNECT AUTO SALES</p>
+          <h1 className={styles.heroTitle}>CONTACT <span>US</span></h1>
+          <p className={styles.heroSub}>We&apos;re here to help — reach out anytime.</p>
         </div>
       </section>
 

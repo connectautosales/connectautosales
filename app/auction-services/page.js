@@ -152,11 +152,9 @@ export default function AuctionServicesPage() {
       <section className={styles.hero}>
         <div className={styles.heroOverlay} />
         <div className="container">
-          <p className={styles.heroEyebrow}>CONNECT AUTO SALES</p>
-          <h1 className={styles.heroTitle}>
-            BUY DIRECT FROM<br />
-            <span>DEALER AUCTIONS</span>
-          </h1>
+          <p className={styles.heroLabel}>CONNECT AUTO SALES</p>
+          <h1 className={styles.heroTitle}>BUY DIRECT FROM<br /><span>DEALER AUCTIONS</span></h1>
+          <p className={styles.heroSub}>Browse and purchase vehicles directly from IAAI, Copart & Manheim auctions.</p>
         </div>
       </section>
 

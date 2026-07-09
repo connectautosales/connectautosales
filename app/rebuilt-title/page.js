@@ -232,8 +232,9 @@ export default function RebuiltTitlePage() {
       <section className={styles.hero}>
         <div className={styles.heroOverlay} />
         <div className="container">
-          <h1 className={styles.heroTitle}>REBUILT TITLE<br />INFORMATION</h1>
-          <div className={styles.heroLine} />
+          <p className={styles.heroLabel}>CONNECT AUTO SALES</p>
+          <h1 className={styles.heroTitle}>REBUILT TITLE <span>INFORMATION</span></h1>
+          <p className={styles.heroSub}>Everything you need to know about rebuilt title vehicles in Michigan.</p>
         </div>
       </section>
 

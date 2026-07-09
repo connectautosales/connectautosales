@@ -2,36 +2,48 @@
 .hero {
   position: relative;
   background: #020300;
-  padding: 72px 0 64px;
+  padding: 80px 0 72px;
   overflow: hidden;
+  min-height: 320px;
+  display: flex;
+  align-items: center;
 }
 
 .heroOverlay {
   position: absolute;
   inset: 0;
   background: url('/images/banner-1.png') center/cover no-repeat;
-  opacity: 0.25;
+  opacity: 0.35;
+}
+
+.heroLabel {
+  position: relative;
+  font-size: 13px;
+  font-weight: 800;
+  color: #e10001;
+  letter-spacing: 3px;
+  margin: 0 0 12px;
 }
 
 .heroTitle {
   position: relative;
-  font-size: clamp(36px, 5.5vw, 70px);
+  font-size: clamp(36px, 5.5vw, 72px);
   font-weight: 900;
-  color: #ffffff;
+  color: #fff;
   letter-spacing: 1px;
   line-height: 1.1;
-  margin: 0 0 20px;
+  margin: 0 0 14px;
 }
 
-.heroTitle span {
-  color: #e10001;
-}
+.heroTitle span { color: #e10001; }
 
-.heroLine {
-  width: 60px;
-  height: 4px;
-  background: #e10001;
-  border-radius: 2px;
+.heroSub {
+  position: relative;
+  font-size: 15px;
+  color: rgba(255,255,255,0.72);
+  margin: 0;
+  max-width: 520px;
+  line-height: 1.6;
 }
 
 /* ── Story + Why ── */

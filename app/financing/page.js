@@ -90,9 +90,9 @@ export default function FinancingPage() {
       <section className={styles.hero}>
         <div className={styles.heroOverlay} />
         <div className="container">
-          <h1 className={styles.heroTitle}>
-            FINANCING<br /><span>MADE EASY</span>
-          </h1>
+          <p className={styles.heroLabel}>CONNECT AUTO SALES</p>
+          <h1 className={styles.heroTitle}>FINANCING <span>MADE EASY</span></h1>
+          <p className={styles.heroSub}>Fast approvals for all credit types — apply online in minutes.</p>
         </div>
       </section>
 

@@ -109,10 +109,9 @@ export default function AboutPage() {
       <section className={styles.hero}>
         <div className={styles.heroOverlay} />
         <div className="container">
-          <h1 className={styles.heroTitle}>
-            ABOUT <span>CONNECT</span><br />AUTO SALES
-          </h1>
-          <div className={styles.heroLine} />
+          <p className={styles.heroLabel}>CONNECT AUTO SALES</p>
+          <h1 className={styles.heroTitle}>ABOUT <span>US</span></h1>
+          <p className={styles.heroSub}>Family-owned dealership serving Dearborn Heights and Metro Detroit.</p>
         </div>
       </section>
 
