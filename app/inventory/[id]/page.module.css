@@ -1,235 +1,877 @@
-.pageHero {
-  background: #24272c;
-  padding: 20px 0;
+.page {
+  background: #f3f4f6;
+  min-height: 100vh;
+}
+
+/* ── Breadcrumb ── */
+.breadcrumbBar {
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 12px 0;
 }
 
 .breadcrumb {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: rgba(255,255,255,0.65);
-}
-
-.breadcrumb a { color: rgba(255,255,255,0.65); text-decoration: none; }
-.breadcrumb a:hover { color: #e74c3c; }
-
-.carDetail {
-  padding: 50px 0 80px;
-  background: #f8f9fa;
-}
-
-.detailGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 50px;
-  align-items: start;
-  background: #ffffff;
-  border-radius: 14px;
-  padding: 40px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.07);
-  margin-bottom: 50px;
-}
-
-.imageSection {
-  position: relative;
-}
-
-.mainImage {
-  border-radius: 10px;
-  overflow: hidden;
-  background: #f0f2f5;
-}
-
-.imagePlaceholder {
-  height: 380px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  background: linear-gradient(135deg, #e8edf2 0%, #d0d8e4 100%);
-}
-
-.imagePlaceholder p {
-  font-size: 16px;
-  font-weight: 600;
-  color: #8a9bb0;
-}
-
-.typeBadge {
-  position: absolute;
-  top: 14px;
-  left: 14px;
-  background: #24272c;
-  color: #ffffff;
-  padding: 5px 14px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.infoSection {}
-
-.carTitle {
-  font-size: 30px;
-  font-weight: 800;
-  color: #24272c;
-  margin-bottom: 10px;
-  line-height: 1.2;
-}
-
-.carPrice {
-  font-size: 36px;
-  font-weight: 900;
-  color: #c0392b;
-  margin-bottom: 28px;
-}
-
-.specsGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0;
-  border: 1px solid #e8e8e8;
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 28px;
-}
-
-.specItem {
-  padding: 14px 16px;
-  border-bottom: 1px solid #f0f0f0;
-  border-right: 1px solid #f0f0f0;
-}
-
-.specItem:nth-child(even) { border-right: none; }
-.specItem:nth-last-child(-n+2) { border-bottom: none; }
-
-.specLabel {
-  display: block;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #999;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-
-.specValue {
-  font-size: 15px;
-  font-weight: 700;
-  color: #24272c;
-}
-
-.actionButtons {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 24px;
+  gap: 6px;
+  font-size: 13px;
+  color: #6b7280;
   flex-wrap: wrap;
 }
 
-.btnSecondary {
-  display: inline-flex;
-  align-items: center;
-  padding: 12px 24px;
-  border: 2px solid #24272c;
-  border-radius: 4px;
-  color: #24272c;
-  font-weight: 600;
-  font-size: 15px;
+.breadcrumb a {
+  color: #6b7280;
   text-decoration: none;
-  transition: all 0.2s;
+  transition: color 0.15s;
 }
 
-.btnSecondary:hover {
-  background: #24272c;
-  color: #ffffff;
+.breadcrumb a:hover { color: #e10001; }
+
+.breadcrumb span:last-child { color: #020300; font-weight: 600; }
+
+.sep { color: #d1d5db; }
+
+/* ── Main Section ── */
+.mainSection {
+  padding: 28px 0 64px;
 }
 
-.dealerInfo {
-  background: #f8f9fa;
-  border-radius: 8px;
-  padding: 16px;
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 28px;
+  align-items: start;
+}
+
+/* ── LEFT COLUMN ── */
+.left {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0;
 }
 
-.dealerInfoItem {
+/* Title Row */
+.titleRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.vehicleTitle {
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 900;
+  color: #020300;
+  margin: 0;
+  line-height: 1.2;
+  flex: 1;
+  min-width: 0;
+}
+
+.badgeClean {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.badgeRebuilt {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff0f0;
+  color: #e10001;
+  border: 1px solid #fecaca;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Specs */
+.specs {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
-  color: #555;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
 }
 
-.relatedSection {
-  margin-top: 20px;
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  color: #4b5563;
+  font-weight: 600;
 }
 
-.relatedTitle {
-  font-size: 24px;
-  font-weight: 800;
-  color: #24272c;
+.chipDot {
+  color: #d1d5db;
+  font-size: 16px;
+}
+
+/* VIN Bar */
+.vinBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px 16px;
   margin-bottom: 20px;
 }
 
-.relatedGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+.vinLabel {
+  font-size: 12px;
+  font-weight: 800;
+  color: #9ca3af;
+  letter-spacing: 0.5px;
 }
 
-.relatedCard {
-  background: #ffffff;
-  border-radius: 10px;
+.vinNum {
+  font-size: 13px;
+  font-weight: 600;
+  color: #020300;
+  font-family: monospace;
+  letter-spacing: 0.5px;
+  flex: 1;
+}
+
+.copyBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #4b5563;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.copyBtn:hover { border-color: #e10001; color: #e10001; }
+
+/* Gallery */
+.gallery {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
   overflow: hidden;
-  text-decoration: none;
-  border: 1px solid #e8e8e8;
-  transition: all 0.2s;
+  margin-bottom: 16px;
 }
 
-.relatedCard:hover {
-  border-color: #c0392b;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+.mainPhoto {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: #f3f4f6;
 }
 
-.relatedImage {
-  height: 120px;
-  background: #f0f2f5;
+.galleryArrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.9);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  color: #020300;
+  box-shadow: 0 2px 8px #00000020;
+  transition: background 0.15s;
 }
 
-.relatedInfo {
-  padding: 12px 16px;
+.galleryArrow:hover { background: #fff; }
+.galleryArrowLeft { left: 12px; }
+.galleryArrowRight { right: 12px; }
+
+.photoCounter {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 4px 12px;
+  z-index: 2;
 }
 
-.relatedName {
-  font-size: 14px;
+/* Photo label */
+.photoLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+  font-size: 13px;
   font-weight: 600;
-  color: #24272c;
-  margin-bottom: 4px;
+  color: #4b5563;
 }
 
-.relatedPrice {
-  font-size: 16px;
+/* Thumbs */
+.thumbStrip {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  overflow-x: auto;
+}
+
+.thumb {
+  position: relative;
+  flex-shrink: 0;
+  width: 80px;
+  height: 60px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  cursor: pointer;
+  background: #f3f4f6;
+  padding: 0;
+  transition: border-color 0.15s;
+}
+
+.thumbActive { border-color: #e10001; }
+
+.thumbMore {
+  position: relative;
+  flex-shrink: 0;
+  width: 80px;
+  height: 60px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #f3f4f6;
+}
+
+.thumbMoreOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 14px;
   font-weight: 800;
-  color: #c0392b;
+}
+
+/* Badges Row */
+.badgesRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #020300;
+}
+
+/* Description */
+.descSection {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin-bottom: 16px;
+}
+
+.sectionTitle {
+  font-size: 17px;
+  font-weight: 900;
+  color: #020300;
+  margin: 0 0 8px;
+  letter-spacing: 0.3px;
+}
+
+.sectionLine {
+  width: 40px;
+  height: 3px;
+  background: #e10001;
+  border-radius: 2px;
+  margin-bottom: 16px;
+}
+
+.description {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.75;
+  margin: 0;
+}
+
+/* Features */
+.featuresSection {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin-bottom: 16px;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 24px;
+}
+
+.featuresList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.featureItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 0;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.featureItem:last-child { border-bottom: none; }
+
+/* CTA Row */
+.ctaRow {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.ctaCall {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #e10001;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 14px 22px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-decoration: none;
+  transition: background 0.2s;
+  flex: 1;
+  justify-content: center;
+}
+
+.ctaCall:hover { background: #c0152f; }
+
+.ctaText {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  color: #020300;
+  border: 1.5px solid #020300;
+  border-radius: 6px;
+  padding: 14px 22px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-decoration: none;
+  transition: border-color 0.2s, background 0.2s;
+  flex: 1;
+  justify-content: center;
+}
+
+.ctaText:hover { background: #f3f4f6; }
+
+.ctaSchedule {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  color: #020300;
+  border: 1.5px solid #020300;
+  border-radius: 6px;
+  padding: 14px 22px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-decoration: none;
+  transition: border-color 0.2s, background 0.2s;
+  flex: 1;
+  justify-content: center;
+}
+
+.ctaSchedule:hover { background: #f3f4f6; }
+
+/* Similar Vehicles */
+.similarSection {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px 28px;
+}
+
+.similarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.seeAll {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #e10001;
+  text-decoration: none;
+}
+
+.seeAll:hover { text-decoration: underline; }
+
+.similarGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.similarCard {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  text-decoration: none;
+  transition: box-shadow 0.15s, border-color 0.15s;
+}
+
+.similarCard:hover { border-color: #e10001; box-shadow: 0 4px 16px #00000012; }
+
+.similarImg {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: #f3f4f6;
+}
+
+.simBadgeClean {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background: #16a34a;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  border-radius: 4px;
+  padding: 2px 8px;
+  z-index: 1;
+}
+
+.simBadgeRebuilt {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background: #e10001;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  border-radius: 4px;
+  padding: 2px 8px;
+  z-index: 1;
+}
+
+.similarInfo {
+  padding: 10px 12px 12px;
+}
+
+.similarName {
+  font-size: 12px;
+  font-weight: 800;
+  color: #020300;
+  margin: 0 0 4px;
+  line-height: 1.3;
+}
+
+.similarMeta {
+  font-size: 11px;
+  color: #9ca3af;
+  margin: 0 0 6px;
+}
+
+.similarPrice {
+  font-size: 14px;
+  font-weight: 900;
+  color: #e10001;
+  margin: 0;
+}
+
+/* ── RIGHT SIDEBAR ── */
+.sidebar {
+  position: sticky;
+  top: 20px;
+}
+
+.sidebarCard {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px #00000010;
+}
+
+/* Great Price */
+.priceBadgeRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 20px 14px;
+  flex-wrap: wrap;
+}
+
+.greatPriceBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.belowMarket {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 600;
+  flex: 1;
+}
+
+.infoBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #9ca3af;
+  display: flex;
+  padding: 2px;
+}
+
+.infoBtn:hover { color: #6b7280; }
+
+.priceDivider {
+  height: 1px;
+  background: #e5e7eb;
+}
+
+/* Price blocks */
+.priceBlock {
+  padding: 16px 20px;
+}
+
+.priceTypeLabel {
+  font-size: 11px;
+  font-weight: 800;
+  color: #9ca3af;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 0 0 4px;
+}
+
+.cashPrice {
+  font-size: 32px;
+  font-weight: 900;
+  color: #e10001;
+  margin: 0 0 4px;
+  line-height: 1.1;
+}
+
+.financePrice {
+  font-size: 24px;
+  font-weight: 900;
+  color: #020300;
+  margin: 0 0 4px;
+  line-height: 1.1;
+}
+
+.priceNote {
+  font-size: 11px;
+  color: #9ca3af;
+  margin: 0 0 4px;
+}
+
+.priceDisclaimer {
+  font-size: 11px;
+  color: #6b7280;
+  margin: 4px 0 0;
+  line-height: 1.5;
+}
+
+/* Estimator */
+.estimatorBlock {
+  padding: 16px 20px 12px;
+}
+
+.estimatorTitle {
+  font-size: 14px;
+  font-weight: 800;
+  color: #020300;
+  margin: 0 0 4px;
+}
+
+.customizeLink {
+  font-size: 12px;
+  color: #e10001;
+  font-weight: 600;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 14px;
+}
+
+.customizeLink:hover { text-decoration: underline; }
+
+.estimatorRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.estimatorField {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.estimatorLabel {
+  font-size: 11px;
+  font-weight: 700;
+  color: #6b7280;
+  letter-spacing: 0.3px;
+}
+
+.inputWithPrefix {
+  display: flex;
+  align-items: center;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.prefix {
+  padding: 0 8px;
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 700;
+  border-right: 1px solid #e5e7eb;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  background: #f9fafb;
+}
+
+.estimatorInput {
+  border: none;
+  outline: none;
+  padding: 9px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #020300;
+  width: 100%;
+  background: transparent;
+}
+
+.estimatorSelect {
+  width: 100%;
+  padding: 9px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #020300;
+  background: #fff;
+  outline: none;
+  cursor: pointer;
+}
+
+.estimatorSelect:focus { border-color: #e10001; }
+
+.monthlyRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.monthlyLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: #6b7280;
+}
+
+.monthlyValue {
+  font-size: 20px;
+  font-weight: 900;
+  color: #e10001;
+}
+
+/* Apply Button */
+.applyBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e10001;
+  color: #fff;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 16px 20px;
+  transition: background 0.2s;
+}
+
+.applyBtn:hover { background: #c0152f; }
+
+/* Damage Photos */
+.damageSection {
+  padding: 16px 20px;
+}
+
+.damageHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.damageTitle {
+  font-size: 14px;
+  font-weight: 800;
+  color: #020300;
+  margin: 0;
+}
+
+.damageNote {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 0 0 12px;
+}
+
+.damageGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.damagePhoto {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #f3f4f6;
+}
+
+.damageCaption {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #16a34a;
+  margin: 0;
+}
+
+/* Contact Quick */
+.contactQuick {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid #e5e7eb;
+}
+
+.quickCall {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 14px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #020300;
+  text-decoration: none;
+  border-right: 1px solid #e5e7eb;
+  transition: background 0.15s;
+}
+
+.quickCall:hover { background: #f9fafb; }
+
+.quickText {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 14px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #020300;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.quickText:hover { background: #f9fafb; }
+
+/* ── Responsive ── */
+@media (max-width: 1100px) {
+  .layout { grid-template-columns: 1fr 320px; }
+  .similarGrid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 900px) {
-  .detailGrid { grid-template-columns: 1fr; gap: 30px; }
-  .relatedGrid { grid-template-columns: repeat(2, 1fr); }
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { position: static; }
+  .similarGrid { grid-template-columns: repeat(2, 1fr); }
 }
 
-@media (max-width: 600px) {
-  .detailGrid { padding: 24px; }
-  .relatedGrid { grid-template-columns: 1fr; }
-  .specsGrid { grid-template-columns: 1fr; }
-  .specItem { border-right: none; }
+@media (max-width: 640px) {
+  .featuresGrid { grid-template-columns: 1fr; }
+  .ctaRow { flex-direction: column; }
+  .ctaCall, .ctaText, .ctaSchedule { flex: none; }
+  .estimatorRow { grid-template-columns: 1fr; }
+  .similarGrid { grid-template-columns: repeat(2, 1fr); }
+  .badgesRow { gap: 8px; }
 }
