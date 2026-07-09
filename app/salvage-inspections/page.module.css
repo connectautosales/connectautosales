@@ -1,0 +1,567 @@
+/* ── Hero ── */
+.hero {
+  position: relative;
+  background: #020300;
+  padding: 80px 0 72px;
+  overflow: hidden;
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: url('/images/banner-3.png') center/cover no-repeat;
+  opacity: 0.4;
+}
+
+.heroTitle {
+  position: relative;
+  font-size: clamp(36px, 5.5vw, 72px);
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 1px;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.heroTitle span {
+  color: #e10001;
+}
+
+/* ── Info Section ── */
+.infoSection {
+  background: #f3f4f6;
+  padding: 0 0 48px;
+}
+
+.infoCard {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 36px;
+  margin-top: -40px;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 4px 24px #00000010;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+/* Col titles */
+.colTitle {
+  font-size: 17px;
+  font-weight: 900;
+  color: #020300;
+  letter-spacing: 0.5px;
+  margin: 0 0 10px;
+}
+
+.colLine {
+  width: 40px;
+  height: 3px;
+  background: #e10001;
+  border-radius: 2px;
+  margin-bottom: 24px;
+}
+
+/* Fees */
+.feesCol {
+  border-right: 1px solid #e5e7eb;
+  padding-right: 48px;
+}
+
+.feesList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 20px;
+}
+
+.feeRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.feeIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.feeInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.feeCode {
+  font-size: 12px;
+  font-weight: 700;
+  color: #9ca3af;
+  letter-spacing: 0.5px;
+}
+
+.feeName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #020300;
+}
+
+.feePrice {
+  font-size: 18px;
+  font-weight: 900;
+  color: #e10001;
+  flex-shrink: 0;
+}
+
+.totalBox {
+  background: #e10001;
+  border-radius: 8px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.totalLabel {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.totalAmount {
+  font-size: 40px;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.1;
+}
+
+.feeNote {
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Steps */
+.processCol {}
+
+.stepsRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0;
+  margin-bottom: 36px;
+}
+
+.stepWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex: 1;
+}
+
+.stepCircle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #e10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.stepNum {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #020300;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.stepLabel {
+  font-size: 11px;
+  font-weight: 700;
+  color: #020300;
+  text-align: center;
+  line-height: 1.4;
+  margin: 0;
+  white-space: pre-line;
+}
+
+.stepArrow {
+  position: absolute;
+  right: -10px;
+  top: 20px;
+  z-index: 1;
+}
+
+/* Required items */
+.reqTitle {
+  font-size: 16px;
+  font-weight: 900;
+  color: #020300;
+  letter-spacing: 0.5px;
+  margin: 0 0 10px;
+}
+
+.reqGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.reqCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.reqIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reqLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: #020300;
+  line-height: 1.4;
+  margin: 0;
+  white-space: pre-line;
+}
+
+/* ── Form Section ── */
+.formSection {
+  background: #f3f4f6;
+  padding: 0 0 56px;
+}
+
+.formCard {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 36px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.formTitle {
+  font-size: 17px;
+  font-weight: 900;
+  color: #020300;
+  letter-spacing: 0.5px;
+  margin: 0 0 10px;
+  line-height: 1.4;
+}
+
+.formTitleLine {
+  width: 40px;
+  height: 3px;
+  background: #e10001;
+  border-radius: 2px;
+  margin-bottom: 20px;
+}
+
+/* Warning */
+.warningBox {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #92400e;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.warningBox svg { flex-shrink: 0; margin-top: 2px; }
+.warningBox p { margin: 0; }
+
+.nameRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #020300;
+  outline: none;
+  transition: border-color 0.2s;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.input:focus { border-color: #e10001; }
+.input::placeholder { color: #9ca3af; }
+
+/* Uploads */
+.uploadsRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 16px 0 12px;
+}
+
+.uploadBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  border: 1.5px dashed #d1d5db;
+  border-radius: 8px;
+  padding: 16px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.uploadBox:hover { border-color: #e10001; }
+
+.uploadIcon {
+  width: 40px;
+  height: 40px;
+  background: #f3f4f6;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.uploadLabel {
+  font-size: 10px;
+  font-weight: 800;
+  color: #020300;
+  letter-spacing: 0.3px;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.uploadDrag {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.uploadOr {
+  font-size: 11px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.uploadFileName {
+  font-size: 11px;
+  color: #22c55e;
+  font-weight: 600;
+  margin: 0;
+  word-break: break-all;
+}
+
+.chooseFileBtn {
+  background: #e10001;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.chooseFileBtn:hover { background: #c0152f; }
+
+.uploadNote {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0 0 4px;
+  line-height: 1.5;
+}
+
+/* Right form */
+.formRight {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.notesLabel {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0 0 10px;
+}
+
+.textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #020300;
+  outline: none;
+  resize: vertical;
+  font-family: inherit;
+  transition: border-color 0.2s;
+  background: #fff;
+  box-sizing: border-box;
+  flex: 1;
+  min-height: 200px;
+  margin-bottom: 16px;
+}
+
+.textarea:focus { border-color: #e10001; }
+.textarea::placeholder { color: #9ca3af; }
+
+.submitBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #e10001;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 16px 24px;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%;
+}
+
+.submitBtn:hover { background: #c0152f; }
+
+/* ── FAQ ── */
+.faqSection {
+  background: #fff;
+  padding: 56px 0 72px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.faqHeader {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 36px;
+}
+
+.faqTitle {
+  font-size: 22px;
+  font-weight: 900;
+  color: #020300;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.faqLine {
+  flex: 1;
+  height: 2px;
+  background: #e10001;
+  border-radius: 2px;
+}
+
+.faqGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 40px;
+}
+
+.faqCol {
+  display: flex;
+  flex-direction: column;
+}
+
+.faqItem {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.faqQ {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: none;
+  border: none;
+  padding: 16px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #020300;
+  cursor: pointer;
+  text-align: left;
+  line-height: 1.4;
+}
+
+.faqA {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.7;
+  padding: 0 0 16px;
+  margin: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .infoGrid { grid-template-columns: 1fr; }
+  .feesCol { border-right: none; border-bottom: 1px solid #e5e7eb; padding-right: 0; padding-bottom: 32px; margin-bottom: 32px; }
+  .formGrid { grid-template-columns: 1fr; }
+  .faqGrid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .stepsRow { flex-wrap: wrap; gap: 20px; }
+  .stepArrow { display: none; }
+  .reqGrid { grid-template-columns: repeat(2, 1fr); }
+  .uploadsRow { grid-template-columns: 1fr; }
+  .nameRow { grid-template-columns: 1fr; }
+}

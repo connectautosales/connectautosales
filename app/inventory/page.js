@@ -171,7 +171,7 @@ export default function InventoryPage() {
                 </p>
               </div>
             </div>
-            <Link href="/salvage-inspections" className={styles.rebuiltBtn}>
+            <Link href="/rebuilt-title" className={styles.rebuiltBtn}>
               LEARN ABOUT REBUILT TITLES
             </Link>
           </div>
