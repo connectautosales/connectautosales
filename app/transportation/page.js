@@ -2,22 +2,12 @@
 import Link from 'next/link'
 import styles from './page.module.css'
 
-const steps = [
-  { num: '01', title: 'Contact Us', desc: 'Reach out about the vehicle you want to purchase. Let us know your delivery location.' },
-  { num: '02', title: 'Get a Quote', desc: "We'll provide a transportation quote based on your location — fast and transparent." },
-  { num: '03', title: 'Complete Purchase', desc: 'Finalize your purchase and financing (if needed) from wherever you are.' },
-  { num: '04', title: 'Vehicle Picked Up', desc: 'Our trusted transport partner picks up your vehicle from our Dearborn Heights lot.' },
-  { num: '05', title: 'Track Your Car', desc: 'Receive real-time updates as your vehicle makes its way to you.' },
-  { num: '06', title: 'Door Delivery', desc: 'Your vehicle arrives at your door — inspected, ready to drive, and all yours.' },
-]
-
-const features = [
-  { title: 'Door-to-Door Delivery', desc: 'Your vehicle delivered right to your driveway anywhere in the US.' },
-  { title: 'Insured Transport', desc: 'Full insurance coverage throughout the entire transport process.' },
-  { title: 'Real-Time Tracking', desc: 'Know exactly where your vehicle is at every stage of delivery.' },
-  { title: 'Nationwide Coverage', desc: 'We ship to all 50 states — no matter how far you are.' },
-  { title: 'Trusted Partners', desc: 'We only work with vetted, professional transport carriers.' },
-  { title: 'Affordable Rates', desc: 'Competitive transport pricing with no hidden fees or surprise charges.' },
+const services = [
+  { text: 'Bought a vehicle from any Auction in USA (IAAI / Copart / Manheim / ADESA) and want to get it to your shop or dealership?' },
+  { text: 'Moving and want to ship your vehicle from Point A to Point B or from State to State?' },
+  { text: 'Looking for Open / Enclosed / Door to Door Service?' },
+  { text: 'Want to get a free quote without any hidden fees?' },
+  { text: 'Running / No Running vehicle — NO Problem!' },
 ]
 
 export default function TransportationPage() {
@@ -30,91 +20,84 @@ export default function TransportationPage() {
         <div className="container">
           <p className={styles.heroLabel}>CONNECT AUTO SALES</p>
           <h1 className={styles.heroTitle}>VEHICLE <span>TRANSPORTATION</span></h1>
-          <p className={styles.heroSub}>We ship nationwide — buy the car you want no matter where you are in the US.</p>
+          <p className={styles.heroSub}>Nationwide vehicle shipping — open, enclosed, or door-to-door service available.</p>
         </div>
       </section>
 
-      {/* Intro Card */}
-      <section className={styles.introSection}>
+      {/* Main Card */}
+      <section className={styles.mainSection}>
         <div className="container">
-          <div className={styles.introCard}>
-            <div className={styles.introText}>
-              <h2 className={styles.introTitle}>We Ship Nationwide</h2>
-              <div className={styles.introLine} />
-              <p className={styles.introPara}>Can't make it to Dearborn Heights? No problem. Connect Auto Sales offers nationwide vehicle transportation so you can buy the car you want, no matter where you are in the US.</p>
-              <p className={styles.introPara}>Our trusted transport partners handle your vehicle with care, ensuring it arrives safely and on time. All shipments are fully insured from pickup to delivery.</p>
-            </div>
-            <div className={styles.introStats}>
-              <div className={styles.stat}>
-                <span className={styles.statNum}>50</span>
-                <span className={styles.statLabel}>States Covered</span>
-              </div>
-              <div className={styles.stat}>
-                <span className={styles.statNum}>100%</span>
-                <span className={styles.statLabel}>Insured Transport</span>
-              </div>
-              <div className={styles.stat}>
-                <span className={styles.statNum}>Live</span>
-                <span className={styles.statLabel}>Tracking Updates</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+          <div className={styles.mainCard}>
 
-      {/* Features */}
-      <section className={styles.featuresSection}>
-        <div className="container">
-          <div className={styles.sectionHeader}>
-            <h2 className={styles.sectionTitle}>What's Included</h2>
-            <div className={styles.sectionLine} />
-          </div>
-          <div className={styles.featuresGrid}>
-            {features.map((f, i) => (
-              <div key={i} className={styles.featureCard}>
-                <div className={styles.featureIcon}>
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e10001" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <div className={styles.left}>
+              <h2 className={styles.cardTitle}>Vehicle Transportation Service</h2>
+              <div className={styles.cardLine} />
+              <p className={styles.cardIntro}>We provide reliable, affordable vehicle transportation across the United States. Whether you purchased a vehicle at auction or need to ship your personal car, we have a solution for you.</p>
+
+              <ul className={styles.serviceList}>
+                {services.map((s, i) => (
+                  <li key={i} className={styles.serviceItem}>
+                    <div className={styles.serviceCheck}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <span>{s.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className={styles.right}>
+              <div className={styles.ctaCard}>
+                <div className={styles.ctaCardIcon}>
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#e10001" strokeWidth="1.5">
+                    <rect x="1" y="3" width="15" height="13" rx="1"/>
+                    <path d="M16 8h4l3 3v5h-7V8z"/>
+                    <circle cx="5.5" cy="18.5" r="2.5"/>
+                    <circle cx="18.5" cy="18.5" r="2.5"/>
+                  </svg>
                 </div>
-                <h3 className={styles.featureTitle}>{f.title}</h3>
-                <p className={styles.featureDesc}>{f.desc}</p>
+                <h3 className={styles.ctaCardTitle}>Contact Us Today for a<br/><span>Free Quote!</span></h3>
+                <p className={styles.ctaCardSub}>No hidden fees. Fast response. All vehicle types welcome.</p>
+
+                <div className={styles.contactOptions}>
+                  <a href="tel:3134133400" className={styles.contactOption}>
+                    <div className={styles.contactOptionIcon}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e10001" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.58 3.44 2 2 0 0 1 3.56 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.5a16 16 0 0 0 5.55 5.55l.86-.86a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    </div>
+                    <div>
+                      <p className={styles.contactOptionLabel}>Call Us</p>
+                      <p className={styles.contactOptionValue}>+1 (313) 413-3400</p>
+                    </div>
+                  </a>
+                  <a href="mailto:ConnectAutoSales@hotmail.com" className={styles.contactOption}>
+                    <div className={styles.contactOptionIcon}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e10001" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    </div>
+                    <div>
+                      <p className={styles.contactOptionLabel}>Email Us</p>
+                      <p className={styles.contactOptionValue}>ConnectAutoSales@hotmail.com</p>
+                    </div>
+                  </a>
+                </div>
+
+                <Link href="/contact" className={styles.ctaBtn}>GET A FREE QUOTE</Link>
               </div>
-            ))}
+            </div>
+
           </div>
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className={styles.stepsSection}>
+      {/* Auction badges */}
+      <section className={styles.auctionsSection}>
         <div className="container">
-          <div className={styles.sectionHeader}>
-            <h2 className={styles.sectionTitle}>How Transportation Works</h2>
-            <div className={styles.sectionLine} />
-            <p className={styles.sectionSub}>Simple 6-step process from purchase to delivery</p>
-          </div>
-          <div className={styles.stepsGrid}>
-            {steps.map((s, i) => (
-              <div key={i} className={styles.stepCard}>
-                <div className={styles.stepNum}>{s.num}</div>
-                <h3 className={styles.stepTitle}>{s.title}</h3>
-                <p className={styles.stepDesc}>{s.desc}</p>
+          <p className={styles.auctionLabel}>WE TRANSPORT FROM ALL MAJOR AUCTIONS</p>
+          <div className={styles.auctionBadges}>
+            {['IAAI', 'COPART', 'MANHEIM', 'ADESA'].map(name => (
+              <div key={name} className={styles.auctionBadge}>
+                <span>{name}</span>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Bar */}
-      <section className={styles.ctaBar}>
-        <div className="container">
-          <div className={styles.ctaBarInner}>
-            <div>
-              <h2 className={styles.ctaBarTitle}>Ready to Ship Your Vehicle?</h2>
-              <p className={styles.ctaBarSub}>Contact us with your location and the vehicle you want — we'll handle the rest.</p>
-            </div>
-            <div className={styles.ctaBtns}>
-              <Link href="/contact" className={styles.ctaBtnPrimary}>GET A TRANSPORT QUOTE</Link>
-              <Link href="/inventory" className={styles.ctaBtnSecondary}>BROWSE INVENTORY</Link>
-            </div>
           </div>
         </div>
       </section>
