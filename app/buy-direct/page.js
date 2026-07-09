@@ -1,83 +1,122 @@
-﻿import Link from 'next/link'
-import styles from '../inner-page.module.css'
-
-export const metadata = { title: 'Buy Direct - Connect Auto Sales' }
+'use client'
+import Link from 'next/link'
+import styles from './page.module.css'
 
 const steps = [
-  { num: '01', title: 'Browse Online', desc: 'Explore our full inventory from the comfort of your home.' },
-  { num: '02', title: 'Choose Your Car', desc: 'Found the one? Contact us or apply for financing online.' },
-  { num: '03', title: 'Get Approved', desc: 'Fast financing approval â€” often same day.' },
-  { num: '04', title: 'Drive Away', desc: 'Come pick it up or have it delivered to your door.' },
+  { num: '01', title: 'Browse Online', desc: 'Explore our full inventory from the comfort of your home. Filter by make, model, price, and title type.' },
+  { num: '02', title: 'Choose Your Car', desc: "Found the one? Contact us directly or apply for financing online — no pressure, no runaround." },
+  { num: '03', title: 'Get Approved', desc: 'Fast financing approval — often same day. We work with all credit types including first-time buyers.' },
+  { num: '04', title: 'Drive Away', desc: 'Come pick it up from our Dearborn Heights lot or arrange transportation to your door.' },
+]
+
+const benefits = [
+  { title: 'No Hidden Fees', desc: 'The price you see is the price you pay. No dealer markups, no surprise charges at the end.' },
+  { title: 'No Pressure', desc: "Take your time. We're here to help, not push. Buy on your schedule, not ours." },
+  { title: 'Fair Trade-Ins', desc: 'Get top dollar for your current vehicle. We offer competitive trade-in values with no hassle.' },
+  { title: 'Online Process', desc: "Browse, apply, and communicate entirely online. Visit us only when you're ready to pick up." },
+  { title: 'All Credit Types', desc: 'First-time buyer, bad credit, or no credit — we work with lenders to find a solution for you.' },
+  { title: 'Local & Trusted', desc: 'Serving Dearborn Heights and Metro Detroit for years. Hundreds of happy customers.' },
 ]
 
 export default function BuyDirectPage() {
   return (
-    <>
-      <div className={styles.pageHero}>
+    <div className={styles.page}>
+
+      {/* Hero */}
+      <section className={styles.hero}>
+        <div className={styles.heroOverlay} />
         <div className="container">
-          <h1 className={styles.pageHeroTitle}>Buy Direct</h1>
-          <div className={styles.breadcrumb}>
-            <Link href="/">Home</Link><span>â€º</span><span>Buy Direct</span>
-          </div>
+          <p className={styles.heroLabel}>CONNECT AUTO SALES</p>
+          <h1 className={styles.heroTitle}>BUY <span>DIRECT</span></h1>
+          <p className={styles.heroSub}>No middlemen. No markups. Just honest pricing straight from the source.</p>
         </div>
-      </div>
+      </section>
 
-      <section className={styles.contentPage}>
+      {/* Intro Card */}
+      <section className={styles.introSection}>
         <div className="container">
-          <div className={styles.contentGrid}>
-            <div className={styles.contentText}>
-              <h2>The Smarter Way to Buy a Car</h2>
-              <p>
-                Skip the middleman and buy directly from Connect Auto Sales. No dealer markups, no pressure sales tactics â€” just honest pricing and great vehicles.
-              </p>
-              <p>
-                Our Buy Direct program lets you purchase with confidence knowing you&apos;re getting the best possible price straight from the source.
-              </p>
-              <div className={styles.featList}>
-                {[
-                  { title: 'No Hidden Fees', desc: 'The price you see is the price you pay. Period.' },
-                  { title: 'No Pressure', desc: 'Take your time. We\'re here to help, not push.' },
-                  { title: 'Fair Trade-Ins', desc: 'Get top dollar for your current vehicle.' },
-                  { title: 'Online Process', desc: 'Complete the whole process without leaving your couch.' },
-                ].map(f => (
-                  <div key={f.title} className={styles.featItem}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <polyline points="20 6 9 17 4 12"/>
-                    </svg>
-                    <div>
-                      <h4>{f.title}</h4>
-                      <p>{f.desc}</p>
-                    </div>
-                  </div>
-                ))}
+          <div className={styles.introCard}>
+            <div className={styles.introText}>
+              <h2 className={styles.introTitle}>The Smarter Way to Buy a Car</h2>
+              <div className={styles.introLine} />
+              <p className={styles.introPara}>Skip the middleman and buy directly from Connect Auto Sales. No dealer markups, no pressure sales tactics — just honest pricing and great vehicles. Our inventory includes both clean title and rebuilt title vehicles, all inspected and priced below market.</p>
+              <p className={styles.introPara}>Whether you have perfect credit or are rebuilding, we have financing options available. Walk in, browse online, or call us — the process is simple from start to finish.</p>
+            </div>
+            <div className={styles.introStats}>
+              <div className={styles.stat}>
+                <span className={styles.statNum}>12+</span>
+                <span className={styles.statLabel}>Vehicles In Stock</span>
               </div>
-            </div>
-            <div className={styles.ctaBox} style={{ alignSelf: 'start' }}>
-              <h3>Ready to Buy Direct?</h3>
-              <p>Browse our inventory online and contact us to get started. We make the process easy and transparent.</p>
-              <Link href="/inventory" className={styles.ctaBoxBtn}>Browse Inventory</Link>
-              <br /><br />
-              <Link href="/financing" className={styles.ctaBoxBtn} style={{ background: 'transparent', border: '2px solid white', color: 'white' }}>Apply for Financing</Link>
-            </div>
-          </div>
-
-          <div style={{ marginTop: '80px' }}>
-            <div className="section-header">
-              <h2 className="section-title">How It Works</h2>
-              <p className="section-subtitle">4 simple steps to your next car</p>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px' }}>
-              {steps.map(step => (
-                <div key={step.num} style={{ textAlign: 'center', padding: '32px 20px' }}>
-                  <div style={{ fontSize: '48px', fontWeight: '900', color: '#e8e8e8', lineHeight: 1, marginBottom: '16px' }}>{step.num}</div>
-                  <h3 style={{ fontSize: '17px', fontWeight: '700', color: '#24272c', marginBottom: '8px' }}>{step.title}</h3>
-                  <p style={{ fontSize: '14px', color: '#666', lineHeight: '1.6' }}>{step.desc}</p>
-                </div>
-              ))}
+              <div className={styles.stat}>
+                <span className={styles.statNum}>100%</span>
+                <span className={styles.statLabel}>Price Transparency</span>
+              </div>
+              <div className={styles.stat}>
+                <span className={styles.statNum}>Same</span>
+                <span className={styles.statLabel}>Day Approval</span>
+              </div>
             </div>
           </div>
         </div>
       </section>
-    </>
+
+      {/* Benefits */}
+      <section className={styles.benefitsSection}>
+        <div className="container">
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>Why Buy Direct From Us</h2>
+            <div className={styles.sectionLine} />
+          </div>
+          <div className={styles.benefitsGrid}>
+            {benefits.map((b, i) => (
+              <div key={i} className={styles.benefitCard}>
+                <div className={styles.benefitIcon}>
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e10001" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <h3 className={styles.benefitTitle}>{b.title}</h3>
+                <p className={styles.benefitDesc}>{b.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className={styles.stepsSection}>
+        <div className="container">
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>How It Works</h2>
+            <div className={styles.sectionLine} />
+            <p className={styles.sectionSub}>4 simple steps to your next vehicle</p>
+          </div>
+          <div className={styles.stepsGrid}>
+            {steps.map((s, i) => (
+              <div key={i} className={styles.stepCard}>
+                <div className={styles.stepNum}>{s.num}</div>
+                <h3 className={styles.stepTitle}>{s.title}</h3>
+                <p className={styles.stepDesc}>{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Bar */}
+      <section className={styles.ctaBar}>
+        <div className="container">
+          <div className={styles.ctaBarInner}>
+            <div>
+              <h2 className={styles.ctaBarTitle}>Ready to Buy Direct?</h2>
+              <p className={styles.ctaBarSub}>Browse our inventory and get started today — no pressure, no hassle.</p>
+            </div>
+            <div className={styles.ctaBtns}>
+              <Link href="/inventory" className={styles.ctaBtnPrimary}>BROWSE INVENTORY</Link>
+              <Link href="/financing" className={styles.ctaBtnSecondary}>APPLY FOR FINANCING</Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
   )
 }

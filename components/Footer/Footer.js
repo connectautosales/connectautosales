@@ -12,6 +12,8 @@ const quickLinks = [
 const serviceLinks = [
   { label: 'Auction Services',    href: '/auction-services',    red: true },
   { label: 'Salvage Inspections', href: '/salvage-inspections', red: false },
+  { label: 'Buy Direct',          href: '/buy-direct',          red: false },
+  { label: 'Transportation',      href: '/transportation',      red: false },
   { label: 'Contact',             href: '/contact',             red: false },
 ]
 
