@@ -1,4 +1,4 @@
-/* ── Hero ── */
+﻿/* â”€â”€ Hero â”€â”€ */
 .hero {
   position: relative;
   background: #020300;
@@ -44,7 +44,11 @@
   margin: 0;
 }
 
-/* ── Badges ── */
+.hero :global(.container) {
+  width: 100%;
+}
+
+/* â”€â”€ Badges â”€â”€ */
 .badges {
   background: #fff;
   padding: 0;
@@ -91,7 +95,7 @@
   line-height: 1.4;
 }
 
-/* ── Partners ── */
+/* â”€â”€ Partners â”€â”€ */
 .partners {
   background: #fff;
   padding: 56px 0 48px;
@@ -217,7 +221,7 @@
   color: #d1d5db;
 }
 
-/* ── Coverage Overview ── */
+/* â”€â”€ Coverage Overview â”€â”€ */
 .coverage {
   background: #fff;
   padding: 56px 0;
@@ -262,7 +266,7 @@
   margin-top: 50px;
 }
 
-/* ── Bottom ── */
+/* â”€â”€ Bottom â”€â”€ */
 .bottom {
   background: #fff;
   padding: 56px 0 72px;
@@ -380,7 +384,7 @@
   margin: 0;
 }
 
-/* ── Responsive ── */
+/* â”€â”€ Responsive â”€â”€ */
 @media (max-width: 1024px) {
   .coverageGrid { grid-template-columns: repeat(3, 1fr); }
   .partnersGrid { grid-template-columns: 1fr; }
@@ -400,3 +404,4 @@
   .badge:last-child { border-bottom: none; }
   .whyGrid { grid-template-columns: 1fr 1fr; }
 }
+

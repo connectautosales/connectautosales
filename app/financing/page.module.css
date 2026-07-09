@@ -1,4 +1,4 @@
-/* ── Hero ── */
+﻿/* â”€â”€ Hero â”€â”€ */
 .hero {
   position: relative;
   background: #020300;
@@ -46,7 +46,11 @@
   line-height: 1.6;
 }
 
-/* ── Features Bar ── */
+.hero :global(.container) {
+  width: 100%;
+}
+
+/* â”€â”€ Features Bar â”€â”€ */
 .featuresSection {
   background: #fff;
   padding: 0 0 0;
@@ -87,7 +91,7 @@
   white-space: pre-line;
 }
 
-/* ── Form Section ── */
+/* â”€â”€ Form Section â”€â”€ */
 .formSection {
   background: #f3f4f6;
   padding: 40px 0 56px;
@@ -376,7 +380,7 @@
   margin: 0;
 }
 
-/* ── Bottom Section ── */
+/* â”€â”€ Bottom Section â”€â”€ */
 .bottomSection {
   background: #fff;
   padding: 56px 0 72px;
@@ -490,7 +494,7 @@
   margin: 0;
 }
 
-/* ── Responsive ── */
+/* â”€â”€ Responsive â”€â”€ */
 @media (max-width: 1024px) {
   .formCard { grid-template-columns: 200px 1fr; }
   .bottomGrid { grid-template-columns: 1fr; }
@@ -508,3 +512,4 @@
   .featuresBar { grid-template-columns: 1fr 1fr; }
   .docsGrid { grid-template-columns: repeat(3, 1fr); }
 }
+

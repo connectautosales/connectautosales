@@ -1,4 +1,4 @@
-/* ── Hero ── */
+﻿/* â”€â”€ Hero â”€â”€ */
 .hero {
   position: relative;
   background: #020300;
@@ -46,7 +46,11 @@
   line-height: 1.6;
 }
 
-/* ── Section headings ── */
+.hero :global(.container) {
+  width: 100%;
+}
+
+/* â”€â”€ Section headings â”€â”€ */
 .sectionTitle {
   font-size: 22px;
   font-weight: 900;
@@ -72,7 +76,7 @@
   margin: 0 auto 36px;
 }
 
-/* ── Steps ── */
+/* â”€â”€ Steps â”€â”€ */
 .stepsSection {
   background: #fff;
   padding: 56px 0 48px;
@@ -142,7 +146,7 @@
   z-index: 1;
 }
 
-/* ── What Customers Need To Know ── */
+/* â”€â”€ What Customers Need To Know â”€â”€ */
 .knowSection {
   background: #fff;
   padding: 48px 0 56px;
@@ -240,7 +244,7 @@
   line-height: 1.5;
 }
 
-/* ── Main Section: Browse + Form ── */
+/* â”€â”€ Main Section: Browse + Form â”€â”€ */
 .mainSection {
   background: #fff;
   padding: 56px 0;
@@ -398,7 +402,7 @@
   background: #c0152f;
 }
 
-/* ── FAQ ── */
+/* â”€â”€ FAQ â”€â”€ */
 .faqSection {
   background: #fff;
   padding: 56px 0 72px;
@@ -441,7 +445,7 @@
   margin: 0;
 }
 
-/* ── Responsive ── */
+/* â”€â”€ Responsive â”€â”€ */
 @media (max-width: 1024px) {
   .mainGrid { grid-template-columns: 1fr; }
 }
@@ -458,3 +462,4 @@
 @media (max-width: 480px) {
   .knowGrid { grid-template-columns: 1fr 1fr; }
 }
+

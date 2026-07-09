@@ -1,6 +1,6 @@
-.page { background: #f3f4f6; }
+﻿.page { background: #f3f4f6; }
 
-/* ── Hero ── */
+/* â”€â”€ Hero â”€â”€ */
 .hero {
   position: relative;
   background: #020300;
@@ -48,7 +48,11 @@
   line-height: 1.6;
 }
 
-/* ── Main Section ── */
+.hero :global(.container) {
+  width: 100%;
+}
+
+/* â”€â”€ Main Section â”€â”€ */
 .mainSection {
   background: #f3f4f6;
   padding: 0 0 56px;
@@ -231,7 +235,7 @@
 
 .ctaBtn:hover { background: #c0152f; }
 
-/* ── Auction Badges ── */
+/* â”€â”€ Auction Badges â”€â”€ */
 .auctionsSection {
   background: #020300;
   padding: 32px 0;
@@ -265,7 +269,7 @@
   letter-spacing: 1px;
 }
 
-/* ── Responsive ── */
+/* â”€â”€ Responsive â”€â”€ */
 @media (max-width: 1024px) {
   .mainCard { grid-template-columns: 1fr; gap: 36px; }
   .ctaCard { position: static; }
@@ -274,3 +278,4 @@
 @media (max-width: 640px) {
   .mainCard { padding: 28px 20px; }
 }
+

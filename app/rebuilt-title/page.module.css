@@ -1,4 +1,4 @@
-/* ── Hero ── */
+﻿/* â”€â”€ Hero â”€â”€ */
 .hero {
   position: relative;
   background: #020300;
@@ -46,7 +46,11 @@
   line-height: 1.6;
 }
 
-/* ── What Is A Rebuilt Title ── */
+.hero :global(.container) {
+  width: 100%;
+}
+
+/* â”€â”€ What Is A Rebuilt Title â”€â”€ */
 .whatSection {
   background: #fff;
   padding: 0 0 0;
@@ -93,7 +97,7 @@
   margin: 0;
 }
 
-/* ── Section headings ── */
+/* â”€â”€ Section headings â”€â”€ */
 .sectionTitle {
   font-size: 22px;
   font-weight: 900;
@@ -119,7 +123,7 @@
   margin: 0 auto 36px;
 }
 
-/* ── Salvage vs Rebuilt ── */
+/* â”€â”€ Salvage vs Rebuilt â”€â”€ */
 .compareSection {
   background: #fff;
   padding: 56px 0;
@@ -276,7 +280,7 @@
   letter-spacing: 0.5px;
 }
 
-/* ── Steps ── */
+/* â”€â”€ Steps â”€â”€ */
 .stepsSection {
   background: #fff;
   padding: 56px 0;
@@ -346,7 +350,7 @@
   z-index: 1;
 }
 
-/* ── What You Should Know ── */
+/* â”€â”€ What You Should Know â”€â”€ */
 .knowSection {
   background: #fff;
   padding: 56px 0;
@@ -399,7 +403,7 @@
   white-space: pre-line;
 }
 
-/* ── Common Myths ── */
+/* â”€â”€ Common Myths â”€â”€ */
 .mythsSection {
   background: #fff;
   padding: 56px 0;
@@ -462,7 +466,7 @@
   opacity: 0.5;
 }
 
-/* ── Why Buy Rebuilt ── */
+/* â”€â”€ Why Buy Rebuilt â”€â”€ */
 .whySection {
   background: #fff;
   padding: 56px 0;
@@ -537,7 +541,7 @@
   font-weight: 500;
 }
 
-/* ── FAQ ── */
+/* â”€â”€ FAQ â”€â”€ */
 .faqSection {
   background: #fff;
   padding: 56px 0;
@@ -584,7 +588,7 @@
   margin: 0;
 }
 
-/* ── CTA Bar ── */
+/* â”€â”€ CTA Bar â”€â”€ */
 .ctaBar {
   background: #fff;
   padding: 32px 0;
@@ -663,7 +667,7 @@
 
 .ctaTextBtn:hover { color: #e10001; }
 
-/* ── Responsive ── */
+/* â”€â”€ Responsive â”€â”€ */
 @media (max-width: 1024px) {
   .compareGrid { grid-template-columns: 1fr 1fr; }
   .vsCenter { display: none; }
@@ -685,3 +689,4 @@
   .whyGrid { grid-template-columns: 1fr; }
   .knowGrid { grid-template-columns: repeat(2, 1fr); }
 }
+

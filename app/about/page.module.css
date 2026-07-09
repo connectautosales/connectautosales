@@ -1,4 +1,4 @@
-/* ── Hero ── */
+﻿/* â”€â”€ Hero â”€â”€ */
 .hero {
   position: relative;
   background: #020300;
@@ -46,7 +46,11 @@
   line-height: 1.6;
 }
 
-/* ── Story + Why ── */
+.hero :global(.container) {
+  width: 100%;
+}
+
+/* â”€â”€ Story + Why â”€â”€ */
 .storySection {
   background: #fff;
   padding: 64px 0;
@@ -157,7 +161,7 @@
   opacity: 0.85;
 }
 
-/* ── What We Offer ── */
+/* â”€â”€ What We Offer â”€â”€ */
 .offerSection {
   background: #fff;
   padding: 56px 0;
@@ -217,7 +221,7 @@
   line-height: 1.5;
 }
 
-/* ── Visit Us ── */
+/* â”€â”€ Visit Us â”€â”€ */
 .visitSection {
   background: #fff;
   padding: 56px 0 72px;
@@ -322,7 +326,7 @@
   background: #c0152f;
 }
 
-/* ── Responsive ── */
+/* â”€â”€ Responsive â”€â”€ */
 @media (max-width: 1024px) {
   .storyGrid { grid-template-columns: 1fr; gap: 40px; }
   .visitGrid { grid-template-columns: 1fr 1fr; }
@@ -341,3 +345,4 @@
   .offerGrid { grid-template-columns: 1fr; }
   .offerCard { border-right: none; border-bottom: 1px solid #e5e7eb; }
 }
+

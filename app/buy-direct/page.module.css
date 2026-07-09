@@ -1,6 +1,6 @@
-.page { background: #f3f4f6; }
+﻿.page { background: #f3f4f6; }
 
-/* ── Hero ── */
+/* â”€â”€ Hero â”€â”€ */
 .hero {
   position: relative;
   background: #020300;
@@ -48,7 +48,11 @@
   line-height: 1.6;
 }
 
-/* ── Intro ── */
+.hero :global(.container) {
+  width: 100%;
+}
+
+/* â”€â”€ Intro â”€â”€ */
 .introSection { background: #f3f4f6; }
 
 .introCard {
@@ -124,7 +128,7 @@
   letter-spacing: 0.3px;
 }
 
-/* ── Section common ── */
+/* â”€â”€ Section common â”€â”€ */
 .sectionHeader { margin-bottom: 32px; }
 
 .sectionTitle {
@@ -148,7 +152,7 @@
   margin: 0;
 }
 
-/* ── Auction Partners ── */
+/* â”€â”€ Auction Partners â”€â”€ */
 .auctionsSection {
   background: #fff;
   padding: 48px 0;
@@ -223,7 +227,7 @@
 
 .auctionLocLink:hover { color: #020300; }
 
-/* ── Steps ── */
+/* â”€â”€ Steps â”€â”€ */
 .stepsSection {
   background: #f3f4f6;
   padding: 52px 0;
@@ -312,7 +316,7 @@
 
 .stepDetailLoc:hover { color: #020300; }
 
-/* ── Warning ── */
+/* â”€â”€ Warning â”€â”€ */
 .warningSection {
   background: #f3f4f6;
   padding: 0 0 52px;
@@ -331,7 +335,7 @@
   line-height: 1.65;
 }
 
-/* ── CTA Bar ── */
+/* â”€â”€ CTA Bar â”€â”€ */
 .ctaBar {
   background: #020300;
   padding: 56px 0;
@@ -400,7 +404,7 @@
 
 .ctaBtnSecondary:hover { border-color: #fff; background: rgba(255,255,255,0.05); }
 
-/* ── Responsive ── */
+/* â”€â”€ Responsive â”€â”€ */
 @media (max-width: 1024px) {
   .introCard { grid-template-columns: 1fr; }
   .introStats { flex-direction: row; }
@@ -415,3 +419,4 @@
   .ctaBarInner { flex-direction: column; align-items: flex-start; }
   .introCard { padding: 28px 20px; }
 }
+

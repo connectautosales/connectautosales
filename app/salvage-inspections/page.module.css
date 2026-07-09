@@ -1,4 +1,4 @@
-/* ── Hero ── */
+﻿/* â”€â”€ Hero â”€â”€ */
 .hero {
   position: relative;
   background: #020300;
@@ -46,7 +46,11 @@
   line-height: 1.6;
 }
 
-/* ── Info Section ── */
+.hero :global(.container) {
+  width: 100%;
+}
+
+/* â”€â”€ Info Section â”€â”€ */
 .infoSection {
   background: #f3f4f6;
   padding: 0 0 48px;
@@ -280,7 +284,7 @@
   white-space: pre-line;
 }
 
-/* ── Form Section ── */
+/* â”€â”€ Form Section â”€â”€ */
 .formSection {
   background: #f3f4f6;
   padding: 0 0 56px;
@@ -496,7 +500,7 @@
 
 .submitBtn:hover { background: #c0152f; }
 
-/* ── FAQ ── */
+/* â”€â”€ FAQ â”€â”€ */
 .faqSection {
   background: #fff;
   padding: 56px 0 72px;
@@ -566,7 +570,7 @@
   margin: 0;
 }
 
-/* ── Responsive ── */
+/* â”€â”€ Responsive â”€â”€ */
 @media (max-width: 1024px) {
   .infoGrid { grid-template-columns: 1fr; }
   .feesCol { border-right: none; border-bottom: 1px solid #e5e7eb; padding-right: 0; padding-bottom: 32px; margin-bottom: 32px; }
@@ -581,3 +585,4 @@
   .uploadsRow { grid-template-columns: 1fr; }
   .nameRow { grid-template-columns: 1fr; }
 }
+
