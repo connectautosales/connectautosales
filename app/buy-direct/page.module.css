@@ -1,4 +1,4 @@
-﻿.page { background: #f3f4f6; }
+﻿.page { background: #fff; }
 
 /* â”€â”€ Hero â”€â”€ */
 .hero {
@@ -22,7 +22,7 @@
   position: relative;
   font-size: 13px;
   font-weight: 800;
-  color: #e10001;
+  color: #e50202;
   letter-spacing: 3px;
   margin: 0 0 12px;
 }
@@ -37,7 +37,7 @@
   margin: 0 0 16px;
 }
 
-.heroTitle span { color: #e10001; }
+.heroTitle span { color: #e50202; }
 
 .heroSub {
   position: relative;
@@ -53,7 +53,7 @@
 }
 
 /* â”€â”€ Intro â”€â”€ */
-.introSection { background: #f3f4f6; }
+.introSection { background: #fff; }
 
 .introCard {
   background: #fff;
@@ -80,7 +80,7 @@
 .introLine {
   width: 40px;
   height: 3px;
-  background: #e10001;
+  background: #e50202;
   border-radius: 2px;
   margin-bottom: 20px;
 }
@@ -116,7 +116,7 @@
 .statNum {
   font-size: 26px;
   font-weight: 900;
-  color: #e10001;
+  color: #e50202;
   line-height: 1;
   margin-bottom: 4px;
 }
@@ -141,7 +141,7 @@
 .sectionLine {
   width: 40px;
   height: 3px;
-  background: #e10001;
+  background: #e50202;
   border-radius: 2px;
   margin-bottom: 10px;
 }
@@ -208,7 +208,7 @@
 
 .auctionLink {
   font-size: 13px;
-  color: #e10001;
+  color: #e50202;
   font-weight: 600;
   text-decoration: none;
 }
@@ -229,7 +229,7 @@
 
 /* â”€â”€ Steps â”€â”€ */
 .stepsSection {
-  background: #f3f4f6;
+  background: #fff;
   padding: 52px 0;
 }
 
@@ -298,7 +298,7 @@
 .stepDetailSite {
   font-size: 13px;
   font-weight: 700;
-  color: #e10001;
+  color: #e50202;
   text-decoration: none;
 }
 
@@ -318,7 +318,7 @@
 
 /* â”€â”€ Warning â”€â”€ */
 .warningSection {
-  background: #f3f4f6;
+  background: #fff;
   padding: 0 0 52px;
 }
 
@@ -372,7 +372,7 @@
 .ctaBtnPrimary {
   display: inline-flex;
   align-items: center;
-  background: #e10001;
+  background: #e50202;
   color: #fff;
   border-radius: 6px;
   padding: 14px 28px;
@@ -384,7 +384,7 @@
   white-space: nowrap;
 }
 
-.ctaBtnPrimary:hover { background: #c0152f; }
+.ctaBtnPrimary:hover { background: #c50000; }
 
 .ctaBtnSecondary {
   display: inline-flex;

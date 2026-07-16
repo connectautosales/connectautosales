@@ -25,7 +25,7 @@
 .heroLine {
   width: 60px;
   height: 4px;
-  background: #e10001;
+  background: #e50202;
   border-radius: 2px;
   margin: 0 auto;
 }
@@ -111,7 +111,7 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: #e10001;
+  background: #e50202;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -165,7 +165,7 @@
 }
 
 .contactLink {
-  color: #e10001;
+  color: #e50202;
   text-decoration: none;
   font-weight: 600;
 }

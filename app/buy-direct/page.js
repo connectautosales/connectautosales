@@ -96,7 +96,7 @@ export default function BuyDirectPage() {
           <div className={styles.auctionGrid}>
             {/* Copart */}
             <div className={styles.auctionCard}>
-              <div className={styles.auctionLogo} style={{ background: '#e10001' }}>
+              <div className={styles.auctionLogo} style={{ background: '#e50202' }}>
                 <span className={styles.auctionLogoText}>COPART</span>
               </div>
               <div className={styles.auctionInfo}>

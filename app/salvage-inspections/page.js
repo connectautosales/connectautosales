@@ -1,5 +1,5 @@
 'use client';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import styles from './page.module.css';
 
 const faqs = [
@@ -27,24 +27,30 @@ const requiredItems = [
   { label: 'Vehicle', icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#4b5563" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> },
 ];
 
-function FileUpload({ label, icon }) {
+function FileUpload({ label, icon, name, hasError, onFileChange }) {
   const inputRef = useRef(null);
   const [fileName, setFileName] = useState(null);
 
   function handleFile(e) {
     const file = e.target.files?.[0];
-    if (file) setFileName(file.name);
+    if (file) { setFileName(file.name); onFileChange?.(); }
   }
 
   function handleDrop(e) {
     e.preventDefault();
     const file = e.dataTransfer.files?.[0];
-    if (file) setFileName(file.name);
+    if (file) {
+      setFileName(file.name);
+      onFileChange?.();
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      inputRef.current.files = dt.files;
+    }
   }
 
   return (
     <div
-      className={styles.uploadBox}
+      className={`${styles.uploadBox} ${hasError ? styles.uploadBoxError : ''}`}
       onDragOver={e => e.preventDefault()}
       onDrop={handleDrop}
     >
@@ -61,7 +67,7 @@ function FileUpload({ label, icon }) {
       <button type="button" className={styles.chooseFileBtn} onClick={() => inputRef.current?.click()}>
         Choose File
       </button>
-      <input ref={inputRef} type="file" accept=".pdf,.jpg,.jpeg,.png" style={{ display: 'none' }} onChange={handleFile} />
+      <input ref={inputRef} name={name} type="file" accept=".pdf,.jpg,.jpeg,.png" style={{ display: 'none' }} onChange={handleFile} />
     </div>
   );
 }
@@ -69,14 +75,60 @@ function FileUpload({ label, icon }) {
 export default function SalvageInspectionsPage() {
   const [openFaq, setOpenFaq] = useState(null);
   const [form, setForm] = useState({ firstName: '', lastName: '', phone: '', notes: '' });
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
+  const formRef = useRef(null);
+  const [fees, setFees] = useState(null);
+
+  useEffect(() => {
+    fetch('/api/settings').then(r => r.json()).then(d => {
+      setFees({
+        inspFeeA:     parseFloat(d.inspFeeA)     || 100,
+        inspFeeB:     parseFloat(d.inspFeeB)     || 100,
+        inspFeePaper: parseFloat(d.inspFeePaper) || 50,
+        inspFeeNote:  d.inspFeeNote || '',
+      });
+    }).catch(() => {
+      setFees({ inspFeeA: 100, inspFeeB: 100, inspFeePaper: 50, inspFeeNote: '' });
+    });
+  }, []);
+
+  const phoneRe = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
 
   function handleChange(e) {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    if (errors[e.target.name]) setErrors(p => { const n={...p}; delete n[e.target.name]; return n });
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    alert('Your documents have been submitted. We will contact you to schedule your inspection.');
+    const errs = {};
+    if (!form.firstName.trim()) errs.firstName = 'First Name cannot be blank.';
+    if (!form.lastName.trim())  errs.lastName  = 'Last Name cannot be blank.';
+    if (!form.phone.trim())     errs.phone     = 'Phone Number cannot be blank.';
+    else if (!phoneRe.test(form.phone.trim())) errs.phone = 'Enter a valid phone number.';
+    const salvageFile = formRef.current?.querySelector('[name="salvageTitle"]')?.files?.[0];
+    const idFile      = formRef.current?.querySelector('[name="validId"]')?.files?.[0];
+    const receiptsFile = formRef.current?.querySelector('[name="receipts"]')?.files?.[0];
+    if (!salvageFile)  errs.salvageTitle = 'Please upload your Salvage Title.';
+    if (!idFile)       errs.validId      = 'Please upload a Valid ID.';
+    if (!receiptsFile) errs.receipts     = 'Please upload Receipts for Major Parts.';
+    if (Object.keys(errs).length) { setErrors(errs); return; }
+    setSubmitting(true);
+    try {
+      const fd = new FormData(formRef.current);
+      fd.set('partsChanged', form.notes);
+      const res = await fetch('/api/inspection', { method: 'POST', body: fd });
+      if (!res.ok) throw new Error('Failed');
+      setSubmitted(true);
+      setErrors({});
+      setForm({ firstName: '', lastName: '', phone: '', notes: '' });
+    } catch {
+      alert('Something went wrong. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   const leftFaqs = faqs.slice(0, 4);
@@ -90,7 +142,7 @@ export default function SalvageInspectionsPage() {
         <div className="container">
           <p className={styles.heroLabel}>CONNECT AUTO SALES</p>
           <h1 className={styles.heroTitle}>SALVAGE VEHICLE <span>INSPECTIONS</span></h1>
-          <p className={styles.heroSub}>Michigan state-certified salvage inspections — $250 total fee.</p>
+          <p className={styles.heroSub}>Michigan state-certified salvage inspections — {fees ? `$${(fees.inspFeeA + fees.inspFeeB + fees.inspFeePaper).toFixed(0)} total fee` : 'state-certified'}.</p>
         </div>
       </section>
 
@@ -113,7 +165,7 @@ export default function SalvageInspectionsPage() {
                       <span className={styles.feeCode}>TR13A</span>
                       <span className={styles.feeName}>Mechanic Inspection</span>
                     </div>
-                    <span className={styles.feePrice}>$100</span>
+                    <span className={styles.feePrice}>{fees ? `$${fees.inspFeeA % 1 === 0 ? fees.inspFeeA : fees.inspFeeA.toFixed(2)}` : '—'}</span>
                   </div>
                   <div className={styles.feeRow}>
                     <div className={styles.feeIcon}>
@@ -123,7 +175,7 @@ export default function SalvageInspectionsPage() {
                       <span className={styles.feeCode}>TR13B</span>
                       <span className={styles.feeName}>Salvage Vehicle Inspection</span>
                     </div>
-                    <span className={styles.feePrice}>$100</span>
+                    <span className={styles.feePrice}>{fees ? `$${fees.inspFeeB % 1 === 0 ? fees.inspFeeB : fees.inspFeeB.toFixed(2)}` : '—'}</span>
                   </div>
                   <div className={styles.feeRow}>
                     <div className={styles.feeIcon}>
@@ -132,14 +184,14 @@ export default function SalvageInspectionsPage() {
                     <div className={styles.feeInfo}>
                       <span className={styles.feeName}>Paperwork Processing Fee</span>
                     </div>
-                    <span className={styles.feePrice}>$50</span>
+                    <span className={styles.feePrice}>{fees ? `$${fees.inspFeePaper % 1 === 0 ? fees.inspFeePaper : fees.inspFeePaper.toFixed(2)}` : '—'}</span>
                   </div>
                 </div>
                 <div className={styles.totalBox}>
                   <span className={styles.totalLabel}>TOTAL COST</span>
-                  <span className={styles.totalAmount}>$250</span>
+                  <span className={styles.totalAmount}>{fees ? `$${(fees.inspFeeA + fees.inspFeeB + fees.inspFeePaper) % 1 === 0 ? (fees.inspFeeA + fees.inspFeeB + fees.inspFeePaper) : (fees.inspFeeA + fees.inspFeeB + fees.inspFeePaper).toFixed(2)}` : '—'}</span>
                 </div>
-                <p className={styles.feeNote}>* Fees shown apply to standard passenger vehicles.<br />Motorcycle and trailer fees may vary.</p>
+                <p className={styles.feeNote}>* {fees ? (fees.inspFeeNote || 'Fees shown apply to standard passenger vehicles. Motorcycle and trailer fees may vary.') : ''}</p>
               </div>
 
               {/* Right: Process + Required */}
@@ -183,7 +235,14 @@ export default function SalvageInspectionsPage() {
       <section className={styles.formSection}>
         <div className="container">
           <div className={styles.formCard}>
-            <form onSubmit={handleSubmit}>
+            {submitted ? (
+              <div style={{padding:'48px',textAlign:'center'}}>
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                <h3 style={{marginTop:16}}>Documents Submitted!</h3>
+                <p style={{marginTop:8,color:'#6b7280'}}>We will contact you to schedule your inspection appointment.</p>
+              </div>
+            ) : (
+            <form ref={formRef} onSubmit={handleSubmit}>
               <div className={styles.formGrid}>
 
                 {/* Left */}
@@ -201,24 +260,51 @@ export default function SalvageInspectionsPage() {
                   </div>
 
                   <div className={styles.nameRow}>
-                    <input className={styles.input} name="firstName" value={form.firstName} onChange={handleChange} placeholder="First Name" required />
-                    <input className={styles.input} name="lastName" value={form.lastName} onChange={handleChange} placeholder="Last Name" required />
+                    <div>
+                      <input className={`${styles.input} ${errors.firstName ? styles.inputError : ''}`} name="firstName" value={form.firstName} onChange={handleChange} placeholder="First Name *" />
+                      {errors.firstName && <span className={styles.fieldError}>{errors.firstName}</span>}
+                    </div>
+                    <div>
+                      <input className={`${styles.input} ${errors.lastName ? styles.inputError : ''}`} name="lastName" value={form.lastName} onChange={handleChange} placeholder="Last Name *" />
+                      {errors.lastName && <span className={styles.fieldError}>{errors.lastName}</span>}
+                    </div>
                   </div>
-                  <input className={styles.input} name="phone" value={form.phone} onChange={handleChange} placeholder="Phone Number" required />
+                  <div>
+                    <input className={`${styles.input} ${errors.phone ? styles.inputError : ''}`} name="phone" value={form.phone} onChange={handleChange} placeholder="Phone Number *" />
+                    {errors.phone && <span className={styles.fieldError}>{errors.phone}</span>}
+                  </div>
 
                   <div className={styles.uploadsRow}>
-                    <FileUpload
-                      label="UPLOAD SALVAGE TITLE"
-                      icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4b5563" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="12 18 12 12"/><polyline points="9 15 12 12 15 15"/></svg>}
-                    />
-                    <FileUpload
-                      label="UPLOAD VALID ID"
-                      icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4b5563" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><path d="M14 10h4M14 14h3"/></svg>}
-                    />
-                    <FileUpload
-                      label="UPLOAD RECEIPTS FOR MAJOR PARTS"
-                      icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4b5563" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>}
-                    />
+                    <div>
+                      <FileUpload
+                        name="salvageTitle"
+                        label="UPLOAD SALVAGE TITLE *"
+                        icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4b5563" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="12 18 12 12"/><polyline points="9 15 12 12 15 15"/></svg>}
+                        hasError={!!errors.salvageTitle}
+                        onFileChange={() => setErrors(p => { const n={...p}; delete n.salvageTitle; return n })}
+                      />
+                      {errors.salvageTitle && <span className={styles.fieldError}>{errors.salvageTitle}</span>}
+                    </div>
+                    <div>
+                      <FileUpload
+                        name="validId"
+                        label="UPLOAD VALID ID *"
+                        icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4b5563" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><path d="M14 10h4M14 14h3"/></svg>}
+                        hasError={!!errors.validId}
+                        onFileChange={() => setErrors(p => { const n={...p}; delete n.validId; return n })}
+                      />
+                      {errors.validId && <span className={styles.fieldError}>{errors.validId}</span>}
+                    </div>
+                    <div>
+                      <FileUpload
+                        name="receipts"
+                        label="UPLOAD RECEIPTS FOR MAJOR PARTS *"
+                        icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4b5563" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>}
+                        hasError={!!errors.receipts}
+                        onFileChange={() => setErrors(p => { const n={...p}; delete n.receipts; return n })}
+                      />
+                      {errors.receipts && <span className={styles.fieldError}>{errors.receipts}</span>}
+                    </div>
                   </div>
 
                   <p className={styles.uploadNote}>Please upload clear and readable copies of all required documents.</p>
@@ -238,13 +324,14 @@ export default function SalvageInspectionsPage() {
                     placeholder="Describe the major parts changed and repairs completed..."
                     rows={10}
                   />
-                  <button type="submit" className={styles.submitBtn}>
+                  <button type="submit" className={styles.submitBtn} disabled={submitting}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="9 12 11 14 15 10"/></svg>
-                    SUBMIT DOCUMENTS FOR REVIEW
+                    {submitting ? 'SUBMITTING...' : 'SUBMIT DOCUMENTS FOR REVIEW'}
                   </button>
                 </div>
               </div>
             </form>
+            )}
           </div>
         </div>
       </section>

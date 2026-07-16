@@ -1,499 +1,675 @@
-'use client';
-import { useState } from 'react';
-import styles from './page.module.css';
+'use client'
 
-const US_STATES = ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'];
+import { useState } from 'react'
+import Link from 'next/link'
+import styles from './page.module.css'
 
-const sidebarSteps = [
-  { num: 1, label: 'Personal Info', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> },
-  { num: 2, label: 'Residence', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> },
-  { num: 3, label: 'Employment', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg> },
-  { num: 4, label: 'Desired Vehicle', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> },
-  { num: 5, label: 'Payment / References', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> },
-  { num: 6, label: 'Agreement & Signature', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> },
-];
+const US_STATES = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming']
+const YEARS_AT  = ['0','1','2','3','4','5','6','7','8','9','10+']
+const MONTHS_AT = ['0','1','2','3','4','5','6','7','8','9','10','11']
 
-const faqs = [
-  { q: 'Do I need good credit to get approved?', a: 'No. We welcome all credit types including good credit, bad credit, first-time buyers, and no credit. We work with multiple lenders to find the best option for you.' },
-  { q: 'How long does approval take?', a: 'Most financing applications are reviewed quickly. Our team will contact you as soon as possible after receiving your application.' },
-  { q: 'Can I finance a rebuilt title vehicle?', a: 'Yes. Financing may be available on rebuilt title vehicles depending on the lender and vehicle qualifications.' },
-  { q: 'Can I trade in my current vehicle?', a: 'Yes. We accept trade-ins. Mention your trade-in vehicle in the financing application and our team will evaluate it.' },
-  { q: 'Can I use my own bank or credit union?', a: 'Yes. You are welcome to use your own financing institution. We can work with outside lenders to complete your purchase.' },
-  { q: 'Can I apply online?', a: 'Yes. You can start your financing application right here on our website. Your information is encrypted and securely transmitted.' },
-];
+const STEPS = [
+  { id:1, label:'Personal Info',         icon:<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg> },
+  { id:2, label:'Residence',             icon:<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg> },
+  { id:3, label:'Employment',            icon:<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg> },
+  { id:4, label:'Desired Vehicle',       icon:<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 17H3v-5l2.5-6h13L21 12v5h-2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg> },
+  { id:5, label:'Payment / References',  icon:<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg> },
+  { id:6, label:'Agreement & Signature', icon:<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> },
+]
 
-const features = [
-  { label: 'All Credit\nTypes Welcome', icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#e10001" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> },
-  { label: 'Fast Approval\nProcess', icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#e10001" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/><path d="M6 2L2 6M22 6l-4-4" strokeWidth="1.2"/></svg> },
-  { label: 'Financing Options\nAvailable', icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#e10001" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg> },
-  { label: 'Secure Online\nApplication', icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#e10001" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><rect x="9" y="11" width="6" height="5" rx="1"/><path d="M9 11V9a3 3 0 0 1 6 0v2"/></svg> },
-];
+const FAQS = [
+  { q:'Do I need good credit to get approved?', a:'No! We work with all credit types including bad credit, no credit, and first-time buyers. Our network of lenders specializes in helping everyone get approved.' },
+  { q:'How long does approval take?', a:'Most applications receive a response within 24-48 hours. In many cases we can get you pre-approved the same day.' },
+  { q:'Can I finance a rebuilt title vehicle?', a:'Yes, we offer financing options for rebuilt title vehicles. Terms may vary based on the lender and vehicle condition.' },
+  { q:'Can I trade in my current vehicle?', a:'Absolutely! We accept trade-ins. The value of your trade-in can be applied toward your down payment.' },
+  { q:'Can I use my own bank or credit union?', a:'Yes, you are welcome to arrange your own financing through your bank or credit union. We will work with any lender you choose.' },
+  { q:'Can I apply online?', a:'Yes! You can complete our full financing application online right here. Our team will follow up with you shortly after submission.' },
+]
 
-const docs = [
-  { label: "Driver's License", icon: <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#e10001" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><path d="M14 10h4M14 14h3"/></svg> },
-  { label: 'Proof of Income', icon: <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#e10001" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg> },
-  { label: 'Proof of Residence', icon: <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#e10001" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> },
-];
+const EMPTY_FORM = {
+  // Step 1
+  firstName:'', middleName:'', lastName:'',
+  dob:'', phone:'', homePhone:'', email:'',
+  ssn:'', idType:'drivers-license', driversLicense:'', idExpiration:'', stateIssuance:'',
+  // Step 2
+  address:'', city:'', state:'', zip:'',
+  timeAtAddressYr:'0', timeAtAddressMo:'0',
+  housingStatus:'', monthlyRent:'',
+  landlordName:'', landlordPhone:'',
+  prevAddress:'', prevCity:'', prevState:'', prevZip:'',
+  // Step 3
+  employmentStatus:'', incomeSource:'', incomeAmount:'', incomeFrequency:'', hoursPerWeek:'',
+  occupation:'', employer:'', employerCity:'', employerState:'', employerPhone:'', supervisor:'',
+  timeEmployedYr:'0', timeEmployedMo:'0',
+  jobTitle:'', monthlyIncome:'',
+  prevEmployer:'',
+  addlIncome:'no', addlIncomeSource:'', addlIncomeAmount:'', addlIncomeFreq:'',
+  // Step 4
+  vehicleYear:'', vehicleMake:'', vehicleModel:'', vehicleMileage:'', stockNumber:'',
+  tradeIn:'no', tradeInPaidOff:'', tradeInPayoff:'',
+  tradeInYear:'', tradeInMake:'', tradeInModel:'', tradeInMileage:'', tradeInVin:'',
+  // Step 5
+  loanAmount:'', downPayment:'', desiredMonthly:'',
+  additionalComments:'', referralSource:'',
+  hasReference:'no', refName:'', refPhone:'', refRelation:'', refAddress:'',
+  // Step 6
+  agreeTerms:false,
+}
 
-const TOTAL_STEPS = 6;
+function Field({ label, req, children, col3, col2, error }) {
+  return (
+    <div className={`${styles.field} ${col3 ? styles.col3 : ''} ${col2 ? styles.col2 : ''}`}>
+      <label>{label}{req && <span className={styles.req}> *</span>}</label>
+      {children}
+      {error && <span className={styles.fieldError}>{error}</span>}
+    </div>
+  )
+}
+
+function SectionLabel({ title }) {
+  return <div className={styles.sectionLabel}>{title}</div>
+}
+
+function RadioGroup({ name, value, onChange, options }) {
+  return (
+    <div className={styles.radioGroup}>
+      {options.map(opt => (
+        <label key={opt.value} className={`${styles.radioOption} ${value === opt.value ? styles.radioChecked : ''}`}>
+          <input type="radio" name={name} value={opt.value} checked={value === opt.value} onChange={onChange} />
+          {opt.label}
+        </label>
+      ))}
+    </div>
+  )
+}
+
+const phoneRe = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/
+const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const ssnRe   = /^(\d{3}-\d{2}-\d{4}|\d{9})$/
+
+function isAdult(dobStr) {
+  if (!dobStr) return false
+  const dob = new Date(dobStr)
+  const cutoff = new Date()
+  cutoff.setFullYear(cutoff.getFullYear() - 18)
+  return dob <= cutoff
+}
 
 export default function FinancingPage() {
-  const [step, setStep] = useState(1);
-  const [openFaq, setOpenFaq] = useState(null);
-  const [submitted, setSubmitted] = useState(false);
+  const [step, setStep]         = useState(1)
+  const [openFaq, setOpenFaq]   = useState(null)
+  const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [signature, setSignature] = useState('')
+  const [form, setForm]         = useState(EMPTY_FORM)
+  const [errors, setErrors]     = useState({})
 
-  const [form, setForm] = useState({
-    // Step 1
-    firstName: '', middleName: '', lastName: '',
-    dob: '', phone: '', email: '',
-    ssn: '', dlNumber: '', dlState: '',
-    // Step 2
-    address: '', city: '', state: '', zip: '',
-    housingType: '', yearsAtAddress: '',
-    monthlyRent: '',
-    // Step 3
-    employerName: '', jobTitle: '', employmentType: '',
-    monthlyIncome: '', yearsEmployed: '',
-    // Step 4
-    vehicleYear: '', vehicleMake: '', vehicleModel: '',
-    vehicleVin: '', downPayment: '', hasTradeIn: 'no',
-    tradeInYear: '', tradeInMake: '', tradeInModel: '',
-    // Step 5
-    monthlyBudget: '',
-    ref1Name: '', ref1Phone: '', ref1Relation: '',
-    ref2Name: '', ref2Phone: '', ref2Relation: '',
-    // Step 6
-    agreeTerms: false, signature: '',
-  });
-
-  function handleChange(e) {
-    const { name, value, type, checked } = e.target;
-    setForm(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+  const upd = e => {
+    const v = e.target.type === 'checkbox' ? e.target.checked : e.target.value
+    setForm(p => ({ ...p, [e.target.name]: v }))
+    if (errors[e.target.name]) setErrors(prev => { const n = {...prev}; delete n[e.target.name]; return n })
   }
 
-  function handleNext() {
-    if (step < TOTAL_STEPS) setStep(step + 1);
+  const noIncome    = ['unemployed', 'student'].includes(form.employmentStatus)
+  const showEmployer = ['employed', 'self-employed', 'military', 'retired-military'].includes(form.employmentStatus)
+
+  function validateStep(s) {
+    const errs = {}
+    if (s === 1) {
+      if (!form.firstName.trim())      errs.firstName    = 'First Name cannot be blank.'
+      if (!form.lastName.trim())       errs.lastName     = 'Last Name cannot be blank.'
+      if (!form.dob)                   errs.dob          = 'Date of Birth cannot be blank.'
+      else if (!isAdult(form.dob))     errs.dob          = 'You must be at least 18 years old.'
+      if (!form.phone.trim() && !form.homePhone.trim()) errs.phone = 'At least one phone number is required.'
+      else if (form.phone.trim() && !phoneRe.test(form.phone.trim()))     errs.phone     = 'Enter a valid phone number.'
+      else if (form.homePhone.trim() && !phoneRe.test(form.homePhone.trim())) errs.homePhone = 'Enter a valid phone number.'
+      if (!form.email.trim())          errs.email        = 'Email cannot be blank.'
+      else if (!emailRe.test(form.email.trim())) errs.email = 'Enter a valid email address.'
+      if (!form.ssn.trim())            errs.ssn          = 'SSN# cannot be blank.'
+      else if (!ssnRe.test(form.ssn.trim())) errs.ssn    = 'Enter SSN in format XXX-XX-XXXX.'
+      if (!form.driversLicense.trim()) errs.driversLicense = 'ID Number cannot be blank.'
+      if (!form.idExpiration)          errs.idExpiration = 'Expiration Date cannot be blank.'
+      if (!form.stateIssuance)         errs.stateIssuance = 'Issuing State cannot be blank.'
+    }
+    if (s === 2) {
+      if (!form.address.trim())        errs.address      = 'Address cannot be blank.'
+      if (!form.city.trim())           errs.city         = 'City cannot be blank.'
+      if (!form.state)                 errs.state        = 'State cannot be blank.'
+      if (!form.zip.trim())            errs.zip          = 'ZIP Code cannot be blank.'
+      if (!form.housingStatus)         errs.housingStatus = 'Housing Status cannot be blank.'
+    }
+    if (s === 3) {
+      if (!form.employmentStatus)      errs.employmentStatus = 'Employment Status cannot be blank.'
+      if (!noIncome && form.employmentStatus) {
+        if (!form.monthlyIncome.trim()) errs.monthlyIncome = 'Monthly Income cannot be blank.'
+        if (showEmployer) {
+          if (!form.occupation.trim())  errs.occupation  = 'Occupation cannot be blank.'
+          if (!form.employer.trim())    errs.employer    = 'Employer Name cannot be blank.'
+        }
+        if (form.addlIncome === 'yes') {
+          if (!form.addlIncomeSource.trim()) errs.addlIncomeSource = 'Income source cannot be blank.'
+          if (!form.addlIncomeAmount.trim()) errs.addlIncomeAmount = 'Income amount cannot be blank.'
+        }
+      }
+    }
+    if (s === 5) {
+      if (!form.loanAmount.trim())     errs.loanAmount   = 'Desired Loan Amount cannot be blank.'
+      if (!form.downPayment.trim())    errs.downPayment  = 'Down Payment cannot be blank.'
+    }
+    if (s === 6) {
+      if (!signature.trim())           errs.signature    = 'E-Signature cannot be blank.'
+      if (!form.agreeTerms)            errs.agreeTerms   = 'You must agree to the terms.'
+    }
+    return errs
   }
 
-  function handleBack() {
-    if (step > 1) setStep(step - 1);
+  function goNext() {
+    const errs = validateStep(step)
+    if (Object.keys(errs).length) { setErrors(errs); return }
+    setErrors({})
+    setStep(s => s + 1)
   }
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    setSubmitted(true);
+  // Conditional: show previous address if < 2 yrs at current address
+  const showPrevAddress = parseInt(form.timeAtAddressYr || '0') < 2
+
+  // Conditional: show landlord fields if renting
+  const showLandlord = form.housingStatus === 'rent'
+
+  const handleSubmit = async e => {
+    e.preventDefault()
+    const errs = validateStep(6)
+    if (Object.keys(errs).length) { setErrors(errs); return }
+    setSubmitting(true)
+    try {
+      const res = await fetch('/api/financing', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...form, signature }),
+      })
+      if (!res.ok) throw new Error('Failed')
+      setSubmitted(true)
+    } catch {
+      alert('Something went wrong. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  if (submitted) {
+    return (
+      <div className={styles.successWrap}>
+        <div className={styles.successBox}>
+          <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#e50202" strokeWidth="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <h2>Application Submitted!</h2>
+          <p>Our financing team will contact you within 24 hours.</p>
+          <Link href="/inventory" className={styles.backBtn}>Browse Inventory</Link>
+        </div>
+      </div>
+    )
   }
 
   return (
-    <main>
-      {/* ── Hero ── */}
+    <>
+      {/* Hero */}
       <section className={styles.hero}>
         <div className={styles.heroOverlay} />
-        <div className="container">
-          <p className={styles.heroLabel}>CONNECT AUTO SALES</p>
-          <h1 className={styles.heroTitle}>FINANCING <span>MADE EASY</span></h1>
-          <p className={styles.heroSub}>Fast approvals for all credit types — apply online in minutes.</p>
+        <div className={styles.heroContent}>
+          <h1>FINANCING <span className={styles.red}>MADE EASY</span></h1>
+          <p>Simple process. Fast approvals. Drive home today.</p>
         </div>
       </section>
 
-      {/* ── Features bar ── */}
-      <section className={styles.featuresSection}>
-        <div className="container">
-          <div className={styles.featuresBar}>
-            {features.map((f, i) => (
-              <div key={i} className={styles.featureItem}>
-                <div className={styles.featureIcon}>{f.icon}</div>
-                <span className={styles.featureLabel}>{f.label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Form Section ── */}
-      <section className={styles.formSection}>
-        <div className="container">
-
-          {/* Header */}
-          <div className={styles.formHeader}>
-            <div className={styles.formHeaderIcon}>
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#020300" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                <line x1="12" y1="16" x2="12" y2="16" strokeWidth="3"/>
-              </svg>
+      {/* Badges */}
+      <section className={styles.badgesSection}>
+        <div className={styles.badgesCard}>
+          {[
+            { label:'All Credit Types Welcome', icon:<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#e50202" strokeWidth="1.5"><circle cx="9" cy="7" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6"/><circle cx="16" cy="9" r="3"/><path d="M22 20c0-3.3-2.7-6-6-6"/></svg> },
+            { label:'Fast Approval Process',    icon:<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#e50202" strokeWidth="1.5"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg> },
+            { label:'Financing Options Available', icon:<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#e50202" strokeWidth="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 6v1m0 10v1M9 9.2C9 8 10.3 7 12 7s3 1 3 2.2c0 2.5-3 2.8-3 5.3M12 17h.01"/></svg> },
+            { label:'Secure Online Application', icon:<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#e50202" strokeWidth="1.5"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/><circle cx="12" cy="16" r="1.2" fill="#e50202" stroke="none"/></svg> },
+          ].map(b => (
+            <div key={b.label} className={styles.badge}>
+              {b.icon}
+              <span className={styles.badgeLabel}>{b.label}</span>
             </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Form Card */}
+      <section className={styles.formSection}>
+        <div className={styles.formCard}>
+          <div className={styles.cardHeader}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#222" strokeWidth="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
             <div>
-              <h2 className={styles.formHeaderTitle}>Start Your Secure Financing Application</h2>
-              <p className={styles.formHeaderSub}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 6, verticalAlign: 'middle' }}><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <h2 className={styles.cardTitle}>Start Your Secure Financing Application</h2>
+              <p className={styles.cardSub}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="2" style={{display:'inline',verticalAlign:'middle',marginRight:4}}><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
                 Your information is encrypted and securely transmitted.
               </p>
             </div>
           </div>
 
-          {submitted ? (
-            <div className={styles.successBox}>
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
-              <h3>Application Submitted!</h3>
-              <p>Thank you. Our financing team will review your application and contact you shortly.</p>
-            </div>
-          ) : (
-            <div className={styles.formCard}>
-              {/* Sidebar */}
-              <div className={styles.sidebar}>
-                {sidebarSteps.map(s => (
-                  <button
-                    key={s.num}
-                    type="button"
-                    className={`${styles.sidebarItem} ${step === s.num ? styles.sidebarActive : ''} ${step > s.num ? styles.sidebarDone : ''}`}
-                    onClick={() => step > s.num && setStep(s.num)}
-                  >
-                    <div className={styles.sidebarNum}>
-                      {step > s.num
-                        ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                        : s.num}
+          <div className={styles.formLayout}>
+            {/* Sidebar */}
+            <aside className={styles.sidebar}>
+              {STEPS.map(s => (
+                <button key={s.id} type="button"
+                  className={`${styles.stepBtn} ${step === s.id ? styles.stepActive : ''} ${step > s.id ? styles.stepDone : ''}`}
+                  onClick={() => setStep(s.id)}
+                >
+                  <span className={styles.stepCircle}>
+                    {step > s.id
+                      ? <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
+                      : s.id}
+                  </span>
+                  <span className={styles.stepIcon}>{s.icon}</span>
+                  <span className={styles.stepLabel}>{s.label}</span>
+                </button>
+              ))}
+            </aside>
+
+            {/* Form Body */}
+            <div className={styles.formBody}>
+              <form onSubmit={handleSubmit}>
+
+                {/* â”€â”€ STEP 1: Personal Info â”€â”€ */}
+                {step === 1 && (
+                  <>
+                    <h3 className={styles.stepTitle}>Personal Information</h3>
+                    <div className={styles.grid3}>
+                      <Field label="First Name" req error={errors.firstName}><input name="firstName" value={form.firstName} onChange={upd} placeholder="First Name" className={errors.firstName ? styles.inputError : ''} /></Field>
+                      <Field label="Middle Name"><input name="middleName" value={form.middleName} onChange={upd} placeholder="Middle Name" /></Field>
+                      <Field label="Last Name" req error={errors.lastName}><input name="lastName" value={form.lastName} onChange={upd} placeholder="Last Name" className={errors.lastName ? styles.inputError : ''} /></Field>
+                      <Field label="Date of Birth" req error={errors.dob}><input name="dob" type="date" value={form.dob} onChange={upd} className={errors.dob ? styles.inputError : ''} /></Field>
+                      <Field label="Cell Phone" req error={errors.phone}><input name="phone" value={form.phone} onChange={upd} placeholder="(000) 000-0000" className={errors.phone ? styles.inputError : ''} /></Field>
+                      <Field label="Home Phone" error={errors.homePhone}><input name="homePhone" value={form.homePhone} onChange={upd} placeholder="(000) 000-0000" className={errors.homePhone ? styles.inputError : ''} /></Field>
+                      <Field label="Email" req col2 error={errors.email}><input name="email" type="email" value={form.email} onChange={upd} placeholder="you@example.com" className={errors.email ? styles.inputError : ''} /></Field>
+                      <Field label="Social Security Number" req error={errors.ssn}><input name="ssn" value={form.ssn} onChange={upd} placeholder="XXX-XX-XXXX" className={errors.ssn ? styles.inputError : ''} /></Field>
                     </div>
-                    <div className={styles.sidebarIcon}>{s.icon}</div>
-                    <span className={styles.sidebarLabel}>{s.label}</span>
-                  </button>
-                ))}
-              </div>
 
-              {/* Step Content */}
-              <div className={styles.stepContent}>
-                <form onSubmit={handleSubmit}>
-
-                  {/* ── Step 1: Personal Info ── */}
-                  {step === 1 && (
-                    <div>
-                      <h3 className={styles.stepTitle}>Personal Information</h3>
-                      <div className={styles.row3}>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>First Name <span className={styles.req}>*</span></label>
-                          <input className={styles.input} name="firstName" value={form.firstName} onChange={handleChange} placeholder="First Name" required />
-                        </div>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Middle Name</label>
-                          <input className={styles.input} name="middleName" value={form.middleName} onChange={handleChange} placeholder="Middle Name" />
-                        </div>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Last Name <span className={styles.req}>*</span></label>
-                          <input className={styles.input} name="lastName" value={form.lastName} onChange={handleChange} placeholder="Last Name" required />
-                        </div>
-                      </div>
-                      <div className={styles.row3}>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Date of Birth <span className={styles.req}>*</span></label>
-                          <input className={styles.input} type="date" name="dob" value={form.dob} onChange={handleChange} placeholder="MM/DD/YYYY" required />
-                        </div>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Phone <span className={styles.req}>*</span></label>
-                          <input className={styles.input} name="phone" value={form.phone} onChange={handleChange} placeholder="(000) 000-0000" required />
-                        </div>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Email <span className={styles.req}>*</span></label>
-                          <input className={styles.input} type="email" name="email" value={form.email} onChange={handleChange} placeholder="you@example.com" required />
-                        </div>
-                      </div>
-                      <div className={styles.row3}>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Social Security Number <span className={styles.req}>*</span></label>
-                          <input className={styles.input} name="ssn" value={form.ssn} onChange={handleChange} placeholder="XXX-XX-XXXX" required />
-                        </div>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Driver's License Number <span className={styles.req}>*</span></label>
-                          <input className={styles.input} name="dlNumber" value={form.dlNumber} onChange={handleChange} placeholder="Driver's License Number" required />
-                        </div>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>State of Issuance <span className={styles.req}>*</span></label>
-                          <select className={styles.input} name="dlState" value={form.dlState} onChange={handleChange} required>
-                            <option value="">Select State</option>
-                            {US_STATES.map(s => <option key={s} value={s}>{s}</option>)}
-                          </select>
-                        </div>
-                      </div>
+                    <SectionLabel title="ID Information" />
+                    <div className={styles.grid3}>
+                      <Field label="ID Type" req>
+                        <select name="idType" value={form.idType} onChange={upd}>
+                          <option value="drivers-license">Driver&apos;s License</option>
+                          <option value="passport">Passport</option>
+                          <option value="government-id">Government ID</option>
+                          <option value="military-id">Military ID</option>
+                          <option value="other">Other</option>
+                        </select>
+                      </Field>
+                      <Field label="ID Number" req error={errors.driversLicense}><input name="driversLicense" value={form.driversLicense} onChange={upd} placeholder="ID / License Number" className={errors.driversLicense ? styles.inputError : ''} /></Field>
+                      <Field label="Expiration Date" req error={errors.idExpiration}><input name="idExpiration" type="date" value={form.idExpiration} onChange={upd} className={errors.idExpiration ? styles.inputError : ''} /></Field>
+                      <Field label="Issuing State" req error={errors.stateIssuance}>
+                        <select name="stateIssuance" value={form.stateIssuance} onChange={upd} className={errors.stateIssuance ? styles.inputError : ''}>
+                          <option value="">Select State</option>
+                          {US_STATES.map(s => <option key={s}>{s}</option>)}
+                        </select>
+                      </Field>
                     </div>
-                  )}
+                  </>
+                )}
 
-                  {/* ── Step 2: Residence ── */}
-                  {step === 2 && (
-                    <div>
-                      <h3 className={styles.stepTitle}>Residence</h3>
-                      <div className={styles.row1}>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Street Address <span className={styles.req}>*</span></label>
-                          <input className={styles.input} name="address" value={form.address} onChange={handleChange} placeholder="Street Address" required />
-                        </div>
-                      </div>
-                      <div className={styles.row3}>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>City <span className={styles.req}>*</span></label>
-                          <input className={styles.input} name="city" value={form.city} onChange={handleChange} placeholder="City" required />
-                        </div>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>State <span className={styles.req}>*</span></label>
-                          <select className={styles.input} name="state" value={form.state} onChange={handleChange} required>
-                            <option value="">Select State</option>
-                            {US_STATES.map(s => <option key={s} value={s}>{s}</option>)}
-                          </select>
-                        </div>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>ZIP Code <span className={styles.req}>*</span></label>
-                          <input className={styles.input} name="zip" value={form.zip} onChange={handleChange} placeholder="ZIP Code" required />
-                        </div>
-                      </div>
-                      <div className={styles.row3}>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Housing Type <span className={styles.req}>*</span></label>
-                          <select className={styles.input} name="housingType" value={form.housingType} onChange={handleChange} required>
-                            <option value="">Select</option>
-                            <option value="own">Own</option>
-                            <option value="rent">Rent</option>
-                            <option value="living-with-family">Living with Family</option>
-                            <option value="other">Other</option>
-                          </select>
-                        </div>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Years at Address <span className={styles.req}>*</span></label>
-                          <input className={styles.input} name="yearsAtAddress" value={form.yearsAtAddress} onChange={handleChange} placeholder="e.g. 2" required />
-                        </div>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Monthly Payment / Rent</label>
-                          <input className={styles.input} name="monthlyRent" value={form.monthlyRent} onChange={handleChange} placeholder="$0.00" />
-                        </div>
-                      </div>
+                {/* â”€â”€ STEP 2: Residence â”€â”€ */}
+                {step === 2 && (
+                  <>
+                    <h3 className={styles.stepTitle}>Residence Information</h3>
+                    <div className={styles.grid3}>
+                      <Field label="Street Address" req col3 error={errors.address}><input name="address" value={form.address} onChange={upd} placeholder="Street Address" className={errors.address ? styles.inputError : ''} /></Field>
+                      <Field label="City" req error={errors.city}><input name="city" value={form.city} onChange={upd} placeholder="City" className={errors.city ? styles.inputError : ''} /></Field>
+                      <Field label="State" req error={errors.state}>
+                        <select name="state" value={form.state} onChange={upd} className={errors.state ? styles.inputError : ''}>
+                          <option value="">Select State</option>
+                          {US_STATES.map(s => <option key={s}>{s}</option>)}
+                        </select>
+                      </Field>
+                      <Field label="ZIP Code" req error={errors.zip}><input name="zip" value={form.zip} onChange={upd} placeholder="ZIP Code" className={errors.zip ? styles.inputError : ''} /></Field>
                     </div>
-                  )}
 
-                  {/* ── Step 3: Employment ── */}
-                  {step === 3 && (
-                    <div>
-                      <h3 className={styles.stepTitle}>Employment</h3>
-                      <div className={styles.row2}>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Employer Name <span className={styles.req}>*</span></label>
-                          <input className={styles.input} name="employerName" value={form.employerName} onChange={handleChange} placeholder="Employer Name" required />
-                        </div>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Job Title <span className={styles.req}>*</span></label>
-                          <input className={styles.input} name="jobTitle" value={form.jobTitle} onChange={handleChange} placeholder="Job Title" required />
-                        </div>
-                      </div>
-                      <div className={styles.row3}>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Employment Type <span className={styles.req}>*</span></label>
-                          <select className={styles.input} name="employmentType" value={form.employmentType} onChange={handleChange} required>
-                            <option value="">Select</option>
-                            <option value="full-time">Full-Time</option>
-                            <option value="part-time">Part-Time</option>
-                            <option value="self-employed">Self-Employed</option>
-                            <option value="retired">Retired</option>
-                            <option value="other">Other</option>
-                          </select>
-                        </div>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Monthly Income <span className={styles.req}>*</span></label>
-                          <input className={styles.input} name="monthlyIncome" value={form.monthlyIncome} onChange={handleChange} placeholder="$0.00" required />
-                        </div>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Years Employed <span className={styles.req}>*</span></label>
-                          <input className={styles.input} name="yearsEmployed" value={form.yearsEmployed} onChange={handleChange} placeholder="e.g. 3" required />
-                        </div>
-                      </div>
+                    <SectionLabel title="Time at Current Address" />
+                    <div className={styles.grid3}>
+                      <Field label="Years">
+                        <select name="timeAtAddressYr" value={form.timeAtAddressYr} onChange={upd}>
+                          {YEARS_AT.map(y => <option key={y} value={y}>{y} year{y !== '1' ? 's' : ''}</option>)}
+                        </select>
+                      </Field>
+                      <Field label="Months">
+                        <select name="timeAtAddressMo" value={form.timeAtAddressMo} onChange={upd}>
+                          {MONTHS_AT.map(m => <option key={m} value={m}>{m} month{m !== '1' ? 's' : ''}</option>)}
+                        </select>
+                      </Field>
+                      <Field label="Housing Status" req error={errors.housingStatus}>
+                        <select name="housingStatus" value={form.housingStatus} onChange={upd} className={errors.housingStatus ? styles.inputError : ''}>
+                          <option value="">Select</option>
+                          <option value="own">Own</option>
+                          <option value="rent">Rent</option>
+                          <option value="mortgage">Mortgage</option>
+                          <option value="military">Military Housing</option>
+                          <option value="family">Living with Family</option>
+                          <option value="other">Other</option>
+                        </select>
+                      </Field>
+                      <Field label="Monthly Rent / Mortgage (enter 0 if none)">
+                        <input name="monthlyRent" value={form.monthlyRent} onChange={upd} placeholder="$0" />
+                      </Field>
                     </div>
-                  )}
 
-                  {/* ── Step 4: Desired Vehicle ── */}
-                  {step === 4 && (
-                    <div>
-                      <h3 className={styles.stepTitle}>Desired Vehicle</h3>
-                      <div className={styles.row3}>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Year</label>
-                          <input className={styles.input} name="vehicleYear" value={form.vehicleYear} onChange={handleChange} placeholder="e.g. 2022" />
+                    {/* Conditional: Landlord info if renting */}
+                    {showLandlord && (
+                      <>
+                        <SectionLabel title="Landlord Information" />
+                        <div className={styles.grid3}>
+                          <Field label="Landlord Name"><input name="landlordName" value={form.landlordName} onChange={upd} placeholder="Landlord Full Name" /></Field>
+                          <Field label="Landlord Phone"><input name="landlordPhone" value={form.landlordPhone} onChange={upd} placeholder="(000) 000-0000" /></Field>
                         </div>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Make</label>
-                          <input className={styles.input} name="vehicleMake" value={form.vehicleMake} onChange={handleChange} placeholder="e.g. Toyota" />
+                      </>
+                    )}
+
+                    {/* Conditional: Previous address if < 2 years */}
+                    {showPrevAddress && (
+                      <>
+                        <SectionLabel title="Previous Address (less than 2 years at current address)" />
+                        <div className={styles.grid3}>
+                          <Field label="Street Address" col3><input name="prevAddress" value={form.prevAddress} onChange={upd} placeholder="Previous Street Address" /></Field>
+                          <Field label="City"><input name="prevCity" value={form.prevCity} onChange={upd} placeholder="City" /></Field>
+                          <Field label="State">
+                            <select name="prevState" value={form.prevState} onChange={upd}>
+                              <option value="">Select State</option>
+                              {US_STATES.map(s => <option key={s}>{s}</option>)}
+                            </select>
+                          </Field>
+                          <Field label="ZIP"><input name="prevZip" value={form.prevZip} onChange={upd} placeholder="ZIP" /></Field>
                         </div>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Model</label>
-                          <input className={styles.input} name="vehicleModel" value={form.vehicleModel} onChange={handleChange} placeholder="e.g. Camry" />
-                        </div>
+                      </>
+                    )}
+                  </>
+                )}
+
+                {/* â”€â”€ STEP 3: Employment â”€â”€ */}
+                {step === 3 && (
+                  <>
+                    <h3 className={styles.stepTitle}>Employment Information</h3>
+                    <div className={styles.grid3}>
+                      <Field label="Employment Status" req col2 error={errors.employmentStatus}>
+                        <select name="employmentStatus" value={form.employmentStatus} onChange={upd} className={errors.employmentStatus ? styles.inputError : ''}>
+                          <option value="">Select Status</option>
+                          <option value="employed">Employed</option>
+                          <option value="self-employed">Self Employed</option>
+                          <option value="retired">Retired</option>
+                          <option value="retired-military">Retired Military</option>
+                          <option value="military">Active Military</option>
+                          <option value="student">Student</option>
+                          <option value="unemployed">Unemployed</option>
+                          <option value="other">Other</option>
+                        </select>
+                      </Field>
+                    </div>
+
+                    {noIncome && (
+                      <div className={styles.warningBox}>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b45309" strokeWidth="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        Unfortunately, we are unable to provide financing without a verifiable source of income.
                       </div>
-                      <div className={styles.row2}>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>VIN (Optional)</label>
-                          <input className={styles.input} name="vehicleVin" value={form.vehicleVin} onChange={handleChange} placeholder="Vehicle Identification Number" />
+                    )}
+
+                    {!noIncome && form.employmentStatus && (
+                      <>
+                        <SectionLabel title="Income Details" />
+                        <div className={styles.grid3}>
+                          <Field label="Income Source" req>
+                            <select name="incomeSource" value={form.incomeSource} onChange={upd}>
+                              <option value="">Select</option>
+                              <option value="fixed-income">Fixed Income</option>
+                              <option value="ssi">SSI</option>
+                              <option value="cash">Cash Income</option>
+                              <option value="other">Other</option>
+                            </select>
+                          </Field>
+                          <Field label="Monthly Income Amount" req error={errors.monthlyIncome}><input name="monthlyIncome" value={form.monthlyIncome} onChange={upd} placeholder="$0" className={errors.monthlyIncome ? styles.inputError : ''} /></Field>
+                          <Field label="Income Frequency" req>
+                            <select name="incomeFrequency" value={form.incomeFrequency} onChange={upd}>
+                              <option value="">Select</option>
+                              <option value="weekly">Weekly</option>
+                              <option value="bi-weekly">Bi-Weekly</option>
+                              <option value="monthly">Monthly</option>
+                              <option value="yearly">Yearly</option>
+                              <option value="hourly">Per Hour</option>
+                            </select>
+                          </Field>
+                          {form.incomeFrequency === 'hourly' && (
+                            <Field label="Hours Per Week"><input name="hoursPerWeek" value={form.hoursPerWeek} onChange={upd} placeholder="e.g. 40" /></Field>
+                          )}
                         </div>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Down Payment</label>
-                          <input className={styles.input} name="downPayment" value={form.downPayment} onChange={handleChange} placeholder="$0.00" />
+
+                        {showEmployer && (
+                          <>
+                            <SectionLabel title="Employer Information" />
+                            <div className={styles.grid3}>
+                              <Field label="Occupation" req error={errors.occupation}><input name="occupation" value={form.occupation} onChange={upd} placeholder="Job Title / Occupation" className={errors.occupation ? styles.inputError : ''} /></Field>
+                              <Field label="Employer Name" req error={errors.employer}><input name="employer" value={form.employer} onChange={upd} placeholder="Employer Name" className={errors.employer ? styles.inputError : ''} /></Field>
+                              <Field label="Employer City"><input name="employerCity" value={form.employerCity} onChange={upd} placeholder="City" /></Field>
+                              <Field label="Employer State">
+                                <select name="employerState" value={form.employerState} onChange={upd}>
+                                  <option value="">Select State</option>
+                                  {US_STATES.map(s => <option key={s}>{s}</option>)}
+                                </select>
+                              </Field>
+                              <Field label="Employer Phone"><input name="employerPhone" value={form.employerPhone} onChange={upd} placeholder="(000) 000-0000" /></Field>
+                              <Field label="Supervisor Name"><input name="supervisor" value={form.supervisor} onChange={upd} placeholder="Supervisor Name" /></Field>
+                            </div>
+
+                            <SectionLabel title="Time at Current Job" />
+                            <div className={styles.grid3}>
+                              <Field label="Years">
+                                <select name="timeEmployedYr" value={form.timeEmployedYr} onChange={upd}>
+                                  {YEARS_AT.map(y => <option key={y} value={y}>{y} year{y !== '1' ? 's' : ''}</option>)}
+                                </select>
+                              </Field>
+                              <Field label="Months">
+                                <select name="timeEmployedMo" value={form.timeEmployedMo} onChange={upd}>
+                                  {MONTHS_AT.map(m => <option key={m} value={m}>{m} month{m !== '1' ? 's' : ''}</option>)}
+                                </select>
+                              </Field>
+                              <Field label="Previous Employer (if any)"><input name="prevEmployer" value={form.prevEmployer} onChange={upd} placeholder="Previous Employer" /></Field>
+                            </div>
+                          </>
+                        )}
+
+                        <SectionLabel title="Additional Income" />
+                        <div className={styles.grid3}>
+                          <Field label="Do you have additional income?" col3>
+                            <RadioGroup name="addlIncome" value={form.addlIncome} onChange={upd}
+                              options={[{ value:'yes', label:'Yes' }, { value:'no', label:'No' }]} />
+                          </Field>
+                          {form.addlIncome === 'yes' && (
+                            <>
+                              <Field label="Income Source" error={errors.addlIncomeSource}><input name="addlIncomeSource" value={form.addlIncomeSource} onChange={upd} placeholder="Source of additional income" className={errors.addlIncomeSource ? styles.inputError : ''} /></Field>
+                              <Field label="Amount ($)" error={errors.addlIncomeAmount}><input name="addlIncomeAmount" value={form.addlIncomeAmount} onChange={upd} placeholder="$0" className={errors.addlIncomeAmount ? styles.inputError : ''} /></Field>
+                              <Field label="Frequency">
+                                <select name="addlIncomeFreq" value={form.addlIncomeFreq} onChange={upd}>
+                                  <option value="">Select</option>
+                                  <option value="weekly">Weekly</option>
+                                  <option value="bi-weekly">Bi-Weekly</option>
+                                  <option value="monthly">Monthly</option>
+                                  <option value="yearly">Yearly</option>
+                                </select>
+                              </Field>
+                            </>
+                          )}
                         </div>
-                      </div>
-                      <div className={styles.row1}>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Do you have a trade-in?</label>
-                          <select className={styles.input} name="hasTradeIn" value={form.hasTradeIn} onChange={handleChange}>
-                            <option value="no">No</option>
-                            <option value="yes">Yes</option>
-                          </select>
-                        </div>
-                      </div>
-                      {form.hasTradeIn === 'yes' && (
-                        <div className={styles.row3}>
-                          <div className={styles.fg}>
-                            <label className={styles.label}>Trade-In Year</label>
-                            <input className={styles.input} name="tradeInYear" value={form.tradeInYear} onChange={handleChange} placeholder="Year" />
-                          </div>
-                          <div className={styles.fg}>
-                            <label className={styles.label}>Trade-In Make</label>
-                            <input className={styles.input} name="tradeInMake" value={form.tradeInMake} onChange={handleChange} placeholder="Make" />
-                          </div>
-                          <div className={styles.fg}>
-                            <label className={styles.label}>Trade-In Model</label>
-                            <input className={styles.input} name="tradeInModel" value={form.tradeInModel} onChange={handleChange} placeholder="Model" />
-                          </div>
-                        </div>
+                      </>
+                    )}
+                  </>
+                )}
+
+                {/* â”€â”€ STEP 4: Desired Vehicle â”€â”€ */}
+                {step === 4 && (
+                  <>
+                    <h3 className={styles.stepTitle}>Desired Vehicle</h3>
+                    <div className={styles.grid3}>
+                      <Field label="Year"><input name="vehicleYear" value={form.vehicleYear} onChange={upd} placeholder="e.g. 2022" /></Field>
+                      <Field label="Make"><input name="vehicleMake" value={form.vehicleMake} onChange={upd} placeholder="e.g. Toyota" /></Field>
+                      <Field label="Model"><input name="vehicleModel" value={form.vehicleModel} onChange={upd} placeholder="e.g. Camry" /></Field>
+                      <Field label="Mileage"><input name="vehicleMileage" value={form.vehicleMileage} onChange={upd} placeholder="e.g. 45,000" /></Field>
+                      <Field label="Stock Number"><input name="stockNumber" value={form.stockNumber} onChange={upd} placeholder="Stock #" /></Field>
+                    </div>
+
+                    <SectionLabel title="Trade-In Vehicle" />
+                    <div className={styles.grid3}>
+                      <Field label="Do you have a trade-in?" col3>
+                        <RadioGroup name="tradeIn" value={form.tradeIn} onChange={upd}
+                          options={[{ value:'no', label:'No' }, { value:'yes', label:'Yes' }]} />
+                      </Field>
+
+                      {form.tradeIn === 'yes' && (
+                        <>
+                          <Field label="Is the vehicle paid off?" col3>
+                            <RadioGroup name="tradeInPaidOff" value={form.tradeInPaidOff} onChange={upd}
+                              options={[{ value:'yes', label:'Yes - Paid Off' }, { value:'no', label:'No - Still Has a Loan' }]} />
+                          </Field>
+
+                          {form.tradeInPaidOff === 'no' && (
+                            <Field label="Payoff Amount on Current Loan">
+                              <input name="tradeInPayoff" value={form.tradeInPayoff} onChange={upd} placeholder="$0" />
+                            </Field>
+                          )}
+
+                          <SectionLabel title="Trade-In Vehicle Details" />
+                          <Field label="Year"><input name="tradeInYear" value={form.tradeInYear} onChange={upd} placeholder="e.g. 2019" /></Field>
+                          <Field label="Make"><input name="tradeInMake" value={form.tradeInMake} onChange={upd} placeholder="e.g. Honda" /></Field>
+                          <Field label="Model"><input name="tradeInModel" value={form.tradeInModel} onChange={upd} placeholder="e.g. Civic" /></Field>
+                          <Field label="Mileage"><input name="tradeInMileage" value={form.tradeInMileage} onChange={upd} placeholder="e.g. 80,000" /></Field>
+                          <Field label="VIN"><input name="tradeInVin" value={form.tradeInVin} onChange={upd} placeholder="Vehicle Identification Number" /></Field>
+                        </>
                       )}
                     </div>
-                  )}
+                  </>
+                )}
 
-                  {/* ── Step 5: Payment / References ── */}
-                  {step === 5 && (
-                    <div>
-                      <h3 className={styles.stepTitle}>Payment / References</h3>
-                      <div className={styles.row1}>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Desired Monthly Payment Budget</label>
-                          <input className={styles.input} name="monthlyBudget" value={form.monthlyBudget} onChange={handleChange} placeholder="$0.00 per month" />
-                        </div>
-                      </div>
-                      <p className={styles.refHeading}>Reference 1</p>
-                      <div className={styles.row3}>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Full Name <span className={styles.req}>*</span></label>
-                          <input className={styles.input} name="ref1Name" value={form.ref1Name} onChange={handleChange} placeholder="Full Name" required />
-                        </div>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Phone <span className={styles.req}>*</span></label>
-                          <input className={styles.input} name="ref1Phone" value={form.ref1Phone} onChange={handleChange} placeholder="Phone" required />
-                        </div>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Relationship <span className={styles.req}>*</span></label>
-                          <input className={styles.input} name="ref1Relation" value={form.ref1Relation} onChange={handleChange} placeholder="e.g. Friend" required />
-                        </div>
-                      </div>
-                      <p className={styles.refHeading}>Reference 2</p>
-                      <div className={styles.row3}>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Full Name</label>
-                          <input className={styles.input} name="ref2Name" value={form.ref2Name} onChange={handleChange} placeholder="Full Name" />
-                        </div>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Phone</label>
-                          <input className={styles.input} name="ref2Phone" value={form.ref2Phone} onChange={handleChange} placeholder="Phone" />
-                        </div>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Relationship</label>
-                          <input className={styles.input} name="ref2Relation" value={form.ref2Relation} onChange={handleChange} placeholder="e.g. Family" />
-                        </div>
-                      </div>
+                {/* â”€â”€ STEP 5: Payment & References â”€â”€ */}
+                {step === 5 && (
+                  <>
+                    <h3 className={styles.stepTitle}>Payment &amp; References</h3>
+                    <div className={styles.grid3}>
+                      <Field label="Desired Loan Amount" req error={errors.loanAmount}><input name="loanAmount" value={form.loanAmount} onChange={upd} placeholder="$0" className={errors.loanAmount ? styles.inputError : ''} /></Field>
+                      <Field label="Available Down Payment" req error={errors.downPayment}><input name="downPayment" value={form.downPayment} onChange={upd} placeholder="$0" className={errors.downPayment ? styles.inputError : ''} /></Field>
+                      <Field label="Desired Monthly Payment"><input name="desiredMonthly" value={form.desiredMonthly} onChange={upd} placeholder="$0" /></Field>
+                      <Field label="Additional Comments" col3>
+                        <textarea name="additionalComments" value={form.additionalComments} onChange={upd} placeholder="Any additional information..." rows={3} style={{resize:'vertical'}} />
+                      </Field>
                     </div>
-                  )}
 
-                  {/* ── Step 6: Agreement ── */}
-                  {step === 6 && (
-                    <div>
-                      <h3 className={styles.stepTitle}>Agreement &amp; Signature</h3>
-                      <div className={styles.agreementBox}>
-                        <p>By submitting this financing application, I certify that the information provided is accurate and complete to the best of my knowledge. I authorize Connect Auto Sales to obtain credit reports and share my information with financing lenders for the purpose of obtaining vehicle financing.</p>
-                        <p>I understand that submitting this application does not guarantee financing approval. Approval is subject to lender review and qualifications.</p>
-                      </div>
-                      <div className={styles.row1}>
-                        <div className={styles.fg}>
-                          <label className={styles.label}>Full Name (Signature) <span className={styles.req}>*</span></label>
-                          <input className={styles.input} name="signature" value={form.signature} onChange={handleChange} placeholder="Type your full name as your signature" required style={{ fontStyle: 'italic' }} />
-                        </div>
-                      </div>
-                      <div className={styles.checkRow}>
-                        <input type="checkbox" id="agreeTerms" name="agreeTerms" checked={form.agreeTerms} onChange={handleChange} required className={styles.checkbox} />
-                        <label htmlFor="agreeTerms" className={styles.checkLabel}>I agree to the terms above and authorize Connect Auto Sales to process my financing application.</label>
-                      </div>
+                    <SectionLabel title="How Did You Hear About Us?" />
+                    <div className={styles.grid3}>
+                      <Field label="" col3>
+                        <RadioGroup name="referralSource" value={form.referralSource} onChange={upd}
+                          options={[
+                            { value:'referral', label:'Referral' },
+                            { value:'past-customer', label:'Past Customer' },
+                            { value:'website', label:'Website' },
+                            { value:'social-media', label:'Social Media' },
+                            { value:'other', label:'Other' },
+                          ]} />
+                      </Field>
                     </div>
+
+                    <SectionLabel title="References" />
+                    <div className={styles.grid3}>
+                      <Field label="Do you have a reference?" col3>
+                        <RadioGroup name="hasReference" value={form.hasReference} onChange={upd}
+                          options={[{ value:'no', label:'No' }, { value:'yes', label:'Yes' }]} />
+                      </Field>
+
+                      {form.hasReference === 'yes' && (
+                        <>
+                          <Field label="Reference Name"><input name="refName" value={form.refName} onChange={upd} placeholder="Full Name" /></Field>
+                          <Field label="Relationship to You"><input name="refRelation" value={form.refRelation} onChange={upd} placeholder="e.g. Friend, Family" /></Field>
+                          <Field label="Reference Phone"><input name="refPhone" value={form.refPhone} onChange={upd} placeholder="(000) 000-0000" /></Field>
+                          <Field label="Reference Address" col3><input name="refAddress" value={form.refAddress} onChange={upd} placeholder="Street Address" /></Field>
+                        </>
+                      )}
+                    </div>
+                  </>
+                )}
+
+                {/* â”€â”€ STEP 6: Agreement & Signature â”€â”€ */}
+                {step === 6 && (
+                  <>
+                    <h3 className={styles.stepTitle}>Agreement &amp; Signature</h3>
+                    <div className={styles.agreementBox}>
+                      <p>I represent, warrant and affirm that the above information is true and correct and have been made in order to induce you, the dealer, to grant me credit to acquire a vehicle by relying on the above knowledge. By submitting this form I authorize you, the dealer, to verify the correctness of the information by verifying my employment and residence and also to acquire other reports, including but not limited to credit bureau reports, to analyze my creditworthiness. I authorize you to retain this application and any credit agreement as your property. I certify that I am 18 years of age or older and that I have read, understand, and agree to all terms stated herein.</p>
+                    </div>
+                    <div className={styles.signWrap}>
+                      <label className={styles.signLabel}>E-Signature <span className={styles.req}>*</span></label>
+                      <input
+                        className={`${styles.signInput} ${errors.signature ? styles.inputError : ''}`}
+                        placeholder="Type your full name as your electronic signature"
+                        value={signature}
+                        onChange={e => { setSignature(e.target.value); if (errors.signature) setErrors(p => { const n={...p}; delete n.signature; return n }) }}
+                      />
+                      {errors.signature && <span className={styles.fieldError}>{errors.signature}</span>}
+                      <label className={styles.checkRow} style={errors.agreeTerms ? {color:'#c00'} : {}}>
+                        <input type="checkbox" name="agreeTerms" checked={form.agreeTerms} onChange={upd} />
+                        I have read and agree to the terms and conditions above.
+                      </label>
+                      {errors.agreeTerms && <span className={styles.fieldError}>{errors.agreeTerms}</span>}
+                    </div>
+                  </>
+                )}
+
+                <div className={styles.navRow}>
+                  {step > 1 && (
+                    <button type="button" onClick={() => { setErrors({}); setStep(s => s - 1) }} className={styles.prevBtn}>&larr; PREV STEP</button>
                   )}
-
-                  {/* Navigation */}
-                  <div className={styles.navRow}>
-                    {step > 1 && (
-                      <button type="button" className={styles.backBtn} onClick={handleBack}>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-                        BACK
-                      </button>
-                    )}
-                    <div style={{ flex: 1 }} />
-                    {step < TOTAL_STEPS ? (
-                      <button type="button" className={styles.nextBtn} onClick={handleNext}>
-                        NEXT STEP
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-                      </button>
-                    ) : (
-                      <button type="submit" className={styles.nextBtn}>
-                        SUBMIT APPLICATION
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-                      </button>
-                    )}
-                  </div>
-                </form>
-              </div>
+                  {step < 6
+                    ? <button type="button" onClick={goNext} className={styles.nextBtn}>NEXT STEP <span style={{fontSize:'1.1em',lineHeight:1}}>&#8250;</span></button>
+                    : <button type="submit" className={styles.nextBtn} disabled={submitting}>{submitting ? 'SUBMITTING...' : 'SUBMIT APPLICATION'}</button>
+                  }
+                </div>
+              </form>
             </div>
-          )}
-
-        </div>
-      </section>
-
-      {/* ── Bottom: Docs + FAQ ── */}
-      <section className={styles.bottomSection}>
-        <div className="container">
-          <div className={styles.bottomGrid}>
-
-            {/* Required Docs */}
-            <div className={styles.docsCol}>
-              <h3 className={styles.docsTitle}>Required Documents</h3>
-              <div className={styles.docsTitleLine} />
-              <div className={styles.docsGrid}>
-                {docs.map((d, i) => (
-                  <div key={i} className={styles.docCard}>
-                    <div className={styles.docIcon}>{d.icon}</div>
-                    <p className={styles.docLabel}>{d.label}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* FAQ */}
-            <div className={styles.faqCol}>
-              <h3 className={styles.faqTitle}>Frequently Asked Questions</h3>
-              <div className={styles.faqTitleLine} />
-              <div className={styles.faqList}>
-                {faqs.map((faq, i) => (
-                  <div key={i} className={styles.faqItem}>
-                    <button className={styles.faqQ} onClick={() => setOpenFaq(openFaq === i ? null : i)}>
-                      <span>{faq.q}</span>
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                        style={{ transform: openFaq === i ? 'rotate(45deg)' : 'rotate(0deg)', transition: 'transform 0.2s', flexShrink: 0 }}>
-                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                      </svg>
-                    </button>
-                    {openFaq === i && <p className={styles.faqA}>{faq.a}</p>}
-                  </div>
-                ))}
-              </div>
-            </div>
-
           </div>
         </div>
       </section>
-    </main>
-  );
+
+      {/* Docs + FAQ */}
+      <section className={styles.docFaqSection}>
+        <div className={styles.docFaqInner}>
+          <div>
+            <h3 className={styles.blockTitle}>Required Documents</h3>
+            <div className={styles.docsRow}>
+              {[
+                { label:"Driver's License", icon:<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#e50202" strokeWidth="1.4"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="7.5" cy="11" r="2"/><path d="M14 9h4M14 13h3M4 17h2"/></svg> },
+                { label:'Proof of Income',  icon:<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#e50202" strokeWidth="1.4"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/></svg> },
+                { label:'Proof of Residence', icon:<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#e50202" strokeWidth="1.4"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg> },
+              ].map(d => (
+                <div key={d.label} className={styles.docCard}>
+                  <div className={styles.docIconBox}>{d.icon}</div>
+                  <span className={styles.docLabel}>{d.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div>
+            <h3 className={styles.blockTitle}>Frequently Asked Questions</h3>
+            <div className={styles.faqList}>
+              {FAQS.map((f, i) => (
+                <div key={i} className={styles.faqItem}>
+                  <button type="button" className={styles.faqQ} onClick={() => setOpenFaq(openFaq === i ? null : i)}>
+                    <span>{f.q}</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e50202" strokeWidth="2.5">
+                      {openFaq === i ? <line x1="5" y1="12" x2="19" y2="12"/> : <><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></>}
+                    </svg>
+                  </button>
+                  {openFaq === i && <p className={styles.faqA}>{f.a}</p>}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
+  )
 }

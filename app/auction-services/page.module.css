@@ -20,7 +20,7 @@
   position: relative;
   font-size: 13px;
   font-weight: 800;
-  color: #e10001;
+  color: #e50202;
   letter-spacing: 3px;
   margin: 0 0 12px;
 }
@@ -35,7 +35,7 @@
   margin: 0 0 14px;
 }
 
-.heroTitle span { color: #e10001; }
+.heroTitle span { color: #e50202; }
 
 .heroSub {
   position: relative;
@@ -63,7 +63,7 @@
 .titleLine {
   width: 60px;
   height: 4px;
-  background: #e10001;
+  background: #e50202;
   border-radius: 2px;
   margin: 0 auto 40px;
 }
@@ -71,7 +71,7 @@
 .titleLineRed {
   width: 60px;
   height: 4px;
-  background: #e10001;
+  background: #e50202;
   border-radius: 2px;
   margin: 0 auto 36px;
 }
@@ -109,7 +109,7 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #e10001;
+  background: #e50202;
   color: #fff;
   font-size: 16px;
   font-weight: 900;
@@ -122,7 +122,7 @@
   width: 72px;
   height: 72px;
   border-radius: 50%;
-  background: #f3f4f6;
+  background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -277,7 +277,7 @@
 .colLine {
   width: 48px;
   height: 3px;
-  background: #e10001;
+  background: #e50202;
   border-radius: 2px;
   margin: 0 auto 28px;
 }
@@ -351,7 +351,7 @@
 }
 
 .input:focus {
-  border-color: #e10001;
+  border-color: #e50202;
 }
 
 .input::placeholder {
@@ -372,7 +372,7 @@
 }
 
 .textarea:focus {
-  border-color: #e10001;
+  border-color: #e50202;
 }
 
 .textarea::placeholder {
@@ -384,7 +384,7 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  background: #e10001;
+  background: #e50202;
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -399,7 +399,7 @@
 }
 
 .submitBtn:hover {
-  background: #c0152f;
+  background: #c50000;
 }
 
 /* â”€â”€ FAQ â”€â”€ */
@@ -463,3 +463,15 @@
   .knowGrid { grid-template-columns: 1fr 1fr; }
 }
 
+
+.fieldError {
+  display: block;
+  color: #c00;
+  font-size: 12px;
+  margin-top: 3px;
+  font-weight: 500;
+}
+.inputError {
+  border-color: #c00 !important;
+  background: #fff5f5 !important;
+}

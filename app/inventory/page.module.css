@@ -9,7 +9,7 @@
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 2px;
-  color: #e10001;
+  color: #e50202;
   text-transform: uppercase;
   margin-bottom: 12px;
 }
@@ -71,7 +71,7 @@
 }
 
 .searchInput:focus {
-  border-color: #e10001;
+  border-color: #e50202;
 }
 
 .searchInput::placeholder {
@@ -91,7 +91,7 @@
 }
 
 .searchClear:hover {
-  color: #e10001;
+  color: #e50202;
 }
 
 .filterGroup {
@@ -115,12 +115,12 @@
 }
 
 .filterSelect:focus {
-  border-color: #e10001;
+  border-color: #e50202;
 }
 
 /* ── Stats Bar ──────────────────────────────────── */
 .statsBar {
-  background: #f9fafb;
+  background: #fff;
   border-bottom: 1px solid #e5e7eb;
   padding: 14px 0;
 }
@@ -142,7 +142,7 @@
 }
 
 .statItem svg {
-  color: #e10001;
+  color: #e50202;
   flex-shrink: 0;
 }
 
@@ -162,13 +162,13 @@
 /* ── Inventory Grid ─────────────────────────────── */
 .inventorySection {
   padding: 48px 0 64px;
-  background: #f9fafb;
+  background: #fff;
 }
 
 .carsGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 22px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 18px;
 }
 
 /* ── No Results ─────────────────────────────────── */
@@ -188,7 +188,7 @@
 }
 
 .clearBtn {
-  background: #e10001;
+  background: #e50202;
   color: #fff;
   border: none;
   padding: 10px 24px;
@@ -201,7 +201,7 @@
 }
 
 .clearBtn:hover {
-  background: #c0152f;
+  background: #c50000;
 }
 
 /* ── Rebuilt Banner ─────────────────────────────── */
@@ -229,7 +229,7 @@
 }
 
 .rebuiltIcon {
-  color: #e10001;
+  color: #e50202;
   flex-shrink: 0;
   margin-top: 2px;
 }
@@ -250,7 +250,7 @@
 
 .rebuiltBtn {
   display: inline-block;
-  background: #e10001;
+  background: #e50202;
   color: #fff;
   font-size: 12.5px;
   font-weight: 800;
@@ -264,11 +264,19 @@
 }
 
 .rebuiltBtn:hover {
-  background: #c0152f;
+  background: #c50000;
 }
 
 /* ── Responsive ─────────────────────────────────── */
+@media (max-width: 1280px) {
+  .carsGrid { grid-template-columns: repeat(4, 1fr); }
+}
+
 @media (max-width: 1024px) {
+  .carsGrid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 768px) {
   .carsGrid { grid-template-columns: repeat(2, 1fr); }
 }
 

@@ -25,7 +25,7 @@
 .heroLine {
   width: 60px;
   height: 4px;
-  background: #e10001;
+  background: #e50202;
   border-radius: 2px;
   margin: 0 auto;
 }
@@ -118,7 +118,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #e10001;
+  background: #e50202;
   flex-shrink: 0;
 }
 
@@ -170,7 +170,7 @@
 .contactBrand {
   font-size: 15px;
   font-weight: 700;
-  color: #e10001;
+  color: #e50202;
   margin: 0 0 4px;
 }
 
@@ -203,7 +203,7 @@
 }
 
 .contactLink {
-  color: #e10001;
+  color: #e50202;
   text-decoration: none;
   font-weight: 600;
 }

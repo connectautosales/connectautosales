@@ -1,5 +1,8 @@
+'use client'
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { useSettings } from '@/context/SettingsContext';
 import styles from './page.module.css';
 
 const whyItems = [
@@ -7,7 +10,7 @@ const whyItems = [
     title: 'LICENSED MICHIGAN DEALER',
     desc: 'We are a fully licensed and bonded dealership in the State of Michigan.',
     icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e10001" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e50202" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
         <polyline points="9 12 11 14 15 10"/>
       </svg>
@@ -17,7 +20,7 @@ const whyItems = [
     title: 'TRANSPARENT & HONEST',
     desc: 'No hidden fees, no surprises. Just honest information and fair prices.',
     icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e10001" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e50202" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
       </svg>
     ),
@@ -26,7 +29,7 @@ const whyItems = [
     title: 'QUALITY YOU CAN TRUST',
     desc: 'We stand behind our vehicles and services so you can buy with confidence.',
     icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e10001" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e50202" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="8" r="6"/>
         <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/>
       </svg>
@@ -36,7 +39,7 @@ const whyItems = [
     title: 'FOCUSED ON YOU',
     desc: "Your satisfaction is our top priority. We're here to help before, during, and after the sale.",
     icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e10001" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e50202" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
         <circle cx="9" cy="7" r="4"/>
         <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
@@ -103,6 +106,22 @@ const offerItems = [
 ];
 
 export default function AboutPage() {
+  const s = useSettings()
+  const phone   = s.phone   || '3134133400'
+  const address = `${s.address || '4413 S Beech Daly St'}, ${s.city || 'Dearborn Heights'}, ${s.state || 'MI'} ${s.zip || '48125'}`
+
+  const [googleRating, setGoogleRating] = useState(null)
+  const [googleCount, setGoogleCount]   = useState(null)
+  useEffect(() => {
+    fetch('/api/reviews', { cache: 'no-store' })
+      .then(r => r.json())
+      .then(d => {
+        if (d.rating) setGoogleRating(d.rating)
+        if (d.count)  setGoogleCount(d.count)
+      })
+      .catch(() => {})
+  }, [])
+  const mapLink = s.mapLink || `https://maps.google.com/?q=${encodeURIComponent(address)}`
   return (
     <main>
       {/* ── Hero ── */}
@@ -209,20 +228,28 @@ export default function AboutPage() {
               <div className={styles.headingLine} style={{ margin: '10px 0 24px' }} />
               <ul className={styles.visitList}>
                 <li>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="#e10001"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                  <span>4413 S Beech Daly St,<br />Dearborn Heights, MI 48125</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="#e50202"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                  <span>{s.address || '4413 S Beech Daly St'},<br />{s.city || 'Dearborn Heights'}, {s.state || 'MI'} {s.zip || '48125'}</span>
                 </li>
                 <li>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e10001" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.76a16 16 0 0 0 6 6l.86-.86a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.02z"/></svg>
-                  <span>(313) 413-3400</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e50202" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.76a16 16 0 0 0 6 6l.86-.86a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.02z"/></svg>
+                  <span>{phone.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3')}</span>
                 </li>
                 <li>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e10001" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                  <span>Mon – Fri: 10:00 AM – 6:00 PM<br />Sat: 10:00 AM – 4:00 PM<br />Sun: Closed</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e50202" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  <span>Mon – Fri: {s.hoursMF || '10AM–6PM'}<br />Sat: {s.hoursSat || '10AM–4PM'}<br />Sun: {s.hoursSun || 'Closed'}</span>
                 </li>
                 <li>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#4285F4"/><path d="M12 6.5c1.38 0 2.63.56 3.54 1.46l2.65-2.65A8.46 8.46 0 0 0 12 3.5c-3.36 0-6.27 1.96-7.72 4.82l3.08 2.39C8.06 8.34 9.9 6.5 12 6.5z" fill="#EA4335"/><path d="M20.5 12c0-.63-.06-1.25-.17-1.84H12v3.5h4.77a4.07 4.07 0 0 1-1.77 2.67l2.78 2.16C19.36 17.07 20.5 14.69 20.5 12z" fill="#4285F4"/><path d="M7.36 14.71A8.5 8.5 0 0 1 3.5 12c0-.97.17-1.9.47-2.78L.89 6.83A11.48 11.48 0 0 0 0 12c0 2.1.56 4.06 1.55 5.75l3.08-2.39-.27-.65z" fill="#FBBC05"/><path d="M12 20.5c2.43 0 4.47-.8 5.96-2.17l-2.78-2.16c-.82.55-1.87.88-3.18.88-2.1 0-3.94-1.84-4.64-3.34l-3.08 2.39C5.73 18.54 8.64 20.5 12 20.5z" fill="#34A853"/></svg>
-                  <span>4.9 ⭐⭐⭐⭐⭐ Google Rating</span>
+                  <span>
+                    {googleRating || '4.9'}{' '}
+                    {[...Array(5)].map((_, i) => (
+                      <svg key={i} width="13" height="13" viewBox="0 0 24 24" fill="#F59E0B" style={{verticalAlign:'middle'}}>
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                      </svg>
+                    ))}{' '}
+                    Google Rating{googleCount ? ` (${googleCount}+ reviews)` : ''}
+                  </span>
                 </li>
               </ul>
             </div>
@@ -231,11 +258,11 @@ export default function AboutPage() {
             <div className={styles.visitCta}>
               <p className={styles.visitCtaText}>Stop by our dealership or reach out today. Our friendly team is ready to help you find the right vehicle or service for your needs.</p>
               <div className={styles.ctaBtns}>
-                <a href="tel:3134133400" className={styles.btnCall}>
+                <a href={`tel:${phone}`} className={styles.btnCall}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.76a16 16 0 0 0 6 6l.86-.86a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.02z"/></svg>
                   CALL US
                 </a>
-                <a href="sms:3134133400" className={styles.btnText}>
+                <a href={`sms:${phone}`} className={styles.btnText}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                   TEXT US
                 </a>

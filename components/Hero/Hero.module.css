@@ -52,7 +52,7 @@
 .redLine {
   width: 40px;
   height: 4px;
-  background: #e10001;
+  background: #e50202;
   border-radius: 2px;
   margin-bottom: 18px;
 }
@@ -72,13 +72,13 @@
 }
 
 .white { color: #ffffff; }
-.red   { color: #e10001; }
+.red   { color: #e50202; }
 
 .btn {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  background: #e10001;
+  background: #e50202;
   color: #fff;
   font-size: 14px;
   font-weight: 800;
@@ -92,7 +92,7 @@
 }
 
 .btn:hover {
-  background: #c0152f;
+  background: #c50000;
 }
 
 /* ── Arrows ──────────────────────────────────── */
@@ -116,8 +116,8 @@
 }
 
 .arrow:hover {
-  background: #e10001;
-  border-color: #e10001;
+  background: #e50202;
+  border-color: #e50202;
 }
 
 .arrowLeft  { left: 20px; }
@@ -146,8 +146,8 @@
 }
 
 .dotActive {
-  background: #e10001;
-  border-color: #e10001;
+  background: #e50202;
+  border-color: #e50202;
   width: 28px;
   border-radius: 5px;
 }

@@ -8,11 +8,18 @@
     "start": "next start"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^7.3.0",
+    "@prisma/client": "^5.22.0",
+    "bcryptjs": "^3.0.3",
+    "mysql2": "^3.22.6",
     "next": "^15.5.18",
+    "next-auth": "^4.24.14",
+    "prisma": "^5.22.0",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
+    "dotenv": "^17.4.2",
     "qrcode": "^1.5.4"
   }
 }

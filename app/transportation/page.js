@@ -1,5 +1,6 @@
 'use client'
 import Link from 'next/link'
+import { useSettings } from '@/context/SettingsContext'
 import styles from './page.module.css'
 
 const services = [
@@ -11,6 +12,8 @@ const services = [
 ]
 
 export default function TransportationPage() {
+  const s = useSettings()
+  const phone = s.phone || '3134133400'
   return (
     <div className={styles.page}>
 
@@ -49,7 +52,7 @@ export default function TransportationPage() {
             <div className={styles.right}>
               <div className={styles.ctaCard}>
                 <div className={styles.ctaCardIcon}>
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#e10001" strokeWidth="1.5">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#e50202" strokeWidth="1.5">
                     <rect x="1" y="3" width="15" height="13" rx="1"/>
                     <path d="M16 8h4l3 3v5h-7V8z"/>
                     <circle cx="5.5" cy="18.5" r="2.5"/>
@@ -60,18 +63,18 @@ export default function TransportationPage() {
                 <p className={styles.ctaCardSub}>No hidden fees. Fast response. All vehicle types welcome.</p>
 
                 <div className={styles.contactOptions}>
-                  <a href="tel:3134133400" className={styles.contactOption}>
+                  <a href={`tel:${phone}`} className={styles.contactOption}>
                     <div className={styles.contactOptionIcon}>
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e10001" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.58 3.44 2 2 0 0 1 3.56 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.5a16 16 0 0 0 5.55 5.55l.86-.86a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e50202" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.58 3.44 2 2 0 0 1 3.56 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.5a16 16 0 0 0 5.55 5.55l.86-.86a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                     </div>
                     <div>
                       <p className={styles.contactOptionLabel}>Call Us</p>
-                      <p className={styles.contactOptionValue}>+1 (313) 413-3400</p>
+                      <p className={styles.contactOptionValue}>+1 {phone.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3')}</p>
                     </div>
                   </a>
                   <a href="mailto:ConnectAutoSales@hotmail.com" className={styles.contactOption}>
                     <div className={styles.contactOptionIcon}>
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e10001" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e50202" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                     </div>
                     <div>
                       <p className={styles.contactOptionLabel}>Email Us</p>

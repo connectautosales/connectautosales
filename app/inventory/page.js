@@ -1,15 +1,23 @@
 'use client'
 
-import { useState, useMemo } from 'react'
-import Link from 'next/link'
+import { useState, useMemo, useEffect } from 'react'
 import CarCard from '@/components/CarCard/CarCard'
-import { cars } from '@/data/cars'
 import styles from './page.module.css'
+import Link from 'next/link'
 
 export default function InventoryPage() {
+  const [cars, setCars] = useState([])
+  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [titleFilter, setTitleFilter] = useState('all')
   const [sortBy, setSortBy] = useState('default')
+
+  useEffect(() => {
+    fetch('/api/cars')
+      .then(r => r.json())
+      .then(data => { setCars(data); setLoading(false) })
+      .catch(() => setLoading(false))
+  }, [])
 
   const filtered = useMemo(() => {
     let list = [...cars]
@@ -17,7 +25,7 @@ export default function InventoryPage() {
     if (search.trim()) {
       const q = search.toLowerCase()
       list = list.filter(c =>
-        `${c.year} ${c.make} ${c.model}`.toLowerCase().includes(q)
+        `${c.year} ${c.make} ${c.model} ${c.trim || ''}`.toLowerCase().includes(q)
       )
     }
 
@@ -33,14 +41,13 @@ export default function InventoryPage() {
     }
 
     return list
-  }, [search, titleFilter, sortBy])
+  }, [cars, search, titleFilter, sortBy])
 
   const cleanCount   = cars.filter(c => c.titleType === 'clean').length
   const rebuiltCount = cars.filter(c => c.titleType === 'rebuilt').length
 
   return (
     <>
-      {/* ── Inner Hero ─────────────────────────────── */}
       <section className={styles.hero}>
         <div className="container">
           <p className={styles.heroLabel}>CONNECT AUTO SALES</p>
@@ -49,7 +56,6 @@ export default function InventoryPage() {
         </div>
       </section>
 
-      {/* ── Search + Filter Bar ─────────────────────── */}
       <section className={styles.searchBar}>
         <div className="container">
           <div className={styles.searchWrap}>
@@ -74,21 +80,13 @@ export default function InventoryPage() {
             </div>
 
             <div className={styles.filterGroup}>
-              <select
-                className={styles.filterSelect}
-                value={titleFilter}
-                onChange={e => setTitleFilter(e.target.value)}
-              >
+              <select className={styles.filterSelect} value={titleFilter} onChange={e => setTitleFilter(e.target.value)}>
                 <option value="all">All Titles ({cars.length})</option>
                 <option value="clean">Clean Title ({cleanCount})</option>
                 <option value="rebuilt">Rebuilt Title ({rebuiltCount})</option>
               </select>
 
-              <select
-                className={styles.filterSelect}
-                value={sortBy}
-                onChange={e => setSortBy(e.target.value)}
-              >
+              <select className={styles.filterSelect} value={sortBy} onChange={e => setSortBy(e.target.value)}>
                 <option value="default">Sort: Default</option>
                 <option value="price-asc">Price: Low to High</option>
                 <option value="price-desc">Price: High to Low</option>
@@ -100,7 +98,6 @@ export default function InventoryPage() {
         </div>
       </section>
 
-      {/* ── Stats Bar ──────────────────────────────── */}
       <div className={styles.statsBar}>
         <div className="container">
           <div className={styles.statsInner}>
@@ -109,7 +106,7 @@ export default function InventoryPage() {
                 <rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v4h-7V8z"/>
                 <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
               </svg>
-              <span><strong>{filtered.length}</strong> Vehicles {titleFilter !== 'all' || search ? 'Found' : 'Available'}</span>
+              <span><strong>{loading ? '...' : filtered.length}</strong> Vehicles {titleFilter !== 'all' || search ? 'Found' : 'Available'}</span>
             </div>
             <div className={styles.statDivider} />
             <div className={styles.statItem}>
@@ -129,10 +126,13 @@ export default function InventoryPage() {
         </div>
       </div>
 
-      {/* ── Car Grid ───────────────────────────────── */}
       <section className={styles.inventorySection}>
         <div className="container">
-          {filtered.length > 0 ? (
+          {loading ? (
+            <div className={styles.noResults}>
+              <p>Loading inventory...</p>
+            </div>
+          ) : filtered.length > 0 ? (
             <div className={styles.carsGrid}>
               {filtered.map(car => (
                 <CarCard key={car.id} car={car} />
@@ -152,7 +152,6 @@ export default function InventoryPage() {
         </div>
       </section>
 
-      {/* ── Rebuilt Title Info Banner ───────────────── */}
       <section className={styles.rebuiltBanner}>
         <div className="container">
           <div className={styles.rebuiltInner}>

@@ -1,0 +1,230 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Site Settings (single row, id always = 1)
+model SiteSettings {
+  id            Int     @id @default(autoincrement())
+  businessName  String  @default("Connect Auto Sales")
+  tagline       String?
+  phone         String  @default("3134133400")
+  email         String  @default("info@connectautosales.com")
+  address       String  @default("4413 S Beech Daly St")
+  city          String  @default("Dearborn Heights")
+  state         String  @default("MI")
+  zip           String  @default("48125")
+  mapLink       String?
+  hoursMF       String  @default("10AM–6PM")
+  hoursSat      String  @default("10AM–4PM")
+  hoursSun      String  @default("Closed")
+  facebook      String?
+  instagram     String?
+  tiktok        String?
+  youtube       String?
+  aboutText        String? @db.Text
+  logoUrl          String?
+  googlePlaceId    String?
+  googleApiKey     String?
+  updatedAt        DateTime @updatedAt
+}
+
+// Google Reviews cache
+model Review {
+  id          Int      @id @default(autoincrement())
+  authorName  String
+  authorPhoto String?
+  rating      Int
+  text        String?  @db.Text
+  time        Int?
+  source      String   @default("google")
+  createdAt   DateTime @default(now())
+}
+
+// Admin User
+model Admin {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String   @default("Admin")
+  createdAt DateTime @default(now())
+}
+
+// Car Inventory
+model Car {
+  id          Int      @id @default(autoincrement())
+  stock       String   @unique
+  year        Int
+  make        String
+  model       String
+  trim        String?
+  vin         String?  @unique
+  price       Float
+  financePrice Float?
+  mileage     Int
+  titleType   String   @default("clean") // clean | rebuilt
+  drivetrain  String?
+  transmission String?
+  fuelType    String?
+  color       String?
+  description String?  @db.Text
+  type        String?                        // Sedan | SUV | Truck | Coupe | Van | Convertible
+  features    String?  @db.Text             // JSON array
+  images      String?  @db.Text             // JSON array of main photo URLs
+  damageImages String? @db.Text            // JSON array of damage history photo URLs (rebuilt)
+  status      String   @default("active")   // active | sold | hidden
+  slug        String?  @unique
+  isNewArrival Boolean @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Financing Applications
+model FinancingApplication {
+  id              Int      @id @default(autoincrement())
+  // Step 1 — Personal Info
+  firstName       String
+  middleName      String?
+  lastName        String
+  dob             String
+  phone           String
+  homePhone       String?
+  email           String
+  ssn             String
+  idType          String?
+  driversLicense  String
+  idExpiration    String?
+  stateIssuance   String
+  // Step 2 — Residence
+  address         String
+  city            String
+  state           String
+  zip             String
+  timeAtAddressYr String?
+  timeAtAddressMo String?
+  housingStatus   String?
+  monthlyRent     String?
+  landlordName    String?
+  landlordPhone   String?
+  prevAddress     String?
+  prevCity        String?
+  prevState       String?
+  prevZip         String?
+  // Step 3 — Employment
+  employmentStatus String
+  incomeSource    String?
+  incomeAmount    String?
+  incomeFrequency String?
+  hoursPerWeek    String?
+  occupation      String?
+  employer        String?
+  employerCity    String?
+  employerState   String?
+  employerPhone   String?
+  supervisor      String?
+  timeEmployedYr  String?
+  timeEmployedMo  String?
+  jobTitle        String?
+  monthlyIncome   String
+  timeEmployed    String?
+  prevEmployer    String?
+  addlIncome      String?
+  addlIncomeSource String?
+  addlIncomeAmount String?
+  addlIncomeFreq  String?
+  // Step 4 — Desired Vehicle
+  vehicleYear     String?
+  vehicleMake     String?
+  vehicleModel    String?
+  vehicleMileage  String?
+  stockNumber     String?
+  tradeIn         String?
+  tradeInPaidOff  String?
+  tradeInPayoff   String?
+  tradeInYear     String?
+  tradeInMake     String?
+  tradeInModel    String?
+  tradeInMileage  String?
+  tradeInVin      String?
+  // Step 5 — Payment & References
+  loanAmount      String
+  downPayment     String
+  desiredMonthly  String?
+  additionalComments String? @db.Text
+  referralSource  String?
+  hasReference    String?
+  refName         String?
+  refPhone        String?
+  refRelation     String?
+  refAddress      String?
+  // Step 6
+  signature       String
+  agreeTerms      Boolean  @default(false)
+  // Admin
+  status          String   @default("new") // new | reviewed | contacted | approved | rejected
+  adminNotes      String?  @db.Text
+  createdAt       DateTime @default(now())
+}
+
+// Auction Service Requests
+model AuctionRequest {
+  id          Int      @id @default(autoincrement())
+  firstName   String
+  lastName    String
+  phone       String
+  email       String
+  auctionLink String?  @db.Text
+  lotNumber   String?
+  notes       String?  @db.Text
+  status      String   @default("new") // new | reviewed | contacted | completed
+  adminNotes  String?  @db.Text
+  createdAt   DateTime @default(now())
+}
+
+// Salvage Inspection Requests
+model SalvageInspection {
+  id            Int      @id @default(autoincrement())
+  firstName     String?
+  lastName      String?
+  phone         String?
+  email         String?
+  salvageTitle  String?  // file path/url
+  validId       String?  // file path/url
+  receipts      String?  // file path/url
+  partsChanged  String?  @db.Text
+  status        String   @default("new") // new | documents-reviewed | scheduled | completed
+  adminNotes    String?  @db.Text
+  createdAt     DateTime @default(now())
+}
+
+// Contact Messages
+model ContactMessage {
+  id        Int      @id @default(autoincrement())
+  name      String?
+  phone     String?
+  email     String?
+  subject   String?
+  message   String?  @db.Text
+  isRead    Boolean  @default(false)
+  adminNotes String? @db.Text
+  createdAt DateTime @default(now())
+}
+
+// Transportation Quote Requests
+model TransportRequest {
+  id        Int      @id @default(autoincrement())
+  name      String?
+  phone     String?
+  email     String?
+  from      String?
+  to        String?
+  vehicle   String?
+  notes     String?  @db.Text
+  status    String   @default("new")
+  createdAt DateTime @default(now())
+}

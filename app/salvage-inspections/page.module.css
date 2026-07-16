@@ -20,7 +20,7 @@
   position: relative;
   font-size: 13px;
   font-weight: 800;
-  color: #e10001;
+  color: #e50202;
   letter-spacing: 3px;
   margin: 0 0 12px;
 }
@@ -35,7 +35,7 @@
   margin: 0 0 14px;
 }
 
-.heroTitle span { color: #e10001; }
+.heroTitle span { color: #e50202; }
 
 .heroSub {
   position: relative;
@@ -52,7 +52,7 @@
 
 /* â”€â”€ Info Section â”€â”€ */
 .infoSection {
-  background: #f3f4f6;
+  background: #fff;
   padding: 0 0 48px;
 }
 
@@ -86,7 +86,7 @@
 .colLine {
   width: 40px;
   height: 3px;
-  background: #e10001;
+  background: #e50202;
   border-radius: 2px;
   margin-bottom: 24px;
 }
@@ -146,12 +146,12 @@
 .feePrice {
   font-size: 18px;
   font-weight: 900;
-  color: #e10001;
+  color: #e50202;
   flex-shrink: 0;
 }
 
 .totalBox {
-  background: #e10001;
+  background: #e50202;
   border-radius: 8px;
   padding: 16px 20px;
   display: flex;
@@ -205,7 +205,7 @@
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: #e10001;
+  background: #e50202;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -286,7 +286,7 @@
 
 /* â”€â”€ Form Section â”€â”€ */
 .formSection {
-  background: #f3f4f6;
+  background: #fff;
   padding: 0 0 56px;
 }
 
@@ -316,7 +316,7 @@
 .formTitleLine {
   width: 40px;
   height: 3px;
-  background: #e10001;
+  background: #e50202;
   border-radius: 2px;
   margin-bottom: 20px;
 }
@@ -360,7 +360,7 @@
   box-sizing: border-box;
 }
 
-.input:focus { border-color: #e10001; }
+.input:focus { border-color: #e50202; }
 .input::placeholder { color: #9ca3af; }
 
 /* Uploads */
@@ -384,12 +384,13 @@
   transition: border-color 0.2s;
 }
 
-.uploadBox:hover { border-color: #e10001; }
+.uploadBox:hover { border-color: #e50202; }
+.uploadBoxError { border-color: #c00 !important; background: #fff5f5 !important; }
 
 .uploadIcon {
   width: 40px;
   height: 40px;
-  background: #f3f4f6;
+  background: #fff;
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -426,7 +427,7 @@
 }
 
 .chooseFileBtn {
-  background: #e10001;
+  background: #e50202;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -437,7 +438,7 @@
   transition: background 0.2s;
 }
 
-.chooseFileBtn:hover { background: #c0152f; }
+.chooseFileBtn:hover { background: #c50000; }
 
 .uploadNote {
   font-size: 13px;
@@ -477,7 +478,7 @@
   margin-bottom: 16px;
 }
 
-.textarea:focus { border-color: #e10001; }
+.textarea:focus { border-color: #e50202; }
 .textarea::placeholder { color: #9ca3af; }
 
 .submitBtn {
@@ -485,7 +486,7 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  background: #e10001;
+  background: #e50202;
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -498,7 +499,7 @@
   width: 100%;
 }
 
-.submitBtn:hover { background: #c0152f; }
+.submitBtn:hover { background: #c50000; }
 
 /* â”€â”€ FAQ â”€â”€ */
 .faqSection {
@@ -526,7 +527,7 @@
 .faqLine {
   flex: 1;
   height: 2px;
-  background: #e10001;
+  background: #e50202;
   border-radius: 2px;
 }
 
@@ -586,3 +587,15 @@
   .nameRow { grid-template-columns: 1fr; }
 }
 
+
+.fieldError {
+  display: block;
+  color: #c00;
+  font-size: 12px;
+  margin-top: 3px;
+  font-weight: 500;
+}
+.inputError {
+  border-color: #c00 !important;
+  background: #fff5f5 !important;
+}

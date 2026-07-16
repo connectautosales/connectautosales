@@ -1,5 +1,5 @@
 .page {
-  background: #f3f4f6;
+  background: #fff;
   min-height: 100vh;
 }
 
@@ -25,7 +25,7 @@
   transition: color 0.15s;
 }
 
-.breadcrumb a:hover { color: #e10001; }
+.breadcrumb a:hover { color: #e50202; }
 
 .breadcrumb span:last-child { color: #020300; font-weight: 600; }
 
@@ -89,7 +89,7 @@
   align-items: center;
   gap: 6px;
   background: #fff0f0;
-  color: #e10001;
+  color: #e50202;
   border: 1px solid #fecaca;
   border-radius: 999px;
   padding: 6px 14px;
@@ -165,7 +165,7 @@
   transition: border-color 0.15s, color 0.15s;
 }
 
-.copyBtn:hover { border-color: #e10001; color: #e10001; }
+.copyBtn:hover { border-color: #e50202; color: #e50202; }
 
 /* Gallery */
 .gallery {
@@ -179,7 +179,7 @@
 .mainPhoto {
   position: relative;
   aspect-ratio: 16 / 9;
-  background: #f3f4f6;
+  background: #fff;
 }
 
 .galleryArrow {
@@ -248,12 +248,12 @@
   overflow: hidden;
   border: 2px solid transparent;
   cursor: pointer;
-  background: #f3f4f6;
+  background: #fff;
   padding: 0;
   transition: border-color 0.15s;
 }
 
-.thumbActive { border-color: #e10001; }
+.thumbActive { border-color: #e50202; }
 
 .thumbMore {
   position: relative;
@@ -262,7 +262,7 @@
   height: 60px;
   border-radius: 6px;
   overflow: hidden;
-  background: #f3f4f6;
+  background: #fff;
 }
 
 .thumbMoreOverlay {
@@ -318,7 +318,7 @@
 .sectionLine {
   width: 40px;
   height: 3px;
-  background: #e10001;
+  background: #e50202;
   border-radius: 2px;
   margin-bottom: 16px;
 }
@@ -378,7 +378,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: #e10001;
+  background: #e50202;
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -392,7 +392,7 @@
   justify-content: center;
 }
 
-.ctaCall:hover { background: #c0152f; }
+.ctaCall:hover { background: #c50000; }
 
 .ctaText {
   display: inline-flex;
@@ -412,7 +412,7 @@
   justify-content: center;
 }
 
-.ctaText:hover { background: #f3f4f6; }
+.ctaText:hover { background: #fff; }
 
 .ctaSchedule {
   display: inline-flex;
@@ -432,7 +432,7 @@
   justify-content: center;
 }
 
-.ctaSchedule:hover { background: #f3f4f6; }
+.ctaSchedule:hover { background: #fff; }
 
 /* Similar Vehicles */
 .similarSection {
@@ -455,7 +455,7 @@
   gap: 4px;
   font-size: 13px;
   font-weight: 700;
-  color: #e10001;
+  color: #e50202;
   text-decoration: none;
 }
 
@@ -477,12 +477,12 @@
   transition: box-shadow 0.15s, border-color 0.15s;
 }
 
-.similarCard:hover { border-color: #e10001; box-shadow: 0 4px 16px #00000012; }
+.similarCard:hover { border-color: #e50202; box-shadow: 0 4px 16px #00000012; }
 
 .similarImg {
   position: relative;
   aspect-ratio: 4 / 3;
-  background: #f3f4f6;
+  background: #fff;
 }
 
 .simBadgeClean {
@@ -502,7 +502,7 @@
   position: absolute;
   top: 6px;
   left: 6px;
-  background: #e10001;
+  background: #e50202;
   color: #fff;
   font-size: 10px;
   font-weight: 800;
@@ -532,7 +532,7 @@
 .similarPrice {
   font-size: 14px;
   font-weight: 900;
-  color: #e10001;
+  color: #e50202;
   margin: 0;
 }
 
@@ -612,7 +612,7 @@
 .cashPrice {
   font-size: 32px;
   font-weight: 900;
-  color: #e10001;
+  color: #e50202;
   margin: 0 0 4px;
   line-height: 1.1;
 }
@@ -652,7 +652,7 @@
 
 .customizeLink {
   font-size: 12px;
-  color: #e10001;
+  color: #e50202;
   font-weight: 600;
   text-decoration: none;
   display: block;
@@ -726,7 +726,7 @@
   cursor: pointer;
 }
 
-.estimatorSelect:focus { border-color: #e10001; }
+.estimatorSelect:focus { border-color: #e50202; }
 
 .monthlyRow {
   display: flex;
@@ -747,7 +747,7 @@
 .monthlyValue {
   font-size: 20px;
   font-weight: 900;
-  color: #e10001;
+  color: #e50202;
 }
 
 /* Apply Button */
@@ -755,7 +755,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #e10001;
+  background: #e50202;
   color: #fff;
   text-decoration: none;
   font-size: 13px;
@@ -765,7 +765,7 @@
   transition: background 0.2s;
 }
 
-.applyBtn:hover { background: #c0152f; }
+.applyBtn:hover { background: #c50000; }
 
 /* Damage Photos */
 .damageSection {
@@ -804,7 +804,7 @@
   aspect-ratio: 4 / 3;
   border-radius: 6px;
   overflow: hidden;
-  background: #f3f4f6;
+  background: #fff;
 }
 
 .damageCaption {

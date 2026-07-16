@@ -1,7 +1,7 @@
 /* ── Featured Vehicles ──────────────────────────── */
 .featuredSection {
   padding: 64px 0 72px;
-  background: #f9fafb;
+  background: #fff;
 }
 
 .featuredHead {
@@ -35,7 +35,7 @@
   display: inline-block;
   width: 36px;
   height: 3px;
-  background: #e10001;
+  background: #e50202;
   border-radius: 2px;
 }
 
@@ -56,7 +56,7 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  color: #e10001;
+  color: #e50202;
   font-size: 16px;
   font-weight: 700;
   text-decoration: none;
@@ -90,7 +90,7 @@
 }
 
 .whyTitle span {
-  color: #e10001;
+  color: #e50202;
 }
 
 .whyGrid {
@@ -123,7 +123,7 @@
 }
 
 .whyIcon {
-  color: #e10001;
+  color: #e50202;
 }
 
 .whyDivider {
@@ -166,7 +166,7 @@
 }
 
 .reviewsDash {
-  color: #e10001;
+  color: #e50202;
   margin-left: 8px;
 }
 
@@ -202,7 +202,7 @@
 
 .googleReviewsBtn {
   display: inline-block;
-  background: #e10001;
+  background: #e50202;
   color: #fff;
   font-size: 14px;
   font-weight: 800;
@@ -215,7 +215,7 @@
 }
 
 .googleReviewsBtn:hover {
-  background: #c0152f;
+  background: #c50000;
 }
 
 .reviewCards {
@@ -230,6 +230,7 @@
   padding: 18px;
   display: flex;
   flex-direction: column;
+  min-height: 220px;
   gap: 10px;
 }
 
@@ -243,6 +244,69 @@
   color: #4b5563;
   line-height: 1.7;
   flex: 1;
+  max-height: calc(1.7em * 5);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
+}
+.reviewText::-webkit-scrollbar {
+  width: 4px;
+}
+.reviewText::-webkit-scrollbar-track {
+  background: transparent;
+}
+.reviewText::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 2px;
+}
+
+/* ── Review Slider Controls ── */
+.sliderControls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 20px;
+}
+.sliderBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid #e5e7eb;
+  background: #fff;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color .15s, color .15s, background .15s;
+  flex-shrink: 0;
+}
+.sliderBtn:hover:not(:disabled) {
+  border-color: #e50202;
+  color: #e50202;
+}
+.sliderBtn:disabled {
+  opacity: .35;
+  cursor: not-allowed;
+}
+.sliderDots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.sliderDot {
+  all: unset;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #d1d5db;
+  cursor: pointer;
+  transition: background .15s, transform .15s;
+}
+.sliderDotActive {
+  background: #e50202;
+  transform: scale(1.3);
 }
 
 .reviewFooter {
@@ -261,7 +325,7 @@
 .reviewsRight {}
 
 .leaveReviewBox {
-  background: #f9fafb;
+  background: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   padding: 28px 20px;
@@ -299,7 +363,7 @@
 
 .leaveReviewBtn {
   display: inline-block;
-  background: #e10001;
+  background: #e50202;
   color: #fff;
   font-size: 14px;
   font-weight: 800;
@@ -313,7 +377,7 @@
 }
 
 .leaveReviewBtn:hover {
-  background: #c0152f;
+  background: #c50000;
 }
 
 /* ── Responsive ──────────────────────────────────── */

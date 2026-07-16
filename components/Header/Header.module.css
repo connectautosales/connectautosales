@@ -1,7 +1,6 @@
 /* ── Header wrapper ─────────────────────────────── */
 .header {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 1000;
 }
 
@@ -38,7 +37,7 @@
 }
 
 .topBarItem svg {
-  color: #e10001;
+  color: #e50202;
   flex-shrink: 0;
 }
 
@@ -66,7 +65,7 @@
 }
 
 .socialIcon:hover {
-  background: #e10001;
+  background: #e50202;
   color: #fff;
 }
 
@@ -74,6 +73,7 @@
 .mainNav {
   background: #ffffff;
   box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  transition: padding 0.25s ease;
 }
 
 .mainNavInner {
@@ -82,6 +82,16 @@
   justify-content: space-between;
   gap: 16px;
   padding: 10px 0;
+  transition: padding 0.25s ease;
+}
+
+/* Scrolled state */
+.scrolled .topBar {
+  display: none;
+}
+
+.scrolled .mainNavInner {
+  padding: 4px 0;
 }
 
 /* Logo */
@@ -95,6 +105,11 @@
   width: auto !important;
   height: 120px !important;
   object-fit: contain;
+  transition: height 0.25s ease;
+}
+
+.scrolled .logoImg {
+  height: 60px !important;
 }
 
 /* Desktop nav links */
@@ -125,14 +140,14 @@
   left: 12px;
   right: 12px;
   height: 2px;
-  background: #e10001;
+  background: #e50202;
   border-radius: 2px;
   transform: scaleX(0);
   transition: transform 0.2s;
 }
 
 .navLink:hover {
-  color: #e10001;
+  color: #e50202;
 }
 
 .navLink:hover::after,
@@ -141,7 +156,7 @@
 }
 
 .navLink.active {
-  color: #e10001;
+  color: #e50202;
 }
 
 /* CTA Buttons */
@@ -177,7 +192,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #e10001;
+  background: #e50202;
   color: #ffffff;
   padding: 9px 18px;
   border-radius: 4px;
@@ -191,7 +206,7 @@
 }
 
 .btnText:hover {
-  background: #c0152f;
+  background: #c50000;
 }
 
 /* Hamburger */
@@ -225,7 +240,7 @@
 
 .mobileNavLink:hover,
 .mobileNavLink.mobileActive {
-  color: #e10001;
+  color: #e50202;
   background: #fff5f5;
 }
 
@@ -257,7 +272,7 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  background: #e10001;
+  background: #e50202;
   color: #fff;
   padding: 11px 12px;
   border-radius: 4px;

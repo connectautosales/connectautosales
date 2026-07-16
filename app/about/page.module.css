@@ -20,7 +20,7 @@
   position: relative;
   font-size: 13px;
   font-weight: 800;
-  color: #e10001;
+  color: #e50202;
   letter-spacing: 3px;
   margin: 0 0 12px;
 }
@@ -35,7 +35,7 @@
   margin: 0 0 14px;
 }
 
-.heroTitle span { color: #e10001; }
+.heroTitle span { color: #e50202; }
 
 .heroSub {
   position: relative;
@@ -74,7 +74,7 @@
 .headingLine {
   width: 40px;
   height: 3px;
-  background: #e10001;
+  background: #e50202;
   border-radius: 2px;
   margin-bottom: 24px;
 }
@@ -311,7 +311,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: #e10001;
+  background: #e50202;
   color: #fff;
   padding: 14px 20px;
   border-radius: 6px;
@@ -323,7 +323,7 @@
 }
 
 .btnText:hover {
-  background: #c0152f;
+  background: #c50000;
 }
 
 /* â”€â”€ Responsive â”€â”€ */

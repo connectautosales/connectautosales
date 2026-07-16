@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useSettings } from '@/context/SettingsContext'
 import styles from './page.module.css'
 
 const faqs = [
@@ -23,7 +24,7 @@ const faqs = [
   },
   {
     q: 'Where are you located?',
-    a: 'Connect Auto Sales is located at 4413 S Beech Daly St, Dearborn Heights, MI 48125.',
+    a: 'Connect Auto Sales is located at 4413 S Beech Daly St, Dearborn Heights, MI 48125. Use Google Maps for directions.',
   },
   {
     q: 'Can I contact you outside business hours?',
@@ -32,15 +33,46 @@ const faqs = [
 ]
 
 export default function ContactPage() {
+  const s = useSettings()
+  const phone    = s.phone    || '3134133400'
+  const email    = s.email    || 'info@connectautosales.com'
+  const address  = `${s.address || '4413 S Beech Daly St'}, ${s.city || 'Dearborn Heights'}, ${s.state || 'MI'} ${s.zip || '48125'}`
+  const mapQ     = encodeURIComponent(address)
+  const mapLink  = s.mapLink  || `https://maps.google.com/?q=${mapQ}`
+
   const [openFaq, setOpenFaq] = useState(null)
   const [form, setForm] = useState({ firstName: '', phone: '', email: '', topic: '', message: '' })
   const [submitted, setSubmitted] = useState(false)
+  const [errors, setErrors] = useState({})
 
-  const handleChange = e => setForm(p => ({ ...p, [e.target.name]: e.target.value }))
-  const handleSubmit = e => {
+  const phoneRe = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/
+  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+  const handleChange = e => {
+    setForm(p => ({ ...p, [e.target.name]: e.target.value }))
+    if (errors[e.target.name]) setErrors(p => { const n={...p}; delete n[e.target.name]; return n })
+  }
+
+  const handleSubmit = async e => {
     e.preventDefault()
+    const errs = {}
+    if (!form.firstName.trim()) errs.firstName = 'Name cannot be blank.'
+    if (!form.email.trim())     errs.email     = 'Email cannot be blank.'
+    else if (!emailRe.test(form.email.trim())) errs.email = 'Enter a valid email address.'
+    if (!form.message.trim())   errs.message   = 'Message cannot be blank.'
+    if (form.phone.trim() && !phoneRe.test(form.phone.trim())) errs.phone = 'Enter a valid phone number.'
+    if (Object.keys(errs).length) { setErrors(errs); return }
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      if (!res.ok) throw new Error('Failed')
+    } catch {}
     setSubmitted(true)
     setForm({ firstName: '', phone: '', email: '', topic: '', message: '' })
+    setErrors({})
     setTimeout(() => setSubmitted(false), 5000)
   }
 
@@ -60,44 +92,44 @@ export default function ContactPage() {
       <section className={styles.contactCards}>
         <div className="container">
           <div className={styles.cardsGrid}>
-            <a href="tel:3134133400" className={styles.card}>
+            <a href={`tel:${phone}`} className={styles.card}>
               <div className={styles.cardIcon}>
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
                 </svg>
               </div>
               <div className={styles.cardLabel}>CALL</div>
-              <div className={styles.cardValue}>(313) 413-3400</div>
+              <div className={styles.cardValue}>{phone.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3')}</div>
             </a>
 
-            <a href="sms:3134133400" className={styles.card}>
+            <a href={`sms:${phone}`} className={styles.card}>
               <div className={styles.cardIcon}>
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
                 </svg>
               </div>
               <div className={styles.cardLabel}>TEXT</div>
-              <div className={styles.cardValue}>(313) 413-3400</div>
+              <div className={styles.cardValue}>{phone.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3')}</div>
             </a>
 
-            <a href="https://maps.google.com/?q=4413+S+Beech+Daly+St+Dearborn+Heights+MI+48125" target="_blank" rel="noreferrer" className={styles.card}>
+            <a href={mapLink} target="_blank" rel="noreferrer" className={styles.card}>
               <div className={styles.cardIcon}>
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
                 </svg>
               </div>
               <div className={styles.cardLabel}>VISIT</div>
-              <div className={styles.cardValue}>4413 S Beech Daly St<br/>Dearborn Heights, MI 48125</div>
+              <div className={styles.cardValue}>{s.address || '4413 S Beech Daly St'}<br/>{s.city || 'Dearborn Heights'}, {s.state || 'MI'} {s.zip || '48125'}</div>
             </a>
 
-            <a href="mailto:sales@connectautosales.com" className={styles.card}>
+            <a href={`mailto:${email}`} className={styles.card}>
               <div className={styles.cardIcon}>
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
                 </svg>
               </div>
               <div className={styles.cardLabel}>EMAIL</div>
-              <div className={styles.cardValue}>sales@connectautosales.com</div>
+              <div className={styles.cardValue}>{email}</div>
             </a>
           </div>
         </div>
@@ -111,36 +143,36 @@ export default function ContactPage() {
             <div className={styles.hoursCol}>
               <div className={styles.hoursBox}>
                 <div className={styles.hoursHead}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e10001" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e50202" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
                   </svg>
                   <span className={styles.hoursTitle}>BUSINESS HOURS</span>
                 </div>
                 <div className={styles.hoursDivider} />
                 <div className={styles.hoursRows}>
-                  <div className={styles.hoursRow}><span>Mon – Fri</span><span>10:00 AM – 6:00 PM</span></div>
-                  <div className={styles.hoursRow}><span>Sat</span><span>10:00 AM – 4:00 PM</span></div>
-                  <div className={styles.hoursRow}><span>Sun</span><span>Closed</span></div>
+                  <div className={styles.hoursRow}><span>Mon – Fri</span><span>{s.hoursMF || '10AM–6PM'}</span></div>
+                  <div className={styles.hoursRow}><span>Sat</span><span>{s.hoursSat || '10AM–4PM'}</span></div>
+                  <div className={styles.hoursRow}><span>Sun</span><span>{s.hoursSun || 'Closed'}</span></div>
                 </div>
               </div>
 
               <div className={styles.followBox}>
                 <p className={styles.followTitle}>FOLLOW US</p>
                 <div className={styles.followIcons}>
-                  <a href="https://facebook.com/connectautosales" target="_blank" rel="noreferrer" className={styles.followIcon} style={{background:'#1877F2'}} aria-label="Facebook">
+                  {s.facebook && <a href={s.facebook} target="_blank" rel="noreferrer" className={styles.followIcon} style={{background:'#1877F2'}} aria-label="Facebook">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
-                  </a>
-                  <a href="https://instagram.com/connectautosales" target="_blank" rel="noreferrer" className={styles.followIcon} style={{background:'radial-gradient(circle at 30% 107%,#fdf497 0%,#fd5949 45%,#d6249f 60%,#285AEB 90%)'}} aria-label="Instagram">
+                  </a>}
+                  {s.instagram && <a href={s.instagram} target="_blank" rel="noreferrer" className={styles.followIcon} style={{background:'radial-gradient(circle at 30% 107%,#fdf497 0%,#fd5949 45%,#d6249f 60%,#285AEB 90%)'}} aria-label="Instagram">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
                     </svg>
-                  </a>
-                  <a href="https://tiktok.com/@connectautosales" target="_blank" rel="noreferrer" className={styles.followIcon} style={{background:'#010101'}} aria-label="TikTok">
+                  </a>}
+                  {s.tiktok && <a href={s.tiktok} target="_blank" rel="noreferrer" className={styles.followIcon} style={{background:'#010101'}} aria-label="TikTok">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.17 8.17 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z"/></svg>
-                  </a>
-                  <a href="https://youtube.com/@connectautosales" target="_blank" rel="noreferrer" className={styles.followIcon} style={{background:'#FF0000'}} aria-label="YouTube">
+                  </a>}
+                  {s.youtube && <a href={s.youtube} target="_blank" rel="noreferrer" className={styles.followIcon} style={{background:'#FF0000'}} aria-label="YouTube">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21.58 7.19c-.23-.86-.91-1.54-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42c-.86.23-1.54.91-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.86.91 1.54 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42c.86-.23 1.54-.91 1.77-1.77C22 15.25 22 12 22 12s0-3.25-.42-4.81zM10 15V9l5.2 3-5.2 3z"/></svg>
-                  </a>
+                  </a>}
                 </div>
               </div>
             </div>
@@ -160,7 +192,7 @@ export default function ContactPage() {
 
           {/* GET DIRECTIONS */}
           <a
-            href="https://maps.google.com/?q=4413+S+Beech+Daly+St+Dearborn+Heights+MI+48125"
+            href={mapLink}
             target="_blank"
             rel="noreferrer"
             className={styles.directionsBtn}
@@ -191,25 +223,34 @@ export default function ContactPage() {
               ) : (
                 <form onSubmit={handleSubmit} className={styles.form}>
                   <div className={styles.formRow}>
-                    <div className={styles.inputWrap}>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={styles.inputIcon}>
-                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                      </svg>
-                      <input name="firstName" value={form.firstName} onChange={handleChange} placeholder="First Name" className={styles.input} required />
+                    <div>
+                      <div className={styles.inputWrap}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={styles.inputIcon}>
+                          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        <input name="firstName" value={form.firstName} onChange={handleChange} placeholder="First Name *" className={`${styles.input} ${errors.firstName ? styles.inputError : ''}`} />
+                      </div>
+                      {errors.firstName && <span className={styles.fieldError}>{errors.firstName}</span>}
                     </div>
-                    <div className={styles.inputWrap}>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={styles.inputIcon}>
-                        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
-                      </svg>
-                      <input name="phone" value={form.phone} onChange={handleChange} placeholder="Phone Number" className={styles.input} type="tel" />
+                    <div>
+                      <div className={styles.inputWrap}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={styles.inputIcon}>
+                          <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+                        </svg>
+                        <input name="phone" value={form.phone} onChange={handleChange} placeholder="Phone Number" className={`${styles.input} ${errors.phone ? styles.inputError : ''}`} type="tel" />
+                      </div>
+                      {errors.phone && <span className={styles.fieldError}>{errors.phone}</span>}
                     </div>
                   </div>
 
-                  <div className={styles.inputWrap}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={styles.inputIcon}>
-                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
-                    </svg>
-                    <input name="email" value={form.email} onChange={handleChange} placeholder="Email Address" className={styles.input} type="email" required />
+                  <div>
+                    <div className={styles.inputWrap}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={styles.inputIcon}>
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+                      </svg>
+                      <input name="email" value={form.email} onChange={handleChange} placeholder="Email Address *" className={`${styles.input} ${errors.email ? styles.inputError : ''}`} />
+                    </div>
+                    {errors.email && <span className={styles.fieldError}>{errors.email}</span>}
                   </div>
 
                   <div className={styles.inputWrap}>
@@ -227,11 +268,14 @@ export default function ContactPage() {
                     </select>
                   </div>
 
-                  <div className={styles.inputWrap}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`${styles.inputIcon} ${styles.textareaIcon}`}>
-                      <path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
-                    </svg>
-                    <textarea name="message" value={form.message} onChange={handleChange} placeholder="Message" className={`${styles.input} ${styles.textarea}`} rows={5} />
+                  <div>
+                    <div className={styles.inputWrap}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`${styles.inputIcon} ${styles.textareaIcon}`}>
+                        <path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+                      </svg>
+                      <textarea name="message" value={form.message} onChange={handleChange} placeholder="Message *" className={`${styles.input} ${styles.textarea} ${errors.message ? styles.inputError : ''}`} rows={5} />
+                    </div>
+                    {errors.message && <span className={styles.fieldError}>{errors.message}</span>}
                   </div>
 
                   <button type="submit" className={styles.submitBtn}>

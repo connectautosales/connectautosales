@@ -17,8 +17,8 @@
 .imageWrap {
   position: relative;
   display: block;
-  height: 200px;
-  background: #f3f4f6;
+  height: 180px;
+  background: #f8f8f8;
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -28,7 +28,7 @@
   top: 10px;
   left: 10px;
   z-index: 2;
-  background: #e10001;
+  background: #e50202;
   color: #fff;
   font-size: 11px;
   font-weight: 800;
@@ -80,7 +80,7 @@
 .price {
   font-size: 26px;
   font-weight: 900;
-  color: #e10001;
+  color: #e50202;
   margin-bottom: 14px;
   line-height: 1;
 }
@@ -109,11 +109,11 @@
 
 .rebuilt {
   background: #fce7e7;
-  color: #e10001;
+  color: #e50202;
 }
 
 .viewBtn {
-  display: inline-block;
+  display: block;
   background: #020300;
   color: #fff;
   font-size: 13px;
@@ -124,6 +124,8 @@
   text-decoration: none;
   transition: background 0.2s;
   white-space: nowrap;
+  text-align: center;
+  margin-top: auto;
 }
 
 .viewBtn:hover {

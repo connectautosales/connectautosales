@@ -1,4 +1,4 @@
-﻿.page { background: #f3f4f6; }
+﻿.page { background: #fff; }
 
 /* â”€â”€ Hero â”€â”€ */
 .hero {
@@ -22,7 +22,7 @@
   position: relative;
   font-size: 13px;
   font-weight: 800;
-  color: #e10001;
+  color: #e50202;
   letter-spacing: 3px;
   margin: 0 0 12px;
 }
@@ -37,7 +37,7 @@
   margin: 0 0 16px;
 }
 
-.heroTitle span { color: #e10001; }
+.heroTitle span { color: #e50202; }
 
 .heroSub {
   position: relative;
@@ -54,7 +54,7 @@
 
 /* â”€â”€ Main Section â”€â”€ */
 .mainSection {
-  background: #f3f4f6;
+  background: #fff;
   padding: 0 0 56px;
 }
 
@@ -86,7 +86,7 @@
 .cardLine {
   width: 40px;
   height: 3px;
-  background: #e10001;
+  background: #e50202;
   border-radius: 2px;
   margin-bottom: 20px;
 }
@@ -121,7 +121,7 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: #e10001;
+  background: #e50202;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -160,7 +160,7 @@
   line-height: 1.3;
 }
 
-.ctaCardTitle span { color: #e10001; }
+.ctaCardTitle span { color: #e50202; }
 
 .ctaCardSub {
   font-size: 13px;
@@ -188,7 +188,7 @@
   transition: border-color 0.15s;
 }
 
-.contactOption:hover { border-color: #e10001; }
+.contactOption:hover { border-color: #e50202; }
 
 .contactOptionIcon {
   width: 38px;
@@ -221,7 +221,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #e10001;
+  background: #e50202;
   color: #fff;
   border-radius: 6px;
   padding: 15px 24px;
@@ -233,7 +233,7 @@
   width: 100%;
 }
 
-.ctaBtn:hover { background: #c0152f; }
+.ctaBtn:hover { background: #c50000; }
 
 /* â”€â”€ Auction Badges â”€â”€ */
 .auctionsSection {

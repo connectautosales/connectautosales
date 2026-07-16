@@ -2,20 +2,33 @@ import Link from 'next/link'
 import Image from 'next/image'
 import styles from './CarCard.module.css'
 
+function getFirstImage(car) {
+  if (car.images) {
+    try {
+      const arr = JSON.parse(car.images)
+      if (Array.isArray(arr) && arr.length > 0) return arr[0]
+    } catch {}
+  }
+  if (car.image) return car.image
+  return null
+}
+
 export default function CarCard({ car }) {
+  const imgSrc = getFirstImage(car)
+
   return (
     <div className={styles.card}>
-      <Link href={`/inventory/${car.id}`} className={styles.imageWrap}>
-        {car.newArrival && (
+      <Link href={`/inventory/${car.slug || car.id}`} className={styles.imageWrap}>
+        {(car.isNewArrival || car.newArrival) && (
           <span className={styles.newArrivalBadge}>NEW ARRIVAL</span>
         )}
-        {car.image ? (
+        {imgSrc ? (
           <Image
-            src={car.image}
+            src={imgSrc}
             alt={`${car.year} ${car.make} ${car.model}`}
             fill
-            sizes="(max-width: 600px) 100vw, (max-width: 1024px) 50vw, 20vw"
-            style={{ objectFit: 'cover' }}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 20vw"
+            style={{ objectFit: 'contain' }}
             unoptimized
           />
         ) : (
@@ -29,14 +42,14 @@ export default function CarCard({ car }) {
 
       <div className={styles.body}>
         <div className={styles.yearMake}>{car.year} {car.make}</div>
-        <div className={styles.model}>{car.model}</div>
-        <div className={styles.mileage}>{car.mileage.toLocaleString()} miles</div>
+        <div className={styles.model}>{car.model}{car.trim ? ` ${car.trim}` : ''}</div>
+        <div className={styles.mileage}>{(car.mileage || 0).toLocaleString()} miles</div>
 
         <div className={styles.price}>
-          {car.price ? `$${car.price.toLocaleString()} *` : 'Call for Price'}
+          {car.price ? `$${car.price.toLocaleString()}` : 'Call for Price'}
         </div>
 
-        <Link href={`/inventory/${car.id}`} className={styles.viewBtn}>
+        <Link href={`/inventory/${car.slug || car.id}`} className={styles.viewBtn}>
           VIEW DETAILS
         </Link>
       </div>

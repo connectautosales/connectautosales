@@ -20,7 +20,7 @@
   position: relative;
   font-size: 13px;
   font-weight: 800;
-  color: #e10001;
+  color: #e50202;
   letter-spacing: 3px;
   margin: 0 0 12px;
 }
@@ -35,7 +35,7 @@
   margin: 0 0 14px;
 }
 
-.heroTitle span { color: #e10001; }
+.heroTitle span { color: #e50202; }
 
 .heroSub {
   position: relative;
@@ -118,7 +118,7 @@
 .titleLineRed {
   width: 60px;
   height: 4px;
-  background: #e10001;
+  background: #e50202;
   border-radius: 2px;
   margin: 0 auto 36px;
 }
@@ -154,7 +154,7 @@
 .salvageLabel {
   font-size: 18px;
   font-weight: 900;
-  color: #e10001;
+  color: #e50202;
   letter-spacing: 0.5px;
 }
 
@@ -162,7 +162,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #e10001;
+  background: #e50202;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -173,7 +173,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #e10001;
+  background: #e50202;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -314,7 +314,7 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #e10001;
+  background: #e50202;
   color: #fff;
   font-size: 16px;
   font-weight: 900;
@@ -327,7 +327,7 @@
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: #f3f4f6;
+  background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -378,7 +378,7 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: #e10001;
+  background: #e50202;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -388,7 +388,7 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: #f3f4f6;
+  background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -653,7 +653,7 @@
   text-decoration: none;
 }
 
-.ctaCall:hover { color: #e10001; }
+.ctaCall:hover { color: #e50202; }
 
 .ctaTextBtn {
   display: flex;
@@ -665,7 +665,7 @@
   text-decoration: none;
 }
 
-.ctaTextBtn:hover { color: #e10001; }
+.ctaTextBtn:hover { color: #e50202; }
 
 /* â”€â”€ Responsive â”€â”€ */
 @media (max-width: 1024px) {

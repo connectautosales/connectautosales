@@ -20,7 +20,7 @@
   position: relative;
   font-size: 13px;
   font-weight: 800;
-  color: #e10001;
+  color: #e50202;
   letter-spacing: 3px;
   margin: 0 0 12px;
 }
@@ -35,7 +35,7 @@
   margin: 0 0 14px;
 }
 
-.heroTitle span { color: #e10001; }
+.heroTitle span { color: #e50202; }
 
 .heroSub {
   position: relative;
@@ -113,7 +113,7 @@
 .titleLine {
   width: 48px;
   height: 3px;
-  background: #e10001;
+  background: #e50202;
   border-radius: 2px;
   margin: 0 auto 16px;
 }
@@ -291,7 +291,7 @@
 .titleLineLeft {
   width: 40px;
   height: 3px;
-  background: #e10001;
+  background: #e50202;
   border-radius: 2px;
   margin: 0 auto 28px;
 }

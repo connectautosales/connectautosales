@@ -59,7 +59,7 @@
 }
 
 .linkRed {
-  color: #e10001;
+  color: #e50202;
 }
 
 .linkRed:hover {
@@ -84,7 +84,7 @@
 }
 
 .contactIcon {
-  color: #e10001;
+  color: #e50202;
   flex-shrink: 0;
   margin-top: 2px;
 }

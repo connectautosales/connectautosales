@@ -1,0 +1,205 @@
+/* Page wrapper */
+.page {
+  padding: 0;
+  min-height: 100vh;
+  background: #f1f5f9;
+}
+
+/* Top Bar — matches dashboard */
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 32px 24px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  gap: 16px;
+}
+
+.topBarLeft { display: flex; flex-direction: column; gap: 2px; }
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.sub {
+  font-size: 0.84rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.addBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #e50202;
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.addBtn:hover { background: #c91920; }
+
+/* Content area */
+.content {
+  padding: 28px 32px;
+}
+
+/* Table card */
+.tableWrap {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+}
+
+.table thead tr {
+  background: #f8fafc;
+}
+
+.table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+  vertical-align: middle;
+}
+
+.table tr:last-child td { border-bottom: none; }
+.table tr:hover td { background: #f8fafc; }
+
+.mono {
+  font-family: monospace;
+  font-size: 0.82rem;
+  color: #64748b;
+}
+
+.empty {
+  text-align: center;
+  color: #94a3b8;
+  padding: 48px 20px !important;
+  font-size: 0.88rem;
+}
+
+/* Badges */
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  letter-spacing: 0.02em;
+}
+
+.clean     { background: #dcfce7; color: #166534; }
+.rebuilt   { background: #fef9c3; color: #854d0e; }
+.active    { background: #dbeafe; color: #1d4ed8; }
+.sold      { background: #f1f5f9; color: #64748b; }
+.hidden    { background: #fee2e2; color: #991b1b; }
+.new       { background: #fef9c3; color: #854d0e; }
+.reviewed  { background: #dbeafe; color: #1d4ed8; }
+.contacted { background: #e0f2fe; color: #0369a1; }
+.approved  { background: #dcfce7; color: #166534; }
+.rejected  { background: #fee2e2; color: #991b1b; }
+.completed { background: #dcfce7; color: #166534; }
+.scheduled { background: #dbeafe; color: #1d4ed8; }
+.documents-reviewed { background: #fef9c3; color: #854d0e; }
+
+/* Unread dot */
+.unreadDot {
+  width: 8px;
+  height: 8px;
+  background: #e50202;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Doc badges */
+.docBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  padding: 2px 8px;
+  border-radius: 5px;
+  font-size: 0.72rem;
+  color: #475569;
+  font-weight: 600;
+  margin-right: 4px;
+}
+
+/* Action buttons */
+.actions {
+  display: flex;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.editBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  background: #0f172a;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.editBtn:hover { background: #1e293b; }
+
+.viewBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  background: #f1f5f9;
+  color: #475569;
+  border-radius: 6px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid #e2e8f0;
+  transition: all 0.15s;
+}
+
+.viewBtn:hover { background: #e2e8f0; color: #1e293b; }
+
+/* pageHeader kept for backward compat */
+.pageHeader { display: none; }
+
+@media (max-width: 768px) {
+  .topBar { padding: 20px; flex-direction: column; align-items: flex-start; }
+  .content { padding: 20px; }
+}

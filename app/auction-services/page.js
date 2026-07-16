@@ -53,7 +53,7 @@ const knowItems = [
   {
     label: 'SERVICE FEE\nREQUIRED',
     icon: (
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#e10001" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#e50202" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="10"/>
         <line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
       </svg>
@@ -62,7 +62,7 @@ const knowItems = [
   {
     label: 'VEHICLE COST\nSEPARATE',
     icon: (
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#e10001" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#e50202" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <rect x="1" y="3" width="15" height="13" rx="2"/>
         <path d="M16 8h4l3 5v3h-7V8z"/>
         <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
@@ -72,7 +72,7 @@ const knowItems = [
   {
     label: 'AUCTION FEES\nMAY APPLY',
     icon: (
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#e10001" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#e50202" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M14 14l-7.5 7.5a2.121 2.121 0 0 1-3-3L11 11"/>
         <path d="M4 4l4 4M14 4l4 4M4 14l4-4"/>
         <line x1="14" y1="4" x2="20" y2="10"/>
@@ -82,11 +82,11 @@ const knowItems = [
   {
     label: 'TRANSPORTATION\nMAY APPLY',
     icon: (
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#e10001" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#e50202" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <rect x="1" y="3" width="15" height="13" rx="2"/>
         <path d="M16 8h4l3 5v3h-7V8z"/>
         <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
-        <path d="M16 3h5" stroke="#e10001" strokeWidth="2"/>
+        <path d="M16 3h5" stroke="#e50202" strokeWidth="2"/>
       </svg>
     ),
   },
@@ -97,7 +97,7 @@ const auctions = [
     name: 'IAAI',
     logo: (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 100, height: 60 }}>
-        <span style={{ fontSize: 42, fontWeight: 900, color: '#e10001', letterSpacing: '-2px', fontFamily: 'Arial Black, sans-serif' }}>AA</span>
+        <span style={{ fontSize: 42, fontWeight: 900, color: '#e50202', letterSpacing: '-2px', fontFamily: 'Arial Black, sans-serif' }}>AA</span>
       </div>
     ),
   },
@@ -141,9 +141,44 @@ export default function AuctionServicesPage() {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
-  function handleSubmit(e) {
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  const phoneRe = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
+  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  function handleChange(e) {
+    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    if (errors[e.target.name]) setErrors(p => { const n={...p}; delete n[e.target.name]; return n });
+  }
+
+  async function handleSubmit(e) {
     e.preventDefault();
-    alert('Your auction purchase request has been submitted. We will contact you shortly!');
+    const errs = {};
+    if (!form.firstName.trim()) errs.firstName = 'First Name cannot be blank.';
+    if (!form.lastName.trim())  errs.lastName  = 'Last Name cannot be blank.';
+    if (!form.phone.trim())     errs.phone     = 'Phone Number cannot be blank.';
+    else if (!phoneRe.test(form.phone.trim())) errs.phone = 'Enter a valid phone number.';
+    if (!form.email.trim())     errs.email     = 'Email cannot be blank.';
+    else if (!emailRe.test(form.email.trim())) errs.email = 'Enter a valid email address.';
+    if (Object.keys(errs).length) { setErrors(errs); return; }
+    setSubmitting(true);
+    try {
+      const res = await fetch('/api/auction', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error('Failed');
+      setSubmitted(true);
+      setForm({ firstName: '', lastName: '', phone: '', email: '', auctionLink: '', lotNumber: '', notes: '' });
+      setErrors({});
+    } catch {
+      alert('Something went wrong. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -239,25 +274,35 @@ export default function AuctionServicesPage() {
             <div className={styles.formCol}>
               <h2 className={styles.colTitle}>START MY AUCTION PURCHASE</h2>
               <div className={styles.colLine} />
+              {submitted ? (
+                <div style={{padding:'32px 0',textAlign:'center'}}>
+                  <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  <p style={{marginTop:12,fontWeight:600}}>Request submitted! We will contact you shortly.</p>
+                </div>
+              ) : (
               <form className={styles.form} onSubmit={handleSubmit}>
                 <div className={styles.formRow}>
                   <div className={styles.formGroup}>
-                    <label className={styles.label}>First Name</label>
-                    <input className={styles.input} name="firstName" value={form.firstName} onChange={handleChange} placeholder="First Name" required />
+                    <label className={styles.label}>First Name <span style={{color:'#c00'}}>*</span></label>
+                    <input className={`${styles.input} ${errors.firstName ? styles.inputError : ''}`} name="firstName" value={form.firstName} onChange={handleChange} placeholder="First Name" />
+                    {errors.firstName && <span className={styles.fieldError}>{errors.firstName}</span>}
                   </div>
                   <div className={styles.formGroup}>
-                    <label className={styles.label}>Last Name</label>
-                    <input className={styles.input} name="lastName" value={form.lastName} onChange={handleChange} placeholder="Last Name" required />
+                    <label className={styles.label}>Last Name <span style={{color:'#c00'}}>*</span></label>
+                    <input className={`${styles.input} ${errors.lastName ? styles.inputError : ''}`} name="lastName" value={form.lastName} onChange={handleChange} placeholder="Last Name" />
+                    {errors.lastName && <span className={styles.fieldError}>{errors.lastName}</span>}
                   </div>
                 </div>
                 <div className={styles.formRow}>
                   <div className={styles.formGroup}>
-                    <label className={styles.label}>Phone Number</label>
-                    <input className={styles.input} name="phone" value={form.phone} onChange={handleChange} placeholder="Phone Number" required />
+                    <label className={styles.label}>Phone Number <span style={{color:'#c00'}}>*</span></label>
+                    <input className={`${styles.input} ${errors.phone ? styles.inputError : ''}`} name="phone" value={form.phone} onChange={handleChange} placeholder="Phone Number" />
+                    {errors.phone && <span className={styles.fieldError}>{errors.phone}</span>}
                   </div>
                   <div className={styles.formGroup}>
-                    <label className={styles.label}>Email</label>
-                    <input className={styles.input} name="email" type="email" value={form.email} onChange={handleChange} placeholder="Email" required />
+                    <label className={styles.label}>Email <span style={{color:'#c00'}}>*</span></label>
+                    <input className={`${styles.input} ${errors.email ? styles.inputError : ''}`} name="email" value={form.email} onChange={handleChange} placeholder="Email" />
+                    {errors.email && <span className={styles.fieldError}>{errors.email}</span>}
                   </div>
                 </div>
                 <div className={styles.formRow}>
@@ -274,15 +319,16 @@ export default function AuctionServicesPage() {
                   <label className={styles.label}>Additional Notes</label>
                   <textarea className={styles.textarea} name="notes" value={form.notes} onChange={handleChange} placeholder="Additional Notes" rows={4} />
                 </div>
-                <button type="submit" className={styles.submitBtn}>
+                <button type="submit" className={styles.submitBtn} disabled={submitting}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="1" y="3" width="15" height="13" rx="2"/>
                     <path d="M16 8h4l3 5v3h-7V8z"/>
                     <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
                   </svg>
-                  START MY AUCTION PURCHASE
+                  {submitting ? 'SUBMITTING...' : 'START MY AUCTION PURCHASE'}
                 </button>
               </form>
+              )}
             </div>
           </div>
         </div>
