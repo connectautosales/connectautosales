@@ -7,4 +7,4 @@ npm-debug.log*
 .DS_Store
 
 /app/generated/prisma
-public/uploads/
+
