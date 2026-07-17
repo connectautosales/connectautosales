@@ -1,31 +1,37 @@
 import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
+import { put } from '@vercel/blob'
 import { sendMail } from '@/lib/mailer'
 import { inspectionCustomer, inspectionAdmin } from '@/lib/emailTemplates'
 
-const saveFile = async (field, formData) => {
+const uploadFile = async (field, formData) => {
   try {
     const file = formData.get(field)
     if (!file || typeof file === 'string') return null
 
-    // Try local filesystem (works locally, fails on Vercel — handled gracefully)
+    // Try Vercel Blob if token is available
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      const nameParts = file.name.split('.')
+      const ext = nameParts.length > 1 ? nameParts[nameParts.length - 1] : 'pdf'
+      const filename = `inspections/${field}-${Date.now()}.${ext}`
+      const blob = await put(filename, file, { access: 'public' })
+      return blob.url
+    }
+
+    // Fallback: local filesystem (dev only)
     const { writeFile, mkdir } = await import('fs/promises')
     const path = await import('path')
     const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'inspections')
     await mkdir(uploadDir, { recursive: true })
     const nameParts = file.name.split('.')
-    const ext = nameParts.length > 1 ? nameParts.pop() : (file.type.split('/')[1] || 'pdf')
+    const ext = nameParts.length > 1 ? nameParts.pop() : 'pdf'
     const filename = `${field}-${Date.now()}.${ext}`
     const bytes = await file.arrayBuffer()
     await writeFile(path.join(uploadDir, filename), Buffer.from(bytes))
     return `/uploads/inspections/${filename}`
-  } catch {
-    // File upload not supported in this environment — store filename only
-    try {
-      const file = formData.get(field)
-      if (!file || typeof file === 'string') return null
-      return file.name || null
-    } catch { return null }
+  } catch (e) {
+    console.error(`File upload failed for ${field}:`, e.message)
+    return null
   }
 }
 
@@ -40,9 +46,9 @@ export async function POST(req) {
     const partsChanged = formData.get('partsChanged') || ''
 
     const [salvageTitle, validId, receipts] = await Promise.all([
-      saveFile('salvageTitle', formData),
-      saveFile('validId', formData),
-      saveFile('receipts', formData),
+      uploadFile('salvageTitle', formData),
+      uploadFile('validId', formData),
+      uploadFile('receipts', formData),
     ])
 
     await prisma.$executeRaw`
