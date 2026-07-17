@@ -10,7 +10,8 @@ export default async function EditCar({ params }) {
   if (!session) redirect('/admin/login')
 
   const { id } = await params
-  const car = await prisma.car.findUnique({ where: { id: parseInt(id) } })
+  const rows = await prisma.$queryRaw`SELECT * FROM car WHERE id = ${parseInt(id)} LIMIT 1`
+  const car = rows[0] || null
   if (!car) notFound()
 
   return <CarForm car={car} />

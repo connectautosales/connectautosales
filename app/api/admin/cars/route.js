@@ -20,11 +20,15 @@ export async function POST(req) {
 
   try {
     const data = await req.json()
-    const car = await prisma.car.create({ data })
-    // Generate slug after we have the id
-    const slug = makeSlug(car.year, car.make, car.model, car.trim, car.id)
-    const updated = await prisma.car.update({ where: { id: car.id }, data: { slug } })
-    return NextResponse.json(updated)
+    const cols = Object.keys(data).map(k => `\`${k}\``).join(', ')
+    const vals = Object.values(data)
+    const placeholders = vals.map(() => '?').join(', ')
+    await prisma.$executeRawUnsafe(`INSERT INTO car (${cols}) VALUES (${placeholders})`, ...vals)
+    const [newCar] = await prisma.$queryRaw`SELECT * FROM car ORDER BY id DESC LIMIT 1`
+    const slug = makeSlug(newCar.year, newCar.make, newCar.model, newCar.trim, newCar.id)
+    await prisma.$executeRaw`UPDATE car SET slug = ${slug} WHERE id = ${newCar.id}`
+    newCar.slug = slug
+    return NextResponse.json(newCar)
   } catch (e) {
     return NextResponse.json({ error: e.message }, { status: 400 })
   }

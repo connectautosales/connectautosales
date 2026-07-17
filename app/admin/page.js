@@ -9,42 +9,40 @@ export default async function AdminDashboard() {
   const session = await getServerSession(authOptions)
   if (!session) redirect('/admin/login')
 
-  const [cars, financing, auction, inspections, contacts, transport, visitorToday, visitorWeek] = await Promise.all([
-    prisma.car.count(),
-    prisma.financingApplication.count(),
-    prisma.auctionRequest.count(),
-    prisma.salvageInspection.count(),
-    prisma.contactMessage.count({ where: { isRead: false } }),
-    prisma.transportRequest.count(),
+  const [
+    [{ count: cars }], [{ count: financing }], [{ count: auction }],
+    [{ count: inspections }], [{ count: contacts }], [{ count: transport }],
+    visitorToday, visitorWeek,
+  ] = await Promise.all([
+    prisma.$queryRaw`SELECT COUNT(*) as count FROM car`,
+    prisma.$queryRaw`SELECT COUNT(*) as count FROM financingapplication`,
+    prisma.$queryRaw`SELECT COUNT(*) as count FROM auctionrequest`,
+    prisma.$queryRaw`SELECT COUNT(*) as count FROM salvageinspection`,
+    prisma.$queryRaw`SELECT COUNT(*) as count FROM contactmessage WHERE isRead = 0`,
+    prisma.$queryRaw`SELECT COUNT(*) as count FROM transportrequest`,
     prisma.$queryRaw`SELECT COUNT(*) as count FROM visitorlog WHERE DATE(createdAt) = CURDATE()`.catch(() => [{ count: 0 }]),
     prisma.$queryRaw`SELECT COUNT(*) as count FROM visitorlog WHERE createdAt >= DATE_SUB(NOW(), INTERVAL 7 DAY)`.catch(() => [{ count: 0 }]),
   ])
 
-  const [newFinancing, newAuction, newInspections, soldCars, activeCars] = await Promise.all([
-    prisma.financingApplication.count({ where: { status: 'new' } }),
-    prisma.auctionRequest.count({ where: { status: 'new' } }),
-    prisma.salvageInspection.count({ where: { status: 'new' } }),
-    prisma.car.count({ where: { status: 'sold' } }),
-    prisma.car.count({ where: { status: 'active' } }),
+  const [
+    [{ count: newFinancing }], [{ count: newAuction }], [{ count: newInspections }],
+    [{ count: soldCars }], [{ count: activeCars }],
+  ] = await Promise.all([
+    prisma.$queryRaw`SELECT COUNT(*) as count FROM financingapplication WHERE status = 'new'`,
+    prisma.$queryRaw`SELECT COUNT(*) as count FROM auctionrequest WHERE status = 'new'`,
+    prisma.$queryRaw`SELECT COUNT(*) as count FROM salvageinspection WHERE status = 'new'`,
+    prisma.$queryRaw`SELECT COUNT(*) as count FROM car WHERE status = 'sold'`,
+    prisma.$queryRaw`SELECT COUNT(*) as count FROM car WHERE status = 'active'`,
   ])
 
-  const recentFinancing = await prisma.financingApplication.findMany({
-    orderBy: { createdAt: 'desc' },
-    take: 5,
-    select: { id: true, firstName: true, lastName: true, status: true, createdAt: true },
-  })
-
-  const recentContacts = await prisma.contactMessage.findMany({
-    orderBy: { createdAt: 'desc' },
-    take: 5,
-    select: { id: true, name: true, email: true, subject: true, isRead: true, createdAt: true },
-  })
+  const recentFinancing = await prisma.$queryRaw`SELECT id, firstName, lastName, status, createdAt FROM financingapplication ORDER BY createdAt DESC LIMIT 5`
+  const recentContacts = await prisma.$queryRaw`SELECT id, name, email, subject, isRead, createdAt FROM contactmessage ORDER BY createdAt DESC LIMIT 5`
 
   const stats = [
     {
       label: 'Active Inventory',
-      value: activeCars,
-      sub: `${soldCars} vehicles sold`,
+      value: Number(activeCars),
+      sub: `${Number(soldCars)} vehicles sold`,
       icon: 'fa-solid fa-car',
       href: '/admin/inventory',
       color: '#e50202',
@@ -52,8 +50,8 @@ export default async function AdminDashboard() {
     },
     {
       label: 'Financing Apps',
-      value: financing,
-      sub: `${newFinancing} new applications`,
+      value: Number(financing),
+      sub: `${Number(newFinancing)} new applications`,
       icon: 'fa-solid fa-file-invoice-dollar',
       href: '/admin/financing',
       color: '#e50202',
@@ -61,8 +59,8 @@ export default async function AdminDashboard() {
     },
     {
       label: 'Auction Requests',
-      value: auction,
-      sub: `${newAuction} new requests`,
+      value: Number(auction),
+      sub: `${Number(newAuction)} new requests`,
       icon: 'fa-solid fa-gavel',
       href: '/admin/auction',
       color: '#e50202',
@@ -70,8 +68,8 @@ export default async function AdminDashboard() {
     },
     {
       label: 'Inspections',
-      value: inspections,
-      sub: `${newInspections} pending review`,
+      value: Number(inspections),
+      sub: `${Number(newInspections)} pending review`,
       icon: 'fa-solid fa-magnifying-glass',
       href: '/admin/inspections',
       color: '#e50202',
@@ -79,7 +77,7 @@ export default async function AdminDashboard() {
     },
     {
       label: 'Unread Messages',
-      value: contacts,
+      value: Number(contacts),
       sub: 'from contact form',
       icon: 'fa-solid fa-envelope',
       href: '/admin/contacts',
@@ -88,7 +86,7 @@ export default async function AdminDashboard() {
     },
     {
       label: 'Transport Quotes',
-      value: transport,
+      value: Number(transport),
       sub: 'total requests',
       icon: 'fa-solid fa-truck',
       href: '/admin/transport',

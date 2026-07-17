@@ -4,13 +4,12 @@ import { NextResponse } from 'next/server'
 export async function GET(req, { params }) {
   try {
     const { slug } = await params
-    // Try slug first, fallback to numeric id
     const isNumeric = /^\d+$/.test(slug)
-    const car = isNumeric
-      ? await prisma.car.findUnique({ where: { id: parseInt(slug) } })
-      : await prisma.car.findUnique({ where: { slug } })
-    if (!car) return NextResponse.json({ error: 'Not found' }, { status: 404 })
-    return NextResponse.json(car)
+    const rows = isNumeric
+      ? await prisma.$queryRaw`SELECT * FROM car WHERE id = ${parseInt(slug)} LIMIT 1`
+      : await prisma.$queryRaw`SELECT * FROM car WHERE slug = ${slug} LIMIT 1`
+    if (!rows.length) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    return NextResponse.json(rows[0])
   } catch (e) {
     return NextResponse.json({ error: e.message }, { status: 500 })
   }

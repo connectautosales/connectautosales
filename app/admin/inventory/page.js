@@ -9,7 +9,7 @@ export default async function AdminInventory() {
   const session = await getServerSession(authOptions)
   if (!session) redirect('/admin/login')
 
-  const cars = await prisma.car.findMany({ orderBy: { createdAt: 'desc' } })
+  const cars = await prisma.$queryRaw`SELECT * FROM car ORDER BY createdAt DESC`
 
   return (
     <div className={styles.page}>

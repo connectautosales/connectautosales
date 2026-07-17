@@ -3,13 +3,8 @@ import { NextResponse } from 'next/server'
 
 export async function GET() {
   try {
-    // Return cached reviews from DB
-    const reviews = await prisma.review.findMany({
-      orderBy: { time: 'desc' },
-    })
-
-    // Get settings for live rating from Google
-    const settings = await prisma.siteSettings.findUnique({ where: { id: 1 } })
+    const settingsRows = await prisma.$queryRaw`SELECT * FROM sitesettings WHERE id = 1 LIMIT 1`
+    const settings = settingsRows[0] || null
 
     let liveRating = null
     let liveCount  = null
@@ -24,28 +19,21 @@ export async function GET() {
           liveRating = data.result.rating
           liveCount  = data.result.user_ratings_total
 
-          // Upsert fresh reviews into cache
           if (data.result.reviews?.length) {
-            // Clear old google reviews and replace with fresh ones
-            await prisma.review.deleteMany({ where: { source: 'google' } })
-            await prisma.review.createMany({
-              data: data.result.reviews.map(r => ({
-                authorName:  r.author_name,
-                authorPhoto: r.profile_photo_url,
-                rating:      r.rating,
-                text:        r.text,
-                time:        r.time,
-                source:      'google',
-              }))
-            })
+            await prisma.$executeRaw`DELETE FROM review WHERE source = 'google'`
+            for (const r of data.result.reviews) {
+              await prisma.$executeRaw`
+                INSERT INTO review (authorName, authorPhoto, rating, text, time, source)
+                VALUES (${r.author_name}, ${r.profile_photo_url}, ${r.rating}, ${r.text}, ${r.time}, 'google')
+              `
+            }
           }
         }
       } catch (_) {}
     }
 
-    const finalReviews = await prisma.review.findMany({ orderBy: { time: 'desc' } })
+    const finalReviews = await prisma.$queryRaw`SELECT * FROM review ORDER BY time DESC`
 
-    // Fall back to calculating from DB if Google API didn't return live stats
     if (!liveRating && finalReviews.length) {
       const avg = finalReviews.reduce((s, r) => s + (r.rating || 5), 0) / finalReviews.length
       liveRating = Math.round(avg * 10) / 10
@@ -54,11 +42,7 @@ export async function GET() {
       liveCount = finalReviews.length
     }
 
-    return NextResponse.json({
-      reviews: finalReviews,
-      rating:  liveRating,
-      count:   liveCount,
-    })
+    return NextResponse.json({ reviews: finalReviews, rating: liveRating, count: liveCount })
   } catch (e) {
     return NextResponse.json({ reviews: [], rating: null, count: null })
   }
