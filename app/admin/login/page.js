@@ -1,7 +1,8 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import styles from './page.module.css'
 
 export default function AdminLogin() {
@@ -10,6 +11,11 @@ export default function AdminLogin() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [showPass, setShowPass] = useState(false)
+  const [logoUrl, setLogoUrl] = useState(null)
+
+  useEffect(() => {
+    fetch('/api/settings').then(r => r.json()).then(d => setLogoUrl(d.logoUrl || null)).catch(() => {})
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -32,9 +38,15 @@ export default function AdminLogin() {
     <div className={styles.page}>
       <div className={styles.leftPanel}>
         <div className={styles.leftContent}>
-          <div className={styles.brandIcon}>
-            <i className="fa-solid fa-car-side" />
-          </div>
+          {logoUrl ? (
+            <div className={styles.logoWrap}>
+              <Image src={logoUrl} alt="Logo" width={160} height={52} style={{ objectFit: 'contain', filter: 'brightness(0) invert(1)' }} unoptimized />
+            </div>
+          ) : (
+            <div className={styles.brandIcon}>
+              <i className="fa-solid fa-car-side" />
+            </div>
+          )}
           <h1 className={styles.brandName}>Connect <span>Auto</span> Sales</h1>
           <p className={styles.brandTagline}>Manage your dealership operations from one place.</p>
           <ul className={styles.featureList}>
