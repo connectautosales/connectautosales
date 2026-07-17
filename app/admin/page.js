@@ -9,13 +9,15 @@ export default async function AdminDashboard() {
   const session = await getServerSession(authOptions)
   if (!session) redirect('/admin/login')
 
-  const [cars, financing, auction, inspections, contacts, transport] = await Promise.all([
+  const [cars, financing, auction, inspections, contacts, transport, visitorToday, visitorWeek] = await Promise.all([
     prisma.car.count(),
     prisma.financingApplication.count(),
     prisma.auctionRequest.count(),
     prisma.salvageInspection.count(),
     prisma.contactMessage.count({ where: { isRead: false } }),
     prisma.transportRequest.count(),
+    prisma.$queryRaw`SELECT COUNT(*) as count FROM visitorlog WHERE DATE(createdAt) = CURDATE()`.catch(() => [{ count: 0 }]),
+    prisma.$queryRaw`SELECT COUNT(*) as count FROM visitorlog WHERE createdAt >= DATE_SUB(NOW(), INTERVAL 7 DAY)`.catch(() => [{ count: 0 }]),
   ])
 
   const [newFinancing, newAuction, newInspections, soldCars, activeCars] = await Promise.all([
@@ -92,6 +94,15 @@ export default async function AdminDashboard() {
       href: '/admin/transport',
       color: '#e50202',
       bg: '#fff1f2',
+    },
+    {
+      label: "Today's Visitors",
+      value: Number(visitorToday[0]?.count || 0),
+      sub: `${Number(visitorWeek[0]?.count || 0)} this week`,
+      icon: 'fa-solid fa-chart-bar',
+      href: '/admin/visitors',
+      color: '#2563eb',
+      bg: '#eff6ff',
     },
   ]
 

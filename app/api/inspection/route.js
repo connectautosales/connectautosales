@@ -2,6 +2,8 @@ import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
 import { writeFile, mkdir } from 'fs/promises'
 import path from 'path'
+import { sendMail } from '@/lib/mailer'
+import { inspectionCustomer, inspectionAdmin } from '@/lib/emailTemplates'
 
 export async function POST(req) {
   try {
@@ -37,6 +39,19 @@ export async function POST(req) {
     const inspection = await prisma.salvageInspection.create({
       data: { firstName, lastName, phone, email, partsChanged, salvageTitle, validId, receipts },
     })
+
+    await Promise.allSettled([
+      email && sendMail({
+        to: email,
+        subject: 'Documents Received — Connect Auto Sales',
+        html: inspectionCustomer({ firstName }),
+      }),
+      sendMail({
+        to: process.env.NOTIFY_EMAIL,
+        subject: `New Inspection Request — ${firstName} ${lastName}`,
+        html: inspectionAdmin({ firstName, lastName, phone, email }),
+      }),
+    ])
 
     return NextResponse.json({ ok: true, id: inspection.id })
   } catch (e) {

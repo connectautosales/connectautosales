@@ -162,8 +162,10 @@ export default function TestDriveModal({ isOpen, onClose, vehicle = '' }) {
               </div>
 
               <button type="submit" className={styles.submitBtn} disabled={submitting}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-                {submitting ? 'Submitting...' : 'Schedule Test Drive'}
+                {submitting
+                  ? <><span className="btn-spinner" />Submitting...</>
+                  : <><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight:'8px',verticalAlign:'middle'}}><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>Schedule Test Drive</>
+                }
               </button>
             </form>
           </>

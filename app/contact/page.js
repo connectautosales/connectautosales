@@ -43,6 +43,7 @@ export default function ContactPage() {
   const [openFaq, setOpenFaq] = useState(null)
   const [form, setForm] = useState({ firstName: '', phone: '', email: '', topic: '', message: '' })
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
   const [errors, setErrors] = useState({})
 
   const phoneRe = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/
@@ -62,6 +63,7 @@ export default function ContactPage() {
     if (!form.message.trim())   errs.message   = 'Message cannot be blank.'
     if (form.phone.trim() && !phoneRe.test(form.phone.trim())) errs.phone = 'Enter a valid phone number.'
     if (Object.keys(errs).length) { setErrors(errs); return }
+    setSubmitting(true)
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
@@ -70,6 +72,7 @@ export default function ContactPage() {
       })
       if (!res.ok) throw new Error('Failed')
     } catch {}
+    setSubmitting(false)
     setSubmitted(true)
     setForm({ firstName: '', phone: '', email: '', topic: '', message: '' })
     setErrors({})
@@ -278,11 +281,13 @@ export default function ContactPage() {
                     {errors.message && <span className={styles.fieldError}>{errors.message}</span>}
                   </div>
 
-                  <button type="submit" className={styles.submitBtn}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                    </svg>
-                    SEND MESSAGE
+                  <button type="submit" className={styles.submitBtn} disabled={submitting}>
+                    {submitting
+                      ? <><span className="btn-spinner" />SENDING...</>
+                      : <><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight:'8px',verticalAlign:'middle'}}>
+                          <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                        </svg>SEND MESSAGE</>
+                    }
                   </button>
                   <p className={styles.secureNote}>
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>

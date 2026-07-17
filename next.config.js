@@ -8,6 +8,10 @@ const nextConfig = {
         pathname: '/wp-content/uploads/**',
       },
     ],
+    localPatterns: [
+      { pathname: '/uploads/**' },
+      { pathname: '/images/**' },
+    ],
   },
 }
 

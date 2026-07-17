@@ -78,7 +78,12 @@ export default function HomePage() {
   useEffect(() => {
     fetch('/api/cars')
       .then(r => r.json())
-      .then(data => setFeaturedCars((data || []).filter(c => c.isNewArrival || c.newArrival).slice(0, 6)))
+      .then(data => {
+        const all = data || []
+        const newArrivals = all.filter(c => c.isNewArrival || c.newArrival)
+        const rest = all.filter(c => !c.isNewArrival && !c.newArrival)
+        setFeaturedCars([...newArrivals, ...rest].slice(0, 6))
+      })
       .catch(() => {})
 
     fetch('/api/reviews')

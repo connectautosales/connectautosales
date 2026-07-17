@@ -625,7 +625,7 @@ export default function FinancingPage() {
                   )}
                   {step < 6
                     ? <button type="button" onClick={goNext} className={styles.nextBtn}>NEXT STEP <span style={{fontSize:'1.1em',lineHeight:1}}>&#8250;</span></button>
-                    : <button type="submit" className={styles.nextBtn} disabled={submitting}>{submitting ? 'SUBMITTING...' : 'SUBMIT APPLICATION'}</button>
+                    : <button type="submit" className={styles.nextBtn} disabled={submitting}>{submitting ? <><span className="btn-spinner" />SUBMITTING...</> : 'SUBMIT APPLICATION'}</button>
                   }
                 </div>
               </form>

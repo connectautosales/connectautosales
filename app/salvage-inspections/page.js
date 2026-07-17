@@ -74,7 +74,7 @@ function FileUpload({ label, icon, name, hasError, onFileChange }) {
 
 export default function SalvageInspectionsPage() {
   const [openFaq, setOpenFaq] = useState(null);
-  const [form, setForm] = useState({ firstName: '', lastName: '', phone: '', notes: '' });
+  const [form, setForm] = useState({ firstName: '', lastName: '', phone: '', email: '', notes: '' });
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
@@ -108,6 +108,8 @@ export default function SalvageInspectionsPage() {
     if (!form.lastName.trim())  errs.lastName  = 'Last Name cannot be blank.';
     if (!form.phone.trim())     errs.phone     = 'Phone Number cannot be blank.';
     else if (!phoneRe.test(form.phone.trim())) errs.phone = 'Enter a valid phone number.';
+    if (!form.email.trim())     errs.email     = 'Email cannot be blank.';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) errs.email = 'Enter a valid email address.';
     const salvageFile = formRef.current?.querySelector('[name="salvageTitle"]')?.files?.[0];
     const idFile      = formRef.current?.querySelector('[name="validId"]')?.files?.[0];
     const receiptsFile = formRef.current?.querySelector('[name="receipts"]')?.files?.[0];
@@ -123,7 +125,7 @@ export default function SalvageInspectionsPage() {
       if (!res.ok) throw new Error('Failed');
       setSubmitted(true);
       setErrors({});
-      setForm({ firstName: '', lastName: '', phone: '', notes: '' });
+      setForm({ firstName: '', lastName: '', phone: '', email: '', notes: '' });
     } catch {
       alert('Something went wrong. Please try again.');
     } finally {
@@ -273,6 +275,10 @@ export default function SalvageInspectionsPage() {
                     <input className={`${styles.input} ${errors.phone ? styles.inputError : ''}`} name="phone" value={form.phone} onChange={handleChange} placeholder="Phone Number *" />
                     {errors.phone && <span className={styles.fieldError}>{errors.phone}</span>}
                   </div>
+                  <div>
+                    <input className={`${styles.input} ${errors.email ? styles.inputError : ''}`} name="email" value={form.email} onChange={handleChange} placeholder="Email Address *" />
+                    {errors.email && <span className={styles.fieldError}>{errors.email}</span>}
+                  </div>
 
                   <div className={styles.uploadsRow}>
                     <div>
@@ -325,8 +331,10 @@ export default function SalvageInspectionsPage() {
                     rows={10}
                   />
                   <button type="submit" className={styles.submitBtn} disabled={submitting}>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="9 12 11 14 15 10"/></svg>
-                    {submitting ? 'SUBMITTING...' : 'SUBMIT DOCUMENTS FOR REVIEW'}
+                    {submitting
+                      ? <><span className="btn-spinner" />SUBMITTING...</>
+                      : <><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight:'8px',verticalAlign:'middle'}}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="9 12 11 14 15 10"/></svg>SUBMIT DOCUMENTS FOR REVIEW</>
+                    }
                   </button>
                 </div>
               </div>

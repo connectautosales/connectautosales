@@ -249,6 +249,7 @@
   color: #374151;
   transition: border-color .15s, background .15s;
   user-select: none;
+  white-space: nowrap;
 }
 .radioOption input[type="radio"] { accent-color: #e50202; }
 .radioChecked {

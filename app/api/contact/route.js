@@ -1,11 +1,12 @@
 import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
+import { sendMail } from '@/lib/mailer'
+import { contactCustomer, contactAdmin } from '@/lib/emailTemplates'
 
 export async function POST(req) {
   try {
     const body = await req.json()
 
-    // Map public form fields → schema fields
     const data = {
       name:    body.name    || body.firstName || null,
       phone:   body.phone   || null,
@@ -15,6 +16,20 @@ export async function POST(req) {
     }
 
     const msg = await prisma.contactMessage.create({ data })
+
+    await Promise.allSettled([
+      data.email && sendMail({
+        to: data.email,
+        subject: 'We Received Your Message — Connect Auto Sales',
+        html: contactCustomer({ name: data.name }),
+      }),
+      sendMail({
+        to: process.env.NOTIFY_EMAIL,
+        subject: `New Contact Message — ${data.name || 'Unknown'}`,
+        html: contactAdmin(data),
+      }),
+    ])
+
     return NextResponse.json({ ok: true, id: msg.id })
   } catch (e) {
     console.error('Contact submit error:', e)

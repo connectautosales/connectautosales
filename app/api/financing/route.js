@@ -1,5 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
+import { sendMail } from '@/lib/mailer'
+import { financingCustomer, financingAdmin } from '@/lib/emailTemplates'
 
 export async function POST(req) {
   try {
@@ -44,6 +46,19 @@ export async function POST(req) {
         ${d.signature || ''}, ${d.agreeTerms ? 1 : 0}, 'new', NOW()
       )
     `
+
+    await Promise.allSettled([
+      d.email && sendMail({
+        to: d.email,
+        subject: 'Financing Application Received — Connect Auto Sales',
+        html: financingCustomer({ firstName: d.firstName }),
+      }),
+      sendMail({
+        to: process.env.NOTIFY_EMAIL,
+        subject: `New Financing Application — ${d.firstName} ${d.lastName}`,
+        html: financingAdmin(d),
+      }),
+    ])
 
     return NextResponse.json({ ok: true })
   } catch (e) {

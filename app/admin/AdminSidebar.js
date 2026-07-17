@@ -11,10 +11,11 @@ const nav = [
   { href: '/admin/inventory',    label: 'Inventory',         icon: 'fa-solid fa-car' },
   { href: '/admin/financing',    label: 'Financing Apps',    icon: 'fa-solid fa-file-invoice-dollar' },
   { href: '/admin/auction',      label: 'Auction Requests',  icon: 'fa-solid fa-gavel' },
-  { href: '/admin/inspections',  label: 'Inspections',       icon: 'fa-solid fa-magnifying-glass' },
+  { href: '/admin/inspections',  label: 'Salvage Inspections', icon: 'fa-solid fa-magnifying-glass' },
   { href: '/admin/test-drives',  label: 'Test Drives',       icon: 'fa-solid fa-car-side' },
   { href: '/admin/contacts',     label: 'Contact Messages',  icon: 'fa-solid fa-envelope' },
   { href: '/admin/transport',    label: 'Transport Quotes',  icon: 'fa-solid fa-truck' },
+  { href: '/admin/visitors',     label: 'Visitors',          icon: 'fa-solid fa-chart-bar' },
   { href: '/admin/settings',     label: 'Website Settings',  icon: 'fa-solid fa-gear' },
 ]
 
@@ -31,17 +32,21 @@ export default function AdminSidebar() {
     <aside className={styles.sidebar}>
       {/* Logo */}
       <div className={styles.logoWrap}>
-        {logoUrl
-          ? <Image
-              src={logoUrl}
-              alt="Connect Auto Sales"
-              width={160}
-              height={60}
-              style={{ objectFit: 'contain', width: '100%', height: 'auto', maxHeight: 60 }}
-              unoptimized
-            />
-          : <div style={{ color: '#f1f5f9', fontWeight: 800, fontSize: 16 }}>Connect Auto Sales</div>
-        }
+        {logoUrl ? (
+          <Image
+            src={logoUrl}
+            alt="Connect Auto Sales"
+            width={160}
+            height={60}
+            style={{ objectFit: 'contain', width: 'auto', height: 'auto', maxHeight: 56, maxWidth: 180, filter: 'brightness(0) invert(1)' }}
+            unoptimized
+          />
+        ) : (
+          <div className={styles.brandText}>
+            <span className={styles.brandName}>CONNECT AUTO</span>
+            <span className={styles.brandSub}>SALES <span className={styles.brandDot}>●</span> ADMIN</span>
+          </div>
+        )}
       </div>
 
       {/* Nav */}
