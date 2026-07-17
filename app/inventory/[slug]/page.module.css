@@ -38,7 +38,7 @@
 
 .layout {
   display: grid;
-  grid-template-columns: 1fr 360px;
+  grid-template-columns: 70% 1fr;
   gap: 28px;
   align-items: start;
 }
