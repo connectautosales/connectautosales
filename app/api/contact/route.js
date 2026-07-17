@@ -15,7 +15,12 @@ export async function POST(req) {
       message: body.message || null,
     }
 
-    const msg = await prisma.contactMessage.create({ data })
+    await prisma.$executeRaw`
+      INSERT INTO contactmessage (name, phone, email, subject, message, isRead, createdAt)
+      VALUES (${data.name}, ${data.phone}, ${data.email}, ${data.subject}, ${data.message}, 0, NOW())
+    `
+    const rows = await prisma.$queryRaw`SELECT * FROM contactmessage ORDER BY id DESC LIMIT 1`
+    const msg = rows[0]
 
     await Promise.allSettled([
       data.email && sendMail({
