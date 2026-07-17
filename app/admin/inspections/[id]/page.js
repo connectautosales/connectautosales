@@ -10,7 +10,7 @@ export default async function InspectionDetail({ params }) {
   if (!session) redirect('/admin/login')
 
   const { id } = await params
-  const i = await prisma.salvageInspection.findUnique({ where: { id: parseInt(id) } })
+  const i = await prisma.$queryRaw`SELECT * FROM salvageinspection WHERE id = ${parseInt(id)} LIMIT 1`.then(r => r[0] || null)
   if (!i) notFound()
 
   const fields = [

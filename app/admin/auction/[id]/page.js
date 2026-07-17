@@ -10,7 +10,7 @@ export default async function AuctionDetail({ params }) {
   if (!session) redirect('/admin/login')
 
   const { id } = await params
-  const r = await prisma.auctionRequest.findUnique({ where: { id: parseInt(id) } })
+  const r = await prisma.$queryRaw`SELECT * FROM auctionrequest WHERE id = ${parseInt(id)} LIMIT 1`.then(r => r[0] || null)
   if (!r) notFound()
 
   const fields = [

@@ -10,7 +10,7 @@ export default async function TransportDetail({ params }) {
   if (!session) redirect('/admin/login')
 
   const { id } = await params
-  const t = await prisma.transportRequest.findUnique({ where: { id: parseInt(id) } })
+  const t = await prisma.$queryRaw`SELECT * FROM transportrequest WHERE id = ${parseInt(id)} LIMIT 1`.then(r => r[0] || null)
   if (!t) notFound()
 
   const fields = [

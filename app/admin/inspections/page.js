@@ -9,7 +9,7 @@ export default async function AdminInspections() {
   const session = await getServerSession(authOptions)
   if (!session) redirect('/admin/login')
 
-  const items = await prisma.salvageInspection.findMany({ orderBy: { createdAt: 'desc' } })
+  const items = await prisma.$queryRaw`SELECT * FROM salvageinspection ORDER BY createdAt DESC`
   const newCount = items.filter(i => i.status === 'new').length
 
   return (

@@ -9,7 +9,7 @@ export default async function AdminAuction() {
   const session = await getServerSession(authOptions)
   if (!session) redirect('/admin/login')
 
-  const requests = await prisma.auctionRequest.findMany({ orderBy: { createdAt: 'desc' } })
+  const requests = await prisma.$queryRaw`SELECT * FROM auctionrequest ORDER BY createdAt DESC`
   const newCount = requests.filter(r => r.status === 'new').length
 
   return (

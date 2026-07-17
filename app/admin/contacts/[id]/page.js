@@ -10,7 +10,7 @@ export default async function ContactDetail({ params }) {
   if (!session) redirect('/admin/login')
 
   const { id } = await params
-  const m = await prisma.contactMessage.findUnique({ where: { id: parseInt(id) } })
+  const m = await prisma.$queryRaw`SELECT * FROM contactmessage WHERE id = ${parseInt(id)} LIMIT 1`.then(r => r[0] || null)
   if (!m) notFound()
 
   const fields = [

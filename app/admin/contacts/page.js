@@ -9,7 +9,7 @@ export default async function AdminContacts() {
   const session = await getServerSession(authOptions)
   if (!session) redirect('/admin/login')
 
-  const msgs = await prisma.contactMessage.findMany({ orderBy: { createdAt: 'desc' } })
+  const msgs = await prisma.$queryRaw`SELECT * FROM contactmessage ORDER BY createdAt DESC`
   const unread = msgs.filter(m => !m.isRead).length
 
   return (

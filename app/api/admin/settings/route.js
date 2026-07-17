@@ -71,7 +71,7 @@ export async function PUT(req) {
         updatedAt       = NOW()
     `
 
-    const settings = await prisma.siteSettings.findFirst()
+    const settings = await prisma.$queryRaw`SELECT * FROM sitesettings LIMIT 1`.then(r => r[0] || null)
     return NextResponse.json(settings)
   } catch (e) {
     console.error('Settings save error:', e)

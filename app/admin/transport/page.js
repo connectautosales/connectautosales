@@ -9,7 +9,7 @@ export default async function AdminTransport() {
   const session = await getServerSession(authOptions)
   if (!session) redirect('/admin/login')
 
-  const items = await prisma.transportRequest.findMany({ orderBy: { createdAt: 'desc' } })
+  const items = await prisma.$queryRaw`SELECT * FROM transportrequest ORDER BY createdAt DESC`
   const newCount = items.filter(t => t.status === 'new').length
 
   return (
