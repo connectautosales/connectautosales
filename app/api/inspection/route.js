@@ -1,9 +1,33 @@
 import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
-import { writeFile, mkdir } from 'fs/promises'
-import path from 'path'
 import { sendMail } from '@/lib/mailer'
 import { inspectionCustomer, inspectionAdmin } from '@/lib/emailTemplates'
+
+const saveFile = async (field, formData) => {
+  try {
+    const file = formData.get(field)
+    if (!file || typeof file === 'string') return null
+
+    // Try local filesystem (works locally, fails on Vercel — handled gracefully)
+    const { writeFile, mkdir } = await import('fs/promises')
+    const path = await import('path')
+    const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'inspections')
+    await mkdir(uploadDir, { recursive: true })
+    const nameParts = file.name.split('.')
+    const ext = nameParts.length > 1 ? nameParts.pop() : (file.type.split('/')[1] || 'pdf')
+    const filename = `${field}-${Date.now()}.${ext}`
+    const bytes = await file.arrayBuffer()
+    await writeFile(path.join(uploadDir, filename), Buffer.from(bytes))
+    return `/uploads/inspections/${filename}`
+  } catch {
+    // File upload not supported in this environment — store filename only
+    try {
+      const file = formData.get(field)
+      if (!file || typeof file === 'string') return null
+      return file.name || null
+    } catch { return null }
+  }
+}
 
 export async function POST(req) {
   try {
@@ -15,25 +39,10 @@ export async function POST(req) {
     const email        = formData.get('email') || ''
     const partsChanged = formData.get('partsChanged') || ''
 
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'inspections')
-    await mkdir(uploadDir, { recursive: true })
-
-    const saveFile = async (field) => {
-      const file = formData.get(field)
-      if (!file || typeof file === 'string') return null
-      const bytes = await file.arrayBuffer()
-      const buffer = Buffer.from(bytes)
-      const nameParts = file.name.split('.')
-      const ext = nameParts.length > 1 ? nameParts.pop() : (file.type.split('/')[1] || 'pdf')
-      const filename = `${field}-${Date.now()}.${ext}`
-      await writeFile(path.join(uploadDir, filename), buffer)
-      return `/uploads/inspections/${filename}`
-    }
-
     const [salvageTitle, validId, receipts] = await Promise.all([
-      saveFile('salvageTitle'),
-      saveFile('validId'),
-      saveFile('receipts'),
+      saveFile('salvageTitle', formData),
+      saveFile('validId', formData),
+      saveFile('receipts', formData),
     ])
 
     await prisma.$executeRaw`
