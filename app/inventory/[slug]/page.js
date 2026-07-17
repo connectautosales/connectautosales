@@ -35,6 +35,22 @@ export default function VehicleDetailPage({ params }) {
     })
   }, [params])
 
+  useEffect(() => {
+    if (!thumbStripRef.current) return
+    const strip = thumbStripRef.current
+    const activeThumb = strip.children[photoIndex]
+    if (!activeThumb) return
+    const thumbLeft = activeThumb.offsetLeft
+    const thumbRight = thumbLeft + activeThumb.offsetWidth
+    const stripLeft = strip.scrollLeft
+    const stripRight = stripLeft + strip.clientWidth
+    if (thumbLeft < stripLeft) {
+      strip.scrollTo({ left: thumbLeft - 8, behavior: 'smooth' })
+    } else if (thumbRight > stripRight) {
+      strip.scrollTo({ left: thumbRight - strip.clientWidth + 8, behavior: 'smooth' })
+    }
+  }, [photoIndex])
+
   if (loading) {
     return (
       <div style={{ padding: '120px 0', textAlign: 'center' }}>
@@ -76,22 +92,6 @@ export default function VehicleDetailPage({ params }) {
 
   const prevPhoto = () => setPhotoIndex(i => (i - 1 + totalPhotos) % totalPhotos)
   const nextPhoto = () => setPhotoIndex(i => (i + 1) % totalPhotos)
-
-  useEffect(() => {
-    if (!thumbStripRef.current) return
-    const strip = thumbStripRef.current
-    const activeThumb = strip.children[photoIndex]
-    if (!activeThumb) return
-    const stripLeft = strip.scrollLeft
-    const stripRight = stripLeft + strip.clientWidth
-    const thumbLeft = activeThumb.offsetLeft
-    const thumbRight = thumbLeft + activeThumb.offsetWidth
-    if (thumbLeft < stripLeft) {
-      strip.scrollTo({ left: thumbLeft - 8, behavior: 'smooth' })
-    } else if (thumbRight > stripRight) {
-      strip.scrollTo({ left: thumbRight - strip.clientWidth + 8, behavior: 'smooth' })
-    }
-  }, [photoIndex])
 
   const currentPhoto = photos[photoIndex]
 
