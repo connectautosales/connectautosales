@@ -237,7 +237,13 @@
   gap: 8px;
   padding: 12px 16px;
   overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #e50202 #f0f0f0;
+  -webkit-overflow-scrolling: touch;
 }
+.thumbStrip::-webkit-scrollbar { height: 4px; }
+.thumbStrip::-webkit-scrollbar-track { background: #f0f0f0; border-radius: 2px; }
+.thumbStrip::-webkit-scrollbar-thumb { background: #e50202; border-radius: 2px; }
 
 .thumb {
   position: relative;
