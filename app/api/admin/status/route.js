@@ -107,9 +107,8 @@ export async function POST(req) {
   )
   const result = rows[0] || {}
 
-  // Send customer notification email (non-blocking)
   if (status && !HAS_ISREAD.has(type)) {
-    sendStatusEmail({ type, record: result, status, adminNotes }).catch(e =>
+    await sendStatusEmail({ type, record: result, status, adminNotes }).catch(e =>
       console.error('Status email error:', e.message)
     )
   }
