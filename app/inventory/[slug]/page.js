@@ -184,7 +184,7 @@ export default function VehicleDetailPage({ params }) {
                 {/* Thumbnails */}
                 {totalPhotos > 1 && (
                   <div className={styles.thumbStrip}>
-                    {photos.slice(0, 8).map((src, i) => (
+                    {photos.map((src, i) => (
                       <button
                         key={i}
                         className={`${styles.thumb} ${photoIndex === i ? styles.thumbActive : ''}`}
