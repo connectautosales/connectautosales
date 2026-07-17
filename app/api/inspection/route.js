@@ -9,10 +9,10 @@ export async function POST(req) {
   try {
     const formData = await req.formData()
 
-    const firstName  = formData.get('firstName') || ''
-    const lastName   = formData.get('lastName') || ''
-    const phone      = formData.get('phone') || ''
-    const email      = formData.get('email') || ''
+    const firstName    = formData.get('firstName') || ''
+    const lastName     = formData.get('lastName') || ''
+    const phone        = formData.get('phone') || ''
+    const email        = formData.get('email') || ''
     const partsChanged = formData.get('partsChanged') || ''
 
     const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'inspections')
@@ -36,9 +36,12 @@ export async function POST(req) {
       saveFile('receipts'),
     ])
 
-    const inspection = await prisma.salvageInspection.create({
-      data: { firstName, lastName, phone, email, partsChanged, salvageTitle, validId, receipts },
-    })
+    await prisma.$executeRaw`
+      INSERT INTO salvageinspection (firstName, lastName, phone, email, partsChanged, salvageTitle, validId, receipts, status, createdAt)
+      VALUES (${firstName}, ${lastName}, ${phone}, ${email}, ${partsChanged}, ${salvageTitle}, ${validId}, ${receipts}, 'new', NOW())
+    `
+    const rows = await prisma.$queryRaw`SELECT * FROM salvageinspection ORDER BY id DESC LIMIT 1`
+    const inspection = rows[0]
 
     await Promise.allSettled([
       email && sendMail({
@@ -53,7 +56,7 @@ export async function POST(req) {
       }),
     ])
 
-    return NextResponse.json({ ok: true, id: inspection.id })
+    return NextResponse.json({ ok: true, id: inspection?.id })
   } catch (e) {
     console.error('Inspection submit error:', e)
     return NextResponse.json({ error: 'Failed to submit documents.' }, { status: 500 })

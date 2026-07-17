@@ -6,7 +6,13 @@ import { transportCustomer, transportAdmin } from '@/lib/emailTemplates'
 export async function POST(req) {
   try {
     const data = await req.json()
-    const request = await prisma.transportRequest.create({ data })
+
+    await prisma.$executeRaw`
+      INSERT INTO transportrequest (name, phone, email, \`from\`, \`to\`, vehicle, notes, status, createdAt)
+      VALUES (${data.name||''}, ${data.phone||''}, ${data.email||''}, ${data.from||null}, ${data.to||null}, ${data.vehicle||null}, ${data.notes||null}, 'new', NOW())
+    `
+    const rows = await prisma.$queryRaw`SELECT * FROM transportrequest ORDER BY id DESC LIMIT 1`
+    const request = rows[0]
 
     await Promise.allSettled([
       data.email && sendMail({
@@ -21,7 +27,7 @@ export async function POST(req) {
       }),
     ])
 
-    return NextResponse.json({ ok: true, id: request.id })
+    return NextResponse.json({ ok: true, id: request?.id })
   } catch (e) {
     console.error('Transport submit error:', e)
     return NextResponse.json({ error: 'Failed to submit quote request.' }, { status: 500 })

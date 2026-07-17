@@ -6,7 +6,13 @@ import { auctionCustomer, auctionAdmin } from '@/lib/emailTemplates'
 export async function POST(req) {
   try {
     const data = await req.json()
-    const request = await prisma.auctionRequest.create({ data })
+
+    await prisma.$executeRaw`
+      INSERT INTO auctionrequest (firstName, lastName, phone, email, auctionLink, lotNumber, notes, status, createdAt)
+      VALUES (${data.firstName||''}, ${data.lastName||''}, ${data.phone||''}, ${data.email||''}, ${data.auctionLink||null}, ${data.lotNumber||null}, ${data.notes||null}, 'new', NOW())
+    `
+    const rows = await prisma.$queryRaw`SELECT * FROM auctionrequest ORDER BY id DESC LIMIT 1`
+    const request = rows[0]
 
     await Promise.allSettled([
       data.email && sendMail({
@@ -21,7 +27,7 @@ export async function POST(req) {
       }),
     ])
 
-    return NextResponse.json({ ok: true, id: request.id })
+    return NextResponse.json({ ok: true, id: request?.id })
   } catch (e) {
     console.error('Auction submit error:', e)
     return NextResponse.json({ error: 'Failed to submit request.' }, { status: 500 })
