@@ -6,12 +6,12 @@ import nodemailer from 'nodemailer'
 import { statusUpdateCustomer } from '@/lib/emailTemplates'
 
 const TABLE_MAP = {
-  financing:  'FinancingApplication',
-  auction:    'AuctionRequest',
-  inspection: 'SalvageInspection',
-  contact:    'ContactMessage',
-  transport:  'TransportRequest',
-  testDrive:  'TestDriveRequest',
+  financing:  'financingapplication',
+  auction:    'auctionrequest',
+  inspection: 'salvageinspection',
+  contact:    'contactmessage',
+  transport:  'transportrequest',
+  testDrive:  'testdriverequest',
 }
 
 // ContactMessage has no status column

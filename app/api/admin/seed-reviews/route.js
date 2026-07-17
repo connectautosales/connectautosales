@@ -5,7 +5,7 @@ const REVIEWS = [{"authorName":"A. Harb","authorPhoto":"https://lh3.googleuserco
 
 export async function GET() {
   try {
-    await prisma.$executeRaw`DELETE FROM Review WHERE source = 'google'`
+    await prisma.$executeRaw`DELETE FROM review WHERE source = 'google'`
 
     for (const r of REVIEWS) {
       await prisma.$executeRaw`

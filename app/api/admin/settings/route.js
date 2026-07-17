@@ -6,10 +6,10 @@ import { NextResponse } from 'next/server'
 export async function GET() {
   const session = await getServerSession(authOptions)
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  const rows = await prisma.$queryRaw`SELECT * FROM SiteSettings LIMIT 1`
+  const rows = await prisma.$queryRaw`SELECT * FROM sitesettings LIMIT 1`
   if (rows.length === 0) {
-    await prisma.$executeRaw`INSERT IGNORE INTO SiteSettings (id, updatedAt) VALUES (1, NOW())`
-    const newRows = await prisma.$queryRaw`SELECT * FROM SiteSettings LIMIT 1`
+    await prisma.$executeRaw`INSERT IGNORE INTO sitesettings (id, updatedAt) VALUES (1, NOW())`
+    const newRows = await prisma.$queryRaw`SELECT * FROM sitesettings LIMIT 1`
     return NextResponse.json(newRows[0] ?? {})
   }
   return NextResponse.json(rows[0])
@@ -22,7 +22,7 @@ export async function PUT(req) {
     const d = await req.json()
 
     await prisma.$executeRaw`
-      INSERT INTO SiteSettings (
+      INSERT INTO sitesettings (
         id, businessName, tagline, phone, email,
         address, city, state, zip, mapLink,
         hoursMF, hoursSat, hoursSun,

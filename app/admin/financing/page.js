@@ -9,7 +9,7 @@ export default async function AdminFinancing() {
   const session = await getServerSession(authOptions)
   if (!session) redirect('/admin/login')
 
-  const apps = await prisma.$queryRaw`SELECT id, firstName, lastName, phone, email, monthlyIncome, downPayment, status, createdAt FROM FinancingApplication ORDER BY createdAt DESC`
+  const apps = await prisma.$queryRaw`SELECT id, firstName, lastName, phone, email, monthlyIncome, downPayment, status, createdAt FROM financingapplication ORDER BY createdAt DESC`
   const newCount = apps.filter(a => a.status === 'new').length
 
   return (

@@ -8,7 +8,7 @@ export async function POST(req) {
     const d = await req.json()
 
     await prisma.$executeRaw`
-      INSERT INTO FinancingApplication (
+      INSERT INTO financingapplication (
         firstName, middleName, lastName, dob, phone, homePhone, email, ssn,
         idType, driversLicense, idExpiration, stateIssuance,
         address, city, state, zip,

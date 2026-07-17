@@ -10,7 +10,7 @@ export default async function FinancingDetail({ params }) {
   if (!session) redirect('/admin/login')
 
   const { id } = await params
-  const rows = await prisma.$queryRaw`SELECT * FROM FinancingApplication WHERE id = ${parseInt(id)} LIMIT 1`
+  const rows = await prisma.$queryRaw`SELECT * FROM financingapplication WHERE id = ${parseInt(id)} LIMIT 1`
   const a = rows[0]
   if (!a) notFound()
 

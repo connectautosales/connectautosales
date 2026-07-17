@@ -10,7 +10,7 @@ export default async function TestDriveDetail({ params }) {
   if (!session) redirect('/admin/login')
 
   const { id } = await params
-  const rows = await prisma.$queryRaw`SELECT * FROM TestDriveRequest WHERE id = ${parseInt(id)} LIMIT 1`
+  const rows = await prisma.$queryRaw`SELECT * FROM testdriverequest WHERE id = ${parseInt(id)} LIMIT 1`
   const r = rows[0]
   if (!r) notFound()
 

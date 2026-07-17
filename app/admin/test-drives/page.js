@@ -9,7 +9,7 @@ export default async function AdminTestDrives() {
   const session = await getServerSession(authOptions)
   if (!session) redirect('/admin/login')
 
-  const items = await prisma.$queryRaw`SELECT * FROM TestDriveRequest ORDER BY createdAt DESC`
+  const items = await prisma.$queryRaw`SELECT * FROM testdriverequest ORDER BY createdAt DESC`
   const newCount = items.filter(i => i.status === 'new').length
 
   return (

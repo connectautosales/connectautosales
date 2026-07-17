@@ -7,7 +7,7 @@ export async function POST(req) {
   try {
     const d = await req.json()
     await prisma.$executeRaw`
-      INSERT INTO TestDriveRequest (firstName, lastName, phone, email, vehicle, preferredDate, preferredTime, notes, status, createdAt)
+      INSERT INTO testdriverequest (firstName, lastName, phone, email, vehicle, preferredDate, preferredTime, notes, status, createdAt)
       VALUES (${d.firstName || ''}, ${d.lastName || ''}, ${d.phone || ''}, ${d.email || ''}, ${d.vehicle || ''}, ${d.preferredDate || ''}, ${d.preferredTime || ''}, ${d.notes || ''}, 'new', NOW())
     `
 
