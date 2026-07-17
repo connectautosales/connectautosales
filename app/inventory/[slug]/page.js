@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useSettings } from '@/context/SettingsContext'
@@ -24,6 +24,7 @@ export default function VehicleDetailPage({ params }) {
   const [term, setTerm] = useState(60)
   const [photoIndex, setPhotoIndex] = useState(0)
   const [testDriveOpen, setTestDriveOpen] = useState(false)
+  const thumbStripRef = useRef(null)
 
   useEffect(() => {
     Promise.resolve(params).then(p => {
@@ -75,6 +76,22 @@ export default function VehicleDetailPage({ params }) {
 
   const prevPhoto = () => setPhotoIndex(i => (i - 1 + totalPhotos) % totalPhotos)
   const nextPhoto = () => setPhotoIndex(i => (i + 1) % totalPhotos)
+
+  useEffect(() => {
+    if (!thumbStripRef.current) return
+    const strip = thumbStripRef.current
+    const activeThumb = strip.children[photoIndex]
+    if (!activeThumb) return
+    const stripLeft = strip.scrollLeft
+    const stripRight = stripLeft + strip.clientWidth
+    const thumbLeft = activeThumb.offsetLeft
+    const thumbRight = thumbLeft + activeThumb.offsetWidth
+    if (thumbLeft < stripLeft) {
+      strip.scrollTo({ left: thumbLeft - 8, behavior: 'smooth' })
+    } else if (thumbRight > stripRight) {
+      strip.scrollTo({ left: thumbRight - strip.clientWidth + 8, behavior: 'smooth' })
+    }
+  }, [photoIndex])
 
   const currentPhoto = photos[photoIndex]
 
@@ -183,16 +200,20 @@ export default function VehicleDetailPage({ params }) {
 
                 {/* Thumbnails */}
                 {totalPhotos > 1 && (
-                  <div className={styles.thumbStrip}>
-                    {photos.map((src, i) => (
-                      <button
-                        key={i}
-                        className={`${styles.thumb} ${photoIndex === i ? styles.thumbActive : ''}`}
-                        onClick={() => setPhotoIndex(i)}
-                      >
-                        <Image src={src} alt="" fill style={{ objectFit: 'cover' }} unoptimized />
-                      </button>
-                    ))}
+                  <div className={styles.thumbWrapper}>
+                    <button className={styles.thumbNav} onClick={() => setPhotoIndex(i => (i - 1 + totalPhotos) % totalPhotos)}>&#8249;</button>
+                    <div className={styles.thumbStrip} ref={thumbStripRef}>
+                      {photos.map((src, i) => (
+                        <button
+                          key={i}
+                          className={`${styles.thumb} ${photoIndex === i ? styles.thumbActive : ''}`}
+                          onClick={() => setPhotoIndex(i)}
+                        >
+                          <Image src={src} alt="" fill style={{ objectFit: 'cover' }} unoptimized />
+                        </button>
+                      ))}
+                    </div>
+                    <button className={styles.thumbNav} onClick={() => setPhotoIndex(i => (i + 1) % totalPhotos)}>&#8250;</button>
                   </div>
                 )}
               </div>
