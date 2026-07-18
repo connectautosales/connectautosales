@@ -30,7 +30,15 @@ export function SettingsProvider({ children }) {
   useEffect(() => {
     fetch('/api/settings', { cache: 'no-store' })
       .then(r => r.ok ? r.json() : null)
-      .then(data => { if (data) setSettings({ ...defaultSettings, ...data }) })
+      .then(data => {
+        if (data) {
+          const merged = { ...defaultSettings, ...data }
+          if (!merged.facebook) merged.facebook = defaultSettings.facebook
+          if (!merged.instagram) merged.instagram = defaultSettings.instagram
+          if (!merged.tiktok) merged.tiktok = defaultSettings.tiktok
+          setSettings(merged)
+        }
+      })
       .catch(() => {})
   }, [])
 
