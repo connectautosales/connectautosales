@@ -48,6 +48,7 @@
   display: flex;
   flex-direction: column;
   gap: 0;
+  min-width: 0;
 }
 
 /* Title Row */
@@ -569,6 +570,7 @@
 .sidebar {
   position: sticky;
   top: 20px;
+  min-width: 0;
 }
 
 .sidebarCard {
