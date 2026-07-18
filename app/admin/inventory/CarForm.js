@@ -370,71 +370,75 @@ export default function CarForm({ car }) {
                   )}
                 </div>
 
-                {/* Damage History Photos — only for rebuilt */}
-                {form.titleType === 'rebuilt' && (
-                  <div className={styles.photoBlock}>
-                    <div className={styles.photoBlockHeader}>
-                      <i className="fa-solid fa-triangle-exclamation" style={{ color: '#f59e0b' }} />
-                      <span>Damage History Photos</span>
-                      <span className={styles.photoCount}>{damagePhotos.length} photos</span>
-                    </div>
-                    <p className={styles.photoNote}>Photos showing the vehicle before repair (required for rebuilt title vehicles).</p>
-
-                    <div
-                      className={`${styles.dropZone} ${styles.dropZoneDamage}`}
-                      onClick={() => damageInputRef.current.click()}
-                      onDragOver={e => e.preventDefault()}
-                      onDrop={handleDamageDrop}
-                    >
-                      {uploading.damage ? (
-                        <><i className="fa-solid fa-spinner fa-spin" /><span>Uploading...</span></>
-                      ) : (
-                        <>
-                          <i className="fa-solid fa-cloud-arrow-up" />
-                          <span>Click or drag damage photos here</span>
-                          <small>JPG, PNG, WEBP — multiple files allowed</small>
-                        </>
-                      )}
-                    </div>
-                    <input
-                      ref={damageInputRef}
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp,image/avif"
-                      multiple
-                      style={{ display: 'none' }}
-                      onChange={e => uploadFiles([...e.target.files], 'damage-history', setDamagePhotos)}
-                    />
-
-                    {uploadError.damage && (
-                      <div className={styles.uploadErr}>
-                        <i className="fa-solid fa-triangle-exclamation" />
-                        {uploadError.damage}
-                      </div>
-                    )}
-
-                    {damagePhotos.length > 0 && (
-                      <div className={styles.photoGrid}>
-                        {damagePhotos.map((url, i) => (
-                          <div key={i} className={styles.photoThumb}>
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={url} alt="" />
-                            <button
-                              type="button"
-                              className={styles.removePhoto}
-                              onClick={() => setDamagePhotos(p => p.filter((_, idx) => idx !== i))}
-                            >
-                              <i className="fa-solid fa-xmark" />
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
 
               </div>
             )}
           </div>
+
+          {/* Damage History Photos — only for rebuilt, outside stock lock */}
+          {form.titleType === 'rebuilt' && (
+          <div className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <i className="fa-solid fa-triangle-exclamation" style={{ color: '#f59e0b' }} />
+              <h3 className={styles.sectionTitle}>Damage History Photos</h3>
+            </div>
+            <p className={styles.photoNote}>Photos showing the vehicle before repair (required for rebuilt title vehicles).</p>
+
+            <div className={styles.photosWrap}>
+              <div className={styles.photoBlock}>
+                <div
+                  className={`${styles.dropZone} ${styles.dropZoneDamage}`}
+                  onClick={() => damageInputRef.current.click()}
+                  onDragOver={e => e.preventDefault()}
+                  onDrop={handleDamageDrop}
+                >
+                  {uploading.damage ? (
+                    <><i className="fa-solid fa-spinner fa-spin" /><span>Uploading...</span></>
+                  ) : (
+                    <>
+                      <i className="fa-solid fa-cloud-arrow-up" />
+                      <span>Click or drag damage photos here</span>
+                      <small>JPG, PNG, WEBP — multiple files allowed</small>
+                    </>
+                  )}
+                </div>
+                <input
+                  ref={damageInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/avif"
+                  multiple
+                  style={{ display: 'none' }}
+                  onChange={e => uploadFiles([...e.target.files], 'damage-history', setDamagePhotos)}
+                />
+
+                {uploadError.damage && (
+                  <div className={styles.uploadErr}>
+                    <i className="fa-solid fa-triangle-exclamation" />
+                    {uploadError.damage}
+                  </div>
+                )}
+
+                {damagePhotos.length > 0 && (
+                  <div className={styles.photoGrid}>
+                    {damagePhotos.map((url, i) => (
+                      <div key={i} className={styles.photoThumb}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={url} alt="" />
+                        <button
+                          type="button"
+                          className={styles.removePhoto}
+                          onClick={() => setDamagePhotos(p => p.filter((_, idx) => idx !== i))}
+                        >
+                          <i className="fa-solid fa-xmark" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+          )}
 
           {/* Listing Status */}
           <div className={styles.section}>
