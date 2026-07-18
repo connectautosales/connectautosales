@@ -17,6 +17,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 12px;
+  min-width: 0;
 }
 
 .topBarLeft {
@@ -24,6 +25,8 @@
   align-items: center;
   gap: 20px;
   flex-wrap: wrap;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .topBarItem {
@@ -311,10 +314,16 @@
   .topBarItem:nth-child(3) {
     display: none;
   }
+  .topBarRight {
+    flex-shrink: 0;
+  }
 }
 
 @media (max-width: 480px) {
   .topBarItem:nth-child(2) {
     display: none;
+  }
+  .topBar {
+    overflow: hidden;
   }
 }
