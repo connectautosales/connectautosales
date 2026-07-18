@@ -74,7 +74,7 @@
 }
 
 /* Left */
-.left {}
+.left { min-width: 0; }
 
 .cardTitle {
   font-size: 22px;
@@ -130,7 +130,7 @@
 }
 
 /* Right CTA card */
-.right {}
+.right { min-width: 0; }
 
 .ctaCard {
   background: #f9fafb;

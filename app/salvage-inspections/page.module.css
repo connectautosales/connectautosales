@@ -95,6 +95,7 @@
 .feesCol {
   border-right: 1px solid #e5e7eb;
   padding-right: 48px;
+  min-width: 0;
 }
 
 .feesList {
@@ -183,7 +184,7 @@
 }
 
 /* Steps */
-.processCol {}
+.processCol { min-width: 0; }
 
 .stepsRow {
   display: flex;
@@ -452,6 +453,7 @@
   display: flex;
   flex-direction: column;
   gap: 0;
+  min-width: 0;
 }
 
 .notesLabel {
@@ -540,6 +542,7 @@
 .faqCol {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .faqItem {
