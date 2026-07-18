@@ -10,6 +10,7 @@
   color: rgba(255,255,255,0.75);
   padding: 7px 0;
   font-size: 12.5px;
+  overflow: hidden;
 }
 
 .topBarInner {
@@ -314,16 +315,13 @@
   .topBarItem:nth-child(3) {
     display: none;
   }
-  .topBarRight {
-    flex-shrink: 0;
-  }
 }
 
 @media (max-width: 480px) {
   .topBarItem:nth-child(2) {
     display: none;
   }
-  .topBar {
-    overflow: hidden;
+  .topBarRight {
+    display: none;
   }
 }
