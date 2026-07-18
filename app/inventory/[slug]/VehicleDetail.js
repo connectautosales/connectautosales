@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import styles from './page.module.css'
@@ -13,6 +13,89 @@ function parseImages(val) {
   } catch { return [] }
 }
 
+function Lightbox({ images, startIndex, onClose }) {
+  const [idx, setIdx] = useState(startIndex)
+  const prev = useCallback(() => setIdx(i => (i - 1 + images.length) % images.length), [images.length])
+  const next = useCallback(() => setIdx(i => (i + 1) % images.length), [images.length])
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'ArrowLeft') prev()
+      else if (e.key === 'ArrowRight') next()
+      else if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [prev, next, onClose])
+
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 9999,
+      background: 'rgba(0,0,0,0.94)',
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+    }} onClick={onClose}>
+      {/* Close */}
+      <button onClick={onClose} style={{
+        position: 'absolute', top: 20, right: 24,
+        background: 'none', border: 'none', color: '#fff',
+        fontSize: 32, cursor: 'pointer', lineHeight: 1, zIndex: 2,
+      }}>&#10005;</button>
+
+      {/* Counter */}
+      <div style={{
+        position: 'absolute', top: 24, left: '50%', transform: 'translateX(-50%)',
+        color: '#aaa', fontSize: 13, fontWeight: 600, zIndex: 2,
+      }}>{idx + 1} / {images.length}</div>
+
+      {/* Main image */}
+      <div style={{ position: 'relative', width: '100%', maxWidth: 1000, flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '60px 80px' }}
+        onClick={e => e.stopPropagation()}>
+        <img
+          src={images[idx]}
+          alt=""
+          style={{ maxWidth: '100%', maxHeight: '80vh', objectFit: 'contain', borderRadius: 4 }}
+        />
+        {images.length > 1 && (
+          <>
+            <button onClick={prev} style={{
+              position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)',
+              background: 'rgba(255,255,255,0.12)', border: 'none', borderRadius: '50%',
+              width: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: '#fff', fontSize: 22, cursor: 'pointer',
+            }}>&#8249;</button>
+            <button onClick={next} style={{
+              position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
+              background: 'rgba(255,255,255,0.12)', border: 'none', borderRadius: '50%',
+              width: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: '#fff', fontSize: 22, cursor: 'pointer',
+            }}>&#8250;</button>
+          </>
+        )}
+      </div>
+
+      {/* Thumb strip */}
+      {images.length > 1 && (
+        <div onClick={e => e.stopPropagation()} style={{
+          display: 'flex', gap: 6, padding: '0 24px 20px',
+          overflowX: 'auto', maxWidth: '100%',
+        }}>
+          {images.map((src, i) => (
+            <button key={i} onClick={() => setIdx(i)} style={{
+              flexShrink: 0, width: 64, height: 48, padding: 0, border: 'none',
+              borderRadius: 4, overflow: 'hidden', cursor: 'pointer',
+              outline: i === idx ? '2px solid #e50202' : '2px solid transparent',
+              opacity: i === idx ? 1 : 0.55,
+              transition: 'opacity 0.15s, outline 0.15s',
+            }}>
+              <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function VehicleDetail({ car, settings }) {
   const phone = settings?.phone || '3134133400'
   const apr = parseFloat(settings?.defaultApr) || 6.99
@@ -22,6 +105,7 @@ export default function VehicleDetail({ car, settings }) {
   const [term, setTerm] = useState(60)
   const [photoIndex, setPhotoIndex] = useState(0)
   const [testDriveOpen, setTestDriveOpen] = useState(false)
+  const [lightbox, setLightbox] = useState(null) // { images, startIndex }
   const thumbStripRef = useRef(null)
 
   useEffect(() => {
@@ -64,8 +148,15 @@ export default function VehicleDetail({ car, settings }) {
     setTimeout(() => setCopied(false), 2000)
   }
 
+  const openLightbox = (images, idx) => setLightbox({ images, startIndex: idx })
+  const closeLightbox = useCallback(() => setLightbox(null), [])
+
   return (
     <>
+    {lightbox && (
+      <Lightbox images={lightbox.images} startIndex={lightbox.startIndex} onClose={closeLightbox} />
+    )}
+
     <div className={styles.page}>
       <div className={styles.breadcrumbBar}>
         <div className="container">
@@ -128,7 +219,11 @@ export default function VehicleDetail({ car, settings }) {
 
               {/* Photo Gallery */}
               <div className={styles.gallery}>
-                <div className={styles.mainPhoto}>
+                <div
+                  className={styles.mainPhoto}
+                  style={{ cursor: photos.length ? 'zoom-in' : 'default' }}
+                  onClick={() => photos.length && openLightbox(photos, photoIndex)}
+                >
                   {currentPhoto ? (
                     <Image
                       src={currentPhoto}
@@ -146,15 +241,23 @@ export default function VehicleDetail({ car, settings }) {
                   )}
                   {totalPhotos > 1 && (
                     <>
-                      <button className={`${styles.galleryArrow} ${styles.galleryArrowLeft}`} onClick={prevPhoto}>
+                      <button className={`${styles.galleryArrow} ${styles.galleryArrowLeft}`} onClick={e => { e.stopPropagation(); prevPhoto() }}>
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>
                       </button>
-                      <button className={`${styles.galleryArrow} ${styles.galleryArrowRight}`} onClick={nextPhoto}>
+                      <button className={`${styles.galleryArrow} ${styles.galleryArrowRight}`} onClick={e => { e.stopPropagation(); nextPhoto() }}>
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"/></svg>
                       </button>
                     </>
                   )}
                   <div className={styles.photoCounter}>{photoIndex + 1} of {totalPhotos}</div>
+                  {photos.length > 0 && (
+                    <div style={{
+                      position: 'absolute', bottom: 44, right: 12,
+                      background: 'rgba(0,0,0,0.55)', color: '#fff',
+                      fontSize: 11, fontWeight: 700, borderRadius: 4,
+                      padding: '3px 8px', zIndex: 2,
+                    }}>Click to expand</div>
+                  )}
                 </div>
 
                 <div className={styles.photoLabel}>
@@ -227,6 +330,7 @@ export default function VehicleDetail({ car, settings }) {
                 </button>
               </div>
 
+              {/* Damage Photos */}
               {isRebuilt && damagePhotos.length > 0 && (
                 <div className={styles.descSection}>
                   <h2 className={styles.sectionTitle}>Previous Damage Photos</h2>
@@ -234,7 +338,12 @@ export default function VehicleDetail({ car, settings }) {
                   <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 12 }}>Photos show the vehicle before repairs.</p>
                   <div className={styles.damageGrid}>
                     {damagePhotos.map((photo, i) => (
-                      <div key={i} className={styles.damagePhoto}>
+                      <div
+                        key={i}
+                        className={styles.damagePhoto}
+                        style={{ cursor: 'zoom-in' }}
+                        onClick={() => openLightbox(damagePhotos, i)}
+                      >
                         <Image src={photo} alt={`Damage photo ${i + 1}`} fill style={{ objectFit: 'cover' }} unoptimized />
                       </div>
                     ))}

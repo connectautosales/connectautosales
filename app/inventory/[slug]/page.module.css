@@ -823,7 +823,7 @@
 
 .damageGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
   gap: 6px;
   margin-bottom: 10px;
 }
@@ -833,8 +833,11 @@
   aspect-ratio: 4 / 3;
   border-radius: 6px;
   overflow: hidden;
-  background: #fff;
+  background: #f3f4f6;
+  transition: opacity 0.15s;
 }
+
+.damagePhoto:hover { opacity: 0.85; }
 
 .damageCaption {
   display: flex;
