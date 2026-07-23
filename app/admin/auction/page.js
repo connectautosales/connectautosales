@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import styles from '../list.module.css'
+import DeleteRowBtn from '../DeleteRowBtn'
 
 export default async function AdminAuction() {
   const session = await getServerSession(authOptions)
@@ -47,10 +48,11 @@ export default async function AdminAuction() {
                   <td className={styles.mono}>{r.lotNumber || '—'}</td>
                   <td><span className={`${styles.badge} ${styles[r.status]}`}>{r.status}</span></td>
                   <td>{new Date(r.createdAt).toLocaleDateString()}</td>
-                  <td>
+                  <td className={styles.actions}>
                     <Link href={`/admin/auction/${r.id}`} className={styles.editBtn}>
                       <i className="fa-solid fa-eye" /> View
                     </Link>
+                    <DeleteRowBtn table="auctionrequest" id={r.id} label="auction request" />
                   </td>
                 </tr>
               ))}

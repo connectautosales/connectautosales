@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import styles from '../list.module.css'
+import DeleteRowBtn from '../DeleteRowBtn'
 
 export default async function AdminFinancing() {
   const session = await getServerSession(authOptions)
@@ -49,10 +50,11 @@ export default async function AdminFinancing() {
                   <td>${a.downPayment}</td>
                   <td><span className={`${styles.badge} ${styles[a.status]}`}>{a.status}</span></td>
                   <td>{new Date(a.createdAt).toLocaleDateString()}</td>
-                  <td>
+                  <td className={styles.actions}>
                     <Link href={`/admin/financing/${a.id}`} className={styles.editBtn}>
                       <i className="fa-solid fa-eye" /> View
                     </Link>
+                    <DeleteRowBtn table="financingapplication" id={a.id} label="application" />
                   </td>
                 </tr>
               ))}

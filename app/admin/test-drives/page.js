@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import styles from '../list.module.css'
+import DeleteRowBtn from '../DeleteRowBtn'
 
 export default async function AdminTestDrives() {
   const session = await getServerSession(authOptions)
@@ -51,10 +52,11 @@ export default async function AdminTestDrives() {
                   <td>{i.preferredTime || '—'}</td>
                   <td><span className={`${styles.badge} ${styles[i.status?.replace(/ /g, '-')]}`}>{i.status}</span></td>
                   <td>{new Date(i.createdAt).toLocaleDateString()}</td>
-                  <td>
+                  <td className={styles.actions}>
                     <Link href={`/admin/test-drives/${i.id}`} className={styles.editBtn}>
                       <i className="fa-solid fa-eye" /> View
                     </Link>
+                    <DeleteRowBtn table="testdriverequest" id={i.id} label="test drive request" />
                   </td>
                 </tr>
               ))}

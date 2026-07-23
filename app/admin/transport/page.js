@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import styles from '../list.module.css'
+import DeleteRowBtn from '../DeleteRowBtn'
 
 export default async function AdminTransport() {
   const session = await getServerSession(authOptions)
@@ -51,10 +52,11 @@ export default async function AdminTransport() {
                   <td>{t.vehicle || '—'}</td>
                   <td><span className={`${styles.badge} ${styles[t.status]}`}>{t.status}</span></td>
                   <td>{new Date(t.createdAt).toLocaleDateString()}</td>
-                  <td>
+                  <td className={styles.actions}>
                     <Link href={`/admin/transport/${t.id}`} className={styles.editBtn}>
                       <i className="fa-solid fa-eye" /> View
                     </Link>
+                    <DeleteRowBtn table="transportrequest" id={t.id} label="transport request" />
                   </td>
                 </tr>
               ))}
