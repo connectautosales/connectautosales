@@ -137,6 +137,13 @@ export default function FinancingPage() {
       if (!form.state)                 errs.state        = 'State cannot be blank.'
       if (!form.zip.trim())            errs.zip          = 'ZIP Code cannot be blank.'
       if (!form.housingStatus)         errs.housingStatus = 'Housing Status cannot be blank.'
+      const yrs = parseInt(form.timeAtAddressYr || '0')
+      if (yrs < 2) {
+        if (!form.prevAddress.trim())  errs.prevAddress  = 'Previous address is required.'
+        if (!form.prevCity.trim())     errs.prevCity     = 'City is required.'
+        if (!form.prevState)           errs.prevState    = 'State is required.'
+        if (!form.prevZip.trim())      errs.prevZip      = 'ZIP is required.'
+      }
     }
     if (s === 3) {
       if (!form.employmentStatus)      errs.employmentStatus = 'Employment Status cannot be blank.'
@@ -257,7 +264,8 @@ export default function FinancingPage() {
               {STEPS.map(s => (
                 <button key={s.id} type="button"
                   className={`${styles.stepBtn} ${step === s.id ? styles.stepActive : ''} ${step > s.id ? styles.stepDone : ''}`}
-                  onClick={() => setStep(s.id)}
+                  onClick={() => { if (s.id < step) { setErrors({}); setStep(s.id) } }}
+                  style={{ cursor: s.id < step ? 'pointer' : 'default' }}
                 >
                   <span className={styles.stepCircle}>
                     {step > s.id
@@ -372,15 +380,15 @@ export default function FinancingPage() {
                       <>
                         <SectionLabel title="Previous Address (less than 2 years at current address)" />
                         <div className={styles.grid3}>
-                          <Field label="Street Address" col3><input name="prevAddress" value={form.prevAddress} onChange={upd} placeholder="Previous Street Address" /></Field>
-                          <Field label="City"><input name="prevCity" value={form.prevCity} onChange={upd} placeholder="City" /></Field>
-                          <Field label="State">
-                            <select name="prevState" value={form.prevState} onChange={upd}>
+                          <Field label="Street Address" req col3 error={errors.prevAddress}><input name="prevAddress" value={form.prevAddress} onChange={upd} placeholder="Previous Street Address" className={errors.prevAddress ? styles.inputError : ''} /></Field>
+                          <Field label="City" req error={errors.prevCity}><input name="prevCity" value={form.prevCity} onChange={upd} placeholder="City" className={errors.prevCity ? styles.inputError : ''} /></Field>
+                          <Field label="State" req error={errors.prevState}>
+                            <select name="prevState" value={form.prevState} onChange={upd} className={errors.prevState ? styles.inputError : ''}>
                               <option value="">Select State</option>
                               {US_STATES.map(s => <option key={s}>{s}</option>)}
                             </select>
                           </Field>
-                          <Field label="ZIP"><input name="prevZip" value={form.prevZip} onChange={upd} placeholder="ZIP" /></Field>
+                          <Field label="ZIP" req error={errors.prevZip}><input name="prevZip" value={form.prevZip} onChange={upd} placeholder="ZIP" className={errors.prevZip ? styles.inputError : ''} /></Field>
                         </div>
                       </>
                     )}
