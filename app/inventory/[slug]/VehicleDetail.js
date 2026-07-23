@@ -129,7 +129,8 @@ export default function VehicleDetail({ car, settings }) {
   const totalPhotos = photos.length || 1
   const damagePhotos = parseImages(car.damageImages)
 
-  const loanAmount = (car.price || 0) - downPayment
+  const calcPrice = car.financePrice || car.price || 0
+  const loanAmount = calcPrice - downPayment
   const monthlyRate = (apr / 100) / 12
   const payment = loanAmount > 0
     ? Math.round(loanAmount * monthlyRate * Math.pow(1 + monthlyRate, term) / (Math.pow(1 + monthlyRate, term) - 1))
@@ -214,6 +215,12 @@ export default function VehicleDetail({ car, settings }) {
                     )}
                     <span>{copied ? 'Copied!' : 'Copy'}</span>
                   </button>
+                </div>
+              )}
+              {car.stock && (
+                <div className={styles.stockBar}>
+                  <span className={styles.vinLabel}>Stock #:</span>
+                  <span className={styles.vinNum}>{car.stock}</span>
                 </div>
               )}
 
@@ -393,7 +400,7 @@ export default function VehicleDetail({ car, settings }) {
                               className={styles.estimatorInput}
                               value={downPayment}
                               min={0}
-                              max={car.price}
+                              max={calcPrice}
                               onChange={e => setDownPayment(Number(e.target.value))}
                             />
                           </div>
@@ -419,7 +426,8 @@ export default function VehicleDetail({ car, settings }) {
                         <span className={styles.monthlyLabel}>Estimated Payment</span>
                         <span className={styles.monthlyValue}>${payment.toLocaleString()} /mo*</span>
                       </div>
-                      <p className={styles.priceNote} style={{ marginTop: 4, marginBottom: 0 }}>* Based on {apr}% APR. Subject to credit approval.</p>
+                      <p className={styles.taxNote}>Taxes, title and registration fees are not included.</p>
+                      <p className={styles.priceNote} style={{ marginTop: 2, marginBottom: 0 }}>* Based on {apr}% APR. Subject to credit approval.</p>
                     </div>
 
                     <Link href="/financing" className={styles.applyBtn}>
