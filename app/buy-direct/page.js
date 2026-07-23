@@ -6,11 +6,7 @@ const steps = [
   {
     num: '01',
     title: 'Do Your Research',
-    desc: 'Browse available vehicles on the major auction platforms before placing a bid.',
-    details: [
-      { label: 'Copart Auction', site: 'www.Copart.com', locLink: 'https://www.copart.com/locations/', locLabel: 'Copart USA Locations' },
-      { label: 'IAAI Auction', site: 'www.IAAI.com', locLink: 'https://www.iaai.com/locations', locLabel: 'IAAI USA Locations' },
-    ],
+    desc: 'Browse available vehicles on IAAI, Copart, and Manheim auction platforms before placing a bid.',
   },
   {
     num: '02',
@@ -93,35 +89,27 @@ export default function BuyDirectPage() {
             <h2 className={styles.sectionTitle}>Our Auction Partners</h2>
             <div className={styles.sectionLine} />
           </div>
-          <div className={styles.auctionGrid}>
-            {/* Copart */}
-            <div className={styles.auctionCard}>
-              <div className={styles.auctionLogo} style={{ background: '#e50202' }}>
-                <span className={styles.auctionLogoText}>COPART</span>
+          <div className={styles.auctionCardsRow}>
+            <a href="https://www.iaai.com" target="_blank" rel="noreferrer" className={styles.auctionLogoCard}>
+              <div style={{ display:'flex', alignItems:'center', justifyContent:'center', width:100, height:60 }}>
+                <span style={{ fontSize:42, fontWeight:900, color:'#e50202', letterSpacing:'-2px', fontFamily:'Arial Black, sans-serif' }}>AA</span>
               </div>
-              <div className={styles.auctionInfo}>
-                <h3 className={styles.auctionName}>Copart Auction</h3>
-                <a href="https://www.copart.com" target="_blank" rel="noreferrer" className={styles.auctionLink}>www.Copart.com</a>
-                <a href="https://www.copart.com/locations/" target="_blank" rel="noreferrer" className={styles.auctionLocLink}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                  Copart USA Locations
-                </a>
+              <p className={styles.auctionLogoName}>IAAI</p>
+            </a>
+            <a href="https://www.copart.com" target="_blank" rel="noreferrer" className={styles.auctionLogoCard}>
+              <div style={{ display:'flex', alignItems:'center', justifyContent:'center', width:120, height:60 }}>
+                <div style={{ background:'#003087', borderRadius:30, padding:'8px 20px' }}>
+                  <span style={{ fontSize:18, fontWeight:900, color:'#fff', letterSpacing:'1px' }}>COPART</span>
+                </div>
               </div>
-            </div>
-            {/* IAAI */}
-            <div className={styles.auctionCard}>
-              <div className={styles.auctionLogo} style={{ background: '#1a3a6b' }}>
-                <span className={styles.auctionLogoText}>IAAI</span>
+              <p className={styles.auctionLogoName}>COPART</p>
+            </a>
+            <a href="https://www.manheim.com" target="_blank" rel="noreferrer" className={styles.auctionLogoCard}>
+              <div style={{ display:'flex', alignItems:'center', justifyContent:'center', width:100, height:60 }}>
+                <span style={{ fontSize:38, fontWeight:900, color:'#c8a400', fontFamily:'Georgia, serif' }}>M</span>
               </div>
-              <div className={styles.auctionInfo}>
-                <h3 className={styles.auctionName}>IAAI Auction</h3>
-                <a href="https://www.iaai.com" target="_blank" rel="noreferrer" className={styles.auctionLink}>www.IAAI.com</a>
-                <a href="https://www.iaai.com/locations" target="_blank" rel="noreferrer" className={styles.auctionLocLink}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                  IAAI USA Locations
-                </a>
-              </div>
-            </div>
+              <p className={styles.auctionLogoName}>MANHEIM</p>
+            </a>
           </div>
         </div>
       </section>

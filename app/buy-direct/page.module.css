@@ -166,6 +166,40 @@
   gap: 20px;
 }
 
+.auctionCardsRow {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.auctionLogoCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px 32px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  min-width: 160px;
+}
+
+.auctionLogoCard:hover {
+  border-color: #e50202;
+  box-shadow: 0 4px 12px rgba(229,2,2,0.1);
+}
+
+.auctionLogoName {
+  font-size: 13px;
+  font-weight: 800;
+  color: #020300;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
 .auctionCard {
   display: flex;
   align-items: center;

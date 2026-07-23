@@ -95,6 +95,7 @@ const knowItems = [
 const auctions = [
   {
     name: 'IAAI',
+    url: 'https://www.iaai.com',
     logo: (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 100, height: 60 }}>
         <span style={{ fontSize: 42, fontWeight: 900, color: '#e50202', letterSpacing: '-2px', fontFamily: 'Arial Black, sans-serif' }}>AA</span>
@@ -103,6 +104,7 @@ const auctions = [
   },
   {
     name: 'COPART',
+    url: 'https://www.copart.com',
     logo: (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 120, height: 60 }}>
         <div style={{ background: '#003087', borderRadius: 30, padding: '8px 20px' }}>
@@ -113,6 +115,7 @@ const auctions = [
   },
   {
     name: 'MANHEIM',
+    url: 'https://www.manheim.com',
     logo: (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 100, height: 60 }}>
         <span style={{ fontSize: 38, fontWeight: 900, color: '#c8a400', fontFamily: 'Georgia, serif' }}>M</span>
@@ -262,10 +265,10 @@ export default function AuctionServicesPage() {
               <div className={styles.colLine} />
               <div className={styles.auctionGrid}>
                 {auctions.map((a, i) => (
-                  <div key={i} className={styles.auctionCard}>
+                  <a key={i} href={a.url} target="_blank" rel="noreferrer" className={styles.auctionCard}>
                     {a.logo}
                     <p className={styles.auctionName}>{a.name}</p>
-                  </div>
+                  </a>
                 ))}
               </div>
             </div>

@@ -299,6 +299,14 @@
   border: 1px solid #e5e7eb;
   border-radius: 10px;
   text-align: center;
+  text-decoration: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.auctionCard:hover {
+  border-color: #e50202;
+  box-shadow: 0 4px 12px rgba(229,2,2,0.1);
 }
 
 .auctionName {

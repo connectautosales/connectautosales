@@ -27,26 +27,48 @@ const requiredItems = [
   { label: 'Vehicle', icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#4b5563" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> },
 ];
 
-function FileUpload({ label, icon, name, hasError, onFileChange }) {
+function FileUpload({ label, icon, name, hasError, onFileChange, maxFiles = 1 }) {
   const inputRef = useRef(null);
-  const [fileName, setFileName] = useState(null);
+  const [files, setFiles] = useState([]);
+
+  function addFiles(newFiles) {
+    setFiles(prev => {
+      const combined = [...prev];
+      for (const f of newFiles) {
+        if (combined.length < maxFiles && !combined.find(x => x.name === f.name)) {
+          combined.push(f);
+        }
+      }
+      // sync to input
+      const dt = new DataTransfer();
+      combined.forEach(f => dt.items.add(f));
+      if (inputRef.current) inputRef.current.files = dt.files;
+      return combined;
+    });
+    onFileChange?.();
+  }
+
+  function removeFile(idx) {
+    setFiles(prev => {
+      const next = prev.filter((_, i) => i !== idx);
+      const dt = new DataTransfer();
+      next.forEach(f => dt.items.add(f));
+      if (inputRef.current) inputRef.current.files = dt.files;
+      return next;
+    });
+  }
 
   function handleFile(e) {
-    const file = e.target.files?.[0];
-    if (file) { setFileName(file.name); onFileChange?.(); }
+    addFiles(Array.from(e.target.files || []));
+    e.target.value = '';
   }
 
   function handleDrop(e) {
     e.preventDefault();
-    const file = e.dataTransfer.files?.[0];
-    if (file) {
-      setFileName(file.name);
-      onFileChange?.();
-      const dt = new DataTransfer();
-      dt.items.add(file);
-      inputRef.current.files = dt.files;
-    }
+    addFiles(Array.from(e.dataTransfer.files || []));
   }
+
+  const canAddMore = files.length < maxFiles;
 
   return (
     <div
@@ -56,18 +78,29 @@ function FileUpload({ label, icon, name, hasError, onFileChange }) {
     >
       <div className={styles.uploadIcon}>{icon}</div>
       <p className={styles.uploadLabel}>{label}</p>
-      {fileName ? (
-        <p className={styles.uploadFileName}>{fileName}</p>
-      ) : (
+      {maxFiles > 1 && <p className={styles.uploadDrag} style={{fontSize:11,color:'#9ca3af'}}>Up to {maxFiles} files</p>}
+      {files.length > 0 && (
+        <div style={{width:'100%',display:'flex',flexDirection:'column',gap:4,margin:'4px 0'}}>
+          {files.map((f, i) => (
+            <div key={i} style={{display:'flex',alignItems:'center',gap:6,justifyContent:'space-between'}}>
+              <span className={styles.uploadFileName} style={{flex:1,textAlign:'left',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{f.name}</span>
+              <button type="button" onClick={() => removeFile(i)} style={{background:'none',border:'none',color:'#9ca3af',cursor:'pointer',padding:'0 2px',fontSize:14,lineHeight:1,flexShrink:0}}>&#10005;</button>
+            </div>
+          ))}
+        </div>
+      )}
+      {files.length === 0 && (
         <>
           <p className={styles.uploadDrag}>Drag &amp; Drop</p>
           <p className={styles.uploadOr}>or</p>
         </>
       )}
-      <button type="button" className={styles.chooseFileBtn} onClick={() => inputRef.current?.click()}>
-        Choose File
-      </button>
-      <input ref={inputRef} name={name} type="file" accept=".pdf,.jpg,.jpeg,.png" style={{ display: 'none' }} onChange={handleFile} />
+      {canAddMore && (
+        <button type="button" className={styles.chooseFileBtn} onClick={() => inputRef.current?.click()}>
+          {files.length > 0 ? 'Add More' : 'Choose File'}
+        </button>
+      )}
+      <input ref={inputRef} name={name} type="file" accept=".pdf,.jpg,.jpeg,.png" multiple style={{ display: 'none' }} onChange={handleFile} />
     </div>
   );
 }
@@ -75,6 +108,7 @@ function FileUpload({ label, icon, name, hasError, onFileChange }) {
 export default function SalvageInspectionsPage() {
   const [openFaq, setOpenFaq] = useState(null);
   const [form, setForm] = useState({ firstName: '', lastName: '', phone: '', email: '', notes: '' });
+  const [noMajorParts, setNoMajorParts] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
@@ -115,7 +149,7 @@ export default function SalvageInspectionsPage() {
     const receiptsFile = formRef.current?.querySelector('[name="receipts"]')?.files?.[0];
     if (!salvageFile)  errs.salvageTitle = 'Please upload your Salvage Title.';
     if (!idFile)       errs.validId      = 'Please upload a Valid ID.';
-    if (!receiptsFile) errs.receipts     = 'Please upload Receipts for Major Parts.';
+    if (!noMajorParts && !receiptsFile) errs.receipts = 'Please upload Receipts for Major Parts.';
     if (Object.keys(errs).length) { setErrors(errs); return; }
     setSubmitting(true);
     try {
@@ -285,6 +319,7 @@ export default function SalvageInspectionsPage() {
                       <FileUpload
                         name="salvageTitle"
                         label="UPLOAD SALVAGE TITLE *"
+                        maxFiles={5}
                         icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4b5563" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="12 18 12 12"/><polyline points="9 15 12 12 15 15"/></svg>}
                         hasError={!!errors.salvageTitle}
                         onFileChange={() => setErrors(p => { const n={...p}; delete n.salvageTitle; return n })}
@@ -295,6 +330,7 @@ export default function SalvageInspectionsPage() {
                       <FileUpload
                         name="validId"
                         label="UPLOAD VALID ID *"
+                        maxFiles={2}
                         icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4b5563" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><path d="M14 10h4M14 14h3"/></svg>}
                         hasError={!!errors.validId}
                         onFileChange={() => setErrors(p => { const n={...p}; delete n.validId; return n })}
@@ -302,14 +338,33 @@ export default function SalvageInspectionsPage() {
                       {errors.validId && <span className={styles.fieldError}>{errors.validId}</span>}
                     </div>
                     <div>
-                      <FileUpload
-                        name="receipts"
-                        label="UPLOAD RECEIPTS FOR MAJOR PARTS *"
-                        icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4b5563" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>}
-                        hasError={!!errors.receipts}
-                        onFileChange={() => setErrors(p => { const n={...p}; delete n.receipts; return n })}
-                      />
-                      {errors.receipts && <span className={styles.fieldError}>{errors.receipts}</span>}
+                      <label style={{display:'flex',alignItems:'center',gap:8,marginBottom:8,cursor:'pointer',fontSize:13,fontWeight:600,color:'#374151'}}>
+                        <input
+                          type="checkbox"
+                          checked={noMajorParts}
+                          onChange={e => { setNoMajorParts(e.target.checked); setErrors(p => { const n={...p}; delete n.receipts; return n }) }}
+                          style={{accentColor:'#e50202',width:15,height:15}}
+                        />
+                        No Major Parts Replaced
+                      </label>
+                      {!noMajorParts && (
+                        <>
+                          <FileUpload
+                            name="receipts"
+                            label="UPLOAD RECEIPTS FOR MAJOR PARTS *"
+                            maxFiles={10}
+                            icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4b5563" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>}
+                            hasError={!!errors.receipts}
+                            onFileChange={() => setErrors(p => { const n={...p}; delete n.receipts; return n })}
+                          />
+                          {errors.receipts && <span className={styles.fieldError}>{errors.receipts}</span>}
+                        </>
+                      )}
+                      {noMajorParts && (
+                        <div style={{padding:'16px',border:'1px solid #e5e7eb',borderRadius:8,background:'#f9fafb',fontSize:13,color:'#6b7280',textAlign:'center'}}>
+                          No receipts required
+                        </div>
+                      )}
                     </div>
                   </div>
 

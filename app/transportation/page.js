@@ -72,13 +72,13 @@ export default function TransportationPage() {
                       <p className={styles.contactOptionValue}>+1 {phone.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3')}</p>
                     </div>
                   </a>
-                  <a href="mailto:ConnectAutoSales@hotmail.com" className={styles.contactOption}>
+                  <a href="mailto:Sales@connectautosales.com" className={styles.contactOption}>
                     <div className={styles.contactOptionIcon}>
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e50202" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                     </div>
                     <div>
                       <p className={styles.contactOptionLabel}>Email Us</p>
-                      <p className={styles.contactOptionValue}>ConnectAutoSales@hotmail.com</p>
+                      <p className={styles.contactOptionValue}>Sales@connectautosales.com</p>
                     </div>
                   </a>
                 </div>
