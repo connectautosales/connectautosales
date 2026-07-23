@@ -159,6 +159,13 @@ export default function FinancingPage() {
         }
       }
     }
+    if (s === 4) {
+      if (form.tradeIn === 'yes') {
+        if (!form.tradeInPaidOff) errs.tradeInPaidOff = 'Please select if trade-in is paid off.'
+        if (!form.tradeInVin.trim())     errs.tradeInVin     = 'VIN is required for trade-in.'
+        if (!form.tradeInMileage.trim()) errs.tradeInMileage = 'Mileage is required for trade-in.'
+      }
+    }
     if (s === 5) {
       if (!form.loanAmount.trim())     errs.loanAmount   = 'Desired Loan Amount cannot be blank.'
       if (!form.downPayment.trim())    errs.downPayment  = 'Down Payment cannot be blank.'
@@ -533,7 +540,7 @@ export default function FinancingPage() {
 
                       {form.tradeIn === 'yes' && (
                         <>
-                          <Field label="Is the vehicle paid off?" col3>
+                          <Field label="Is the vehicle paid off?" col3 error={errors.tradeInPaidOff}>
                             <RadioGroup name="tradeInPaidOff" value={form.tradeInPaidOff} onChange={upd}
                               options={[{ value:'yes', label:'Yes - Paid Off' }, { value:'no', label:'No - Still Has a Loan' }]} />
                           </Field>
@@ -548,8 +555,8 @@ export default function FinancingPage() {
                           <Field label="Year"><input name="tradeInYear" value={form.tradeInYear} onChange={upd} placeholder="e.g. 2019" /></Field>
                           <Field label="Make"><input name="tradeInMake" value={form.tradeInMake} onChange={upd} placeholder="e.g. Honda" /></Field>
                           <Field label="Model"><input name="tradeInModel" value={form.tradeInModel} onChange={upd} placeholder="e.g. Civic" /></Field>
-                          <Field label="Mileage"><input name="tradeInMileage" value={form.tradeInMileage} onChange={upd} placeholder="e.g. 80,000" /></Field>
-                          <Field label="VIN"><input name="tradeInVin" value={form.tradeInVin} onChange={upd} placeholder="Vehicle Identification Number" /></Field>
+                          <Field label="Mileage *" error={errors.tradeInMileage}><input name="tradeInMileage" value={form.tradeInMileage} onChange={upd} placeholder="e.g. 80,000" /></Field>
+                          <Field label="VIN *" error={errors.tradeInVin}><input name="tradeInVin" value={form.tradeInVin} onChange={upd} placeholder="Vehicle Identification Number" /></Field>
                         </>
                       )}
                     </div>
