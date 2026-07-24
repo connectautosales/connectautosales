@@ -305,11 +305,11 @@ export default function SalvageInspectionsPage() {
                       {errors.lastName && <span className={styles.fieldError}>{errors.lastName}</span>}
                     </div>
                   </div>
-                  <div>
+                  <div style={{marginBottom:12}}>
                     <input className={`${styles.input} ${errors.phone ? styles.inputError : ''}`} name="phone" value={form.phone} onChange={handleChange} placeholder="Phone Number *" />
                     {errors.phone && <span className={styles.fieldError}>{errors.phone}</span>}
                   </div>
-                  <div>
+                  <div style={{marginBottom:12}}>
                     <input className={`${styles.input} ${errors.email ? styles.inputError : ''}`} name="email" value={form.email} onChange={handleChange} placeholder="Email Address *" />
                     {errors.email && <span className={styles.fieldError}>{errors.email}</span>}
                   </div>
