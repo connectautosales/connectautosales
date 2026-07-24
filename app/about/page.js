@@ -219,7 +219,7 @@ export default function AboutPage() {
           <div className={styles.visitGrid}>
             {/* Image */}
             <div className={styles.visitImg}>
-              <Image src="/images/banner-1.png" alt="Connect Auto Sales dealership" fill style={{ objectFit: 'cover' }} unoptimized />
+              <Image src="/images/banner-1.webp" alt="Connect Auto Sales dealership" fill style={{ objectFit: 'cover' }} unoptimized />
             </div>
 
             {/* Contact Info */}

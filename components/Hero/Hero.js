@@ -7,28 +7,28 @@ import styles from './Hero.module.css'
 
 const slides = [
   {
-    image: '/images/banner-1.png',
+    image: '/images/banner-1.webp',
     label: 'Quality Pre-Owned Vehicles',
     title: ['QUALITY', 'PRE-OWNED', 'VEHICLES'],
     titleColors: ['white', 'red', 'white'],
     btn: { text: 'BROWSE INVENTORY', href: '/inventory' },
   },
   {
-    image: '/images/banner-2.png',
+    image: '/images/banner-2.webp',
     label: 'Financing Made Easy',
     title: ['FINANCING', 'MADE EASY'],
     titleColors: ['white', 'red'],
     btn: { text: 'APPLY FOR FINANCING', href: '/financing' },
   },
   {
-    image: '/images/banner-3.png',
+    image: '/images/banner-3.webp',
     label: 'Dealer Auctions',
     title: ['DEALER', 'AUCTIONS'],
     titleColors: ['white', 'red'],
     btn: { text: 'START AUCTION PURCHASE', href: '/auction-services' },
   },
   {
-    image: '/images/banner-4.png',
+    image: '/images/banner-4.webp',
     label: 'Michigan Salvage Inspections',
     title: ['MICHIGAN', 'SALVAGE', 'INSPECTIONS'],
     titleColors: ['white', 'red', 'white'],

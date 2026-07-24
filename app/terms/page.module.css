@@ -9,7 +9,7 @@
 .heroOverlay {
   position: absolute;
   inset: 0;
-  background: url('/images/banner-1.png') center/cover no-repeat;
+  background: url('/images/banner-1.webp') center/cover no-repeat;
   opacity: 0.22;
 }
 
