@@ -2,7 +2,6 @@ export const runtime = 'nodejs'
 export const maxDuration = 60
 
 import { NextResponse } from 'next/server'
-import { put } from '@vercel/blob'
 import fs from 'fs'
 import path from 'path'
 
@@ -40,22 +39,20 @@ function buildSvg(logoB64, year, make, model, trim, cashPrice, financePrice) {
   const trimW = Math.max(80, (trim || '').length * 22 + 30)
 
   const displayFinance = (financePrice && financePrice > cashPrice) ? financePrice : cashPrice + 1000
-  const displayCash = cashPrice
-
-  const boxTop = 868
-  const boxH = 182
-
-  const cashStr = fmt(displayCash)
-  const finStr = fmt(displayFinance)
+  const cashStr = fmt(cashPrice)
+  const finStr  = fmt(displayFinance)
   const cashFontSize = cashStr.length <= 7 ? 80 : cashStr.length <= 8 ? 68 : 56
 
-  const yearMake = esc(`${year} ${(make || '').toUpperCase()}`)
+  const yearMake  = esc(`${year} ${(make || '').toUpperCase()}`)
   const modelText = esc((model || '').toUpperCase())
-  const trimText = esc((trim || '').toUpperCase())
+  const trimText  = esc((trim || '').toUpperCase())
 
   const logoImg = logoB64
     ? `<image href="data:image/png;base64,${logoB64}" x="18" y="12" width="300" height="100"/>`
     : `<text x="18" y="80" font-family="Arial,sans-serif" font-weight="900" font-size="28" fill="#ffffff">ConnectAuto-Sales.com</text>`
+
+  const boxTop = 868
+  const boxH   = 182
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg width="${SIZE}" height="${SIZE}" viewBox="0 0 ${SIZE} ${SIZE}" xmlns="http://www.w3.org/2000/svg">
@@ -102,87 +99,63 @@ function buildSvg(logoB64, year, make, model, trim, cashPrice, financePrice) {
 export async function POST(req) {
   let step = 'init'
   try {
-    // Step 1: parse form data
     step = 'parse_form'
     const formData = await req.formData()
-    const photo = formData.get('photo')
+    const photo        = formData.get('photo')
     const year         = formData.get('year')         || ''
     const make         = formData.get('make')         || ''
     const model        = formData.get('model')        || ''
     const trim         = formData.get('trim')         || ''
     const price        = parseFloat(formData.get('price') || 0)
     const financePrice = parseFloat(formData.get('financePrice') || 0)
-    const carId        = formData.get('carId')        || 'gen'
 
     if (!photo) return NextResponse.json({ error: 'No photo provided' }, { status: 400 })
 
-    // Step 2: load Sharp
     step = 'load_sharp'
     const sharp = (await import('sharp')).default
 
-    // Step 3: read logo
     step = 'read_logo'
     let logoB64 = ''
     try {
       const logoPath = path.join(process.cwd(), 'public', 'images', 'logo.png')
       logoB64 = fs.readFileSync(logoPath).toString('base64')
-    } catch {
-      // proceed without logo
-    }
+    } catch { /* proceed without logo */ }
 
-    // Step 4: build SVG
     step = 'build_svg'
-    const svg = buildSvg(logoB64, year, make, model, trim, price, financePrice)
+    const svg    = buildSvg(logoB64, year, make, model, trim, price, financePrice)
     const svgBuf = Buffer.from(svg, 'utf8')
 
-    // Step 5: convert photo buffer
     step = 'read_photo'
-    const bytes = await photo.arrayBuffer()
+    const bytes    = await photo.arrayBuffer()
     const photoBuf = Buffer.from(bytes)
 
-    // Step 6: resize car photo
     step = 'resize_photo'
     const resized = await sharp(photoBuf)
       .resize(SIZE, SIZE, { fit: 'cover', position: 'center' })
       .png()
       .toBuffer()
 
-    // Step 7: render SVG to PNG
     step = 'render_svg'
     const overlay = await sharp(svgBuf, { density: 96 })
       .resize(SIZE, SIZE)
       .png()
       .toBuffer()
 
-    // Step 8: composite
     step = 'composite'
     const result = await sharp(resized)
       .composite([{ input: overlay, top: 0, left: 0 }])
       .jpeg({ quality: 93 })
       .toBuffer()
 
-    // Step 9: upload
-    step = 'upload'
-    const filename = `watermark/${carId}-${Date.now()}.jpg`
-    let url
-
-    if (process.env.BLOB_READ_WRITE_TOKEN) {
-      const blob = await put(filename, result, { access: 'public' })
-      url = blob.url
-    } else {
-      const outDir = path.join(process.cwd(), 'public', 'uploads', 'watermark')
-      fs.mkdirSync(outDir, { recursive: true })
-      const fname = `${carId}-${Date.now()}.jpg`
-      fs.writeFileSync(path.join(outDir, fname), result)
-      url = `/uploads/watermark/${fname}`
-    }
-
-    return NextResponse.json({ url })
+    // Return as base64 — client uploads via /api/admin/upload (avoids blob token issues)
+    step = 'encode'
+    const b64 = result.toString('base64')
+    return NextResponse.json({ base64: `data:image/jpeg;base64,${b64}` })
 
   } catch (err) {
-    console.error(`Watermark failed at step [${step}]:`, err)
+    console.error(`Watermark failed at [${step}]:`, err)
     return NextResponse.json(
-      { error: `Failed at step "${step}": ${err.message || String(err)}` },
+      { error: `Failed at "${step}": ${err.message || String(err)}` },
       { status: 500 }
     )
   }

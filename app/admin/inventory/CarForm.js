@@ -123,12 +123,30 @@ export default function CarForm({ car }) {
       fd.append('price', form.price)
       fd.append('financePrice', form.financePrice || '')
       setGenStep('Applying watermark template...')
+      setGenStep('Applying watermark template...')
       const res = await fetch('/api/admin/watermark', { method: 'POST', body: fd })
-      setGenStep('Saving to cloud...')
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Generation failed')
+
+      // Convert base64 to File and upload via existing upload route
+      setGenStep('Saving to cloud...')
+      const base64 = data.base64
+      const byteStr = atob(base64.split(',')[1])
+      const ab = new ArrayBuffer(byteStr.length)
+      const ia = new Uint8Array(ab)
+      for (let i = 0; i < byteStr.length; i++) ia[i] = byteStr.charCodeAt(i)
+      const file = new File([ab], 'watermark.jpg', { type: 'image/jpeg' })
+
+      const uploadFd = new FormData()
+      uploadFd.append('file', file)
+      uploadFd.append('carId', isEdit ? car.id : `stock-${form.stock}`)
+      uploadFd.append('folder', 'main-photos')
+      const uploadRes = await fetch('/api/admin/upload', { method: 'POST', body: uploadFd })
+      const uploadData = await uploadRes.json()
+      if (!uploadRes.ok) throw new Error(uploadData.error || 'Upload failed')
+
       setGenStep('Done!')
-      setGenResult(data.url)
+      setGenResult(uploadData.url)
     } catch (err) {
       setGenError(err.message || 'Something went wrong. Check Make, Model, and Price are filled.')
     } finally {
@@ -517,10 +535,10 @@ export default function CarForm({ car }) {
                               {/* Steps */}
                               <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 12 }}>
                                 {[
-                                  { label: 'Preparing image', step: 'Preparing image...' },
-                                  { label: 'Uploading to server', step: 'Uploading photo to server...' },
-                                  { label: 'Applying watermark template', step: 'Applying watermark template...' },
-                                  { label: 'Saving to cloud', step: 'Saving to cloud...' },
+                                  { label: 'Preparing image',           step: 'Preparing image...' },
+                                  { label: 'Uploading photo to server', step: 'Uploading photo to server...' },
+                                  { label: 'Applying watermark',        step: 'Applying watermark template...' },
+                                  { label: 'Saving to cloud',           step: 'Saving to cloud...' },
                                 ].map((s, idx) => {
                                   const steps = ['Preparing image...', 'Uploading photo to server...', 'Applying watermark template...', 'Saving to cloud...']
                                   const currentIdx = steps.indexOf(genStep)
