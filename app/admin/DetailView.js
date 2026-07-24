@@ -58,9 +58,20 @@ export default function DetailView({ type, item, fields, statusOptions, title, b
                     <dt>{f.label}</dt>
                     <dd>
                       {f.type === 'file'
-                        ? <a href={f.value} target="_blank" rel="noreferrer" className={styles.fileLink}>
-                            <i className="fa-solid fa-file-arrow-down" /> View / Download
-                          </a>
+                        ? (() => {
+                            let urls = []
+                            try { urls = JSON.parse(f.value) } catch { urls = [f.value] }
+                            if (!Array.isArray(urls)) urls = [f.value]
+                            return (
+                              <div style={{display:'flex',flexDirection:'column',gap:6}}>
+                                {urls.map((url, idx) => (
+                                  <a key={idx} href={url} target="_blank" rel="noreferrer" className={styles.fileLink}>
+                                    <i className="fa-solid fa-file-arrow-down" /> File {urls.length > 1 ? idx + 1 : ''} — View / Download
+                                  </a>
+                                ))}
+                              </div>
+                            )
+                          })()
                         : f.value
                       }
                     </dd>
