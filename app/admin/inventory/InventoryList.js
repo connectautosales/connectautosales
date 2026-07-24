@@ -74,12 +74,12 @@ export default function InventoryList({ initialCars }) {
     let list = [...cars]
     if (search.trim()) {
       const q = search.trim().toLowerCase()
-      list = list.filter(c =>
-        (c.stock || '').toLowerCase().includes(q) ||
-        (c.make || '').toLowerCase().includes(q) ||
-        (c.model || '').toLowerCase().includes(q) ||
-        String(c.year || '').includes(q)
-      )
+      list = list.filter(c => {
+        const full = `${c.year || ''} ${c.make || ''} ${c.model || ''} ${c.trim || ''}`.toLowerCase()
+        return full.includes(q) ||
+          (c.stock || '').toLowerCase().includes(q) ||
+          (c.vin || '').toLowerCase().includes(q)
+      })
     }
     switch (sortBy) {
       case 'newest':    list.sort((a, b) => b.id - a.id); break
