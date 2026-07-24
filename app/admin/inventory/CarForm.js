@@ -375,14 +375,13 @@ export default function CarForm({ car }) {
             )}
           </div>
 
-          {/* Damage History Photos — only for rebuilt, outside stock lock */}
-          {form.titleType === 'rebuilt' && (
+          {/* Damage History Photos — always visible, shown on website only if photos uploaded */}
           <div className={styles.section}>
             <div className={styles.sectionHeader}>
               <i className="fa-solid fa-triangle-exclamation" style={{ color: '#f59e0b' }} />
               <h3 className={styles.sectionTitle}>Damage History Photos</h3>
             </div>
-            <p className={styles.photoNote}>Photos showing the vehicle before repair (required for rebuilt title vehicles).</p>
+            <p className={styles.photoNote}>Photos showing previous damage. Upload only if applicable — section will be hidden on the website if no photos are added.</p>
 
             <div className={styles.photosWrap}>
               <div className={styles.photoBlock}>
@@ -438,7 +437,6 @@ export default function CarForm({ car }) {
               </div>
             </div>
           </div>
-          )}
 
           {/* Listing Status */}
           <div className={styles.section}>
