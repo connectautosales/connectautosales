@@ -31,7 +31,13 @@ export async function POST(req) {
     step = 'prepare_image'
     const bytes  = await photo.arrayBuffer()
     const buffer = Buffer.from(bytes)
-    const imageFile = await toFile(buffer, 'car.png', { type: 'image/png' })
+    // Resize to max 1024px and convert to PNG for OpenAI
+    const sharp = (await import('sharp')).default
+    const resized = await sharp(buffer)
+      .resize(1024, 1024, { fit: 'inside', withoutEnlargement: true })
+      .png({ compressionLevel: 6 })
+      .toBuffer()
+    const imageFile = await toFile(resized, 'car.png', { type: 'image/png' })
 
     const prompt = `You are adding a professional car dealership advertisement overlay on top of this car photo. Keep the car photo fully visible as the background. Add these exact overlay elements:
 
@@ -60,7 +66,7 @@ Style: Professional car dealership advertisement, high contrast, bold graphics. 
 
     step = 'generate_image'
     const response = await openai.images.edit({
-      model: 'gpt-image-2',
+      model: 'gpt-image-1',
       image: imageFile,
       prompt,
       n: 1,
