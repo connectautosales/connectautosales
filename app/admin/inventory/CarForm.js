@@ -49,6 +49,7 @@ export default function CarForm({ car }) {
   const [genFile,     setGenFile]     = useState(null)
   const [genPreview,  setGenPreview]  = useState(null)
   const [generating,  setGenerating]  = useState(false)
+  const [genStep,     setGenStep]     = useState('') // current step label
   const [genResult,   setGenResult]   = useState(null)
   const [genError,    setGenError]    = useState('')
 
@@ -105,10 +106,13 @@ export default function CarForm({ car }) {
     if (!genFile) return
     if (!isEdit && !form.stock.trim()) { setError('Enter a Stock # before generating.'); return }
     if (!form.price) { setError('Enter a Cash Price before generating.'); return }
+    if (!form.make || !form.model) { setError('Enter Make and Model before generating.'); return }
     setGenerating(true)
+    setGenStep('Preparing image...')
     setGenError('')
     setGenResult(null)
     try {
+      setGenStep('Uploading photo to server...')
       const fd = new FormData()
       fd.append('photo', genFile)
       fd.append('carId', isEdit ? car.id : `stock-${form.stock}`)
@@ -118,14 +122,18 @@ export default function CarForm({ car }) {
       fd.append('trim', form.trim)
       fd.append('price', form.price)
       fd.append('financePrice', form.financePrice || '')
+      setGenStep('Applying watermark template...')
       const res = await fetch('/api/admin/watermark', { method: 'POST', body: fd })
+      setGenStep('Saving to cloud...')
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Generation failed')
+      setGenStep('Done!')
       setGenResult(data.url)
     } catch (err) {
-      setGenError(err.message)
+      setGenError(err.message || 'Something went wrong. Check Make, Model, and Price are filled.')
     } finally {
       setGenerating(false)
+      setGenStep('')
     }
   }
 
@@ -470,22 +478,70 @@ export default function CarForm({ car }) {
                       />
 
                       {genFile && !genResult && (
-                        <button
-                          type="button"
-                          onClick={handleGenerate}
-                          disabled={generating}
-                          style={{
-                            width: '100%', padding: '10px 0', background: generating ? '#94a3b8' : '#e50202',
-                            color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700,
-                            fontSize: '0.9rem', cursor: generating ? 'not-allowed' : 'pointer',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                          }}
-                        >
-                          {generating
-                            ? <><i className="fa-solid fa-spinner fa-spin" /> Generating...</>
-                            : <><i className="fa-solid fa-wand-magic-sparkles" /> Generate Watermark</>
-                          }
-                        </button>
+                        <>
+                          <button
+                            type="button"
+                            onClick={handleGenerate}
+                            disabled={generating}
+                            style={{
+                              width: '100%', padding: '11px 0', background: generating ? '#64748b' : '#e50202',
+                              color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700,
+                              fontSize: '0.9rem', cursor: generating ? 'not-allowed' : 'pointer',
+                              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                              transition: 'background 0.2s',
+                            }}
+                          >
+                            {generating
+                              ? <><i className="fa-solid fa-spinner fa-spin" /> {genStep || 'Processing...'}</>
+                              : <><i className="fa-solid fa-wand-magic-sparkles" /> Generate Watermark</>
+                            }
+                          </button>
+
+                          {generating && (
+                            <div style={{ marginTop: 12 }}>
+                              {/* Progress bar */}
+                              <div style={{ height: 4, background: '#e2e8f0', borderRadius: 99, overflow: 'hidden' }}>
+                                <div style={{
+                                  height: '100%', borderRadius: 99, background: '#e50202',
+                                  animation: 'genProgress 3s ease-in-out infinite',
+                                  width: '60%',
+                                }} />
+                              </div>
+                              <style>{`
+                                @keyframes genProgress {
+                                  0%   { width: 5%;  margin-left: 0; }
+                                  50%  { width: 40%; margin-left: 30%; }
+                                  100% { width: 5%;  margin-left: 95%; }
+                                }
+                              `}</style>
+                              {/* Steps */}
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 12 }}>
+                                {[
+                                  { label: 'Preparing image', step: 'Preparing image...' },
+                                  { label: 'Uploading to server', step: 'Uploading photo to server...' },
+                                  { label: 'Applying watermark template', step: 'Applying watermark template...' },
+                                  { label: 'Saving to cloud', step: 'Saving to cloud...' },
+                                ].map((s, idx) => {
+                                  const steps = ['Preparing image...', 'Uploading photo to server...', 'Applying watermark template...', 'Saving to cloud...']
+                                  const currentIdx = steps.indexOf(genStep)
+                                  const isDone = currentIdx > idx
+                                  const isActive = currentIdx === idx
+                                  return (
+                                    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.78rem', color: isDone ? '#16a34a' : isActive ? '#e50202' : '#94a3b8' }}>
+                                      {isDone
+                                        ? <i className="fa-solid fa-circle-check" style={{ fontSize: 13 }} />
+                                        : isActive
+                                          ? <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: 13 }} />
+                                          : <i className="fa-regular fa-circle" style={{ fontSize: 13 }} />
+                                      }
+                                      <span style={{ fontWeight: isActive ? 700 : 400 }}>{s.label}</span>
+                                    </div>
+                                  )
+                                })}
+                              </div>
+                            </div>
+                          )}
+                        </>
                       )}
 
                       {genError && (
