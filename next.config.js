@@ -7,6 +7,10 @@ const nextConfig = {
         hostname: 'connectautosales.com',
         pathname: '/wp-content/uploads/**',
       },
+      {
+        protocol: 'https',
+        hostname: '*.public.blob.vercel-storage.com',
+      },
     ],
     localPatterns: [
       { pathname: '/uploads/**' },
