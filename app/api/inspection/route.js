@@ -4,35 +4,37 @@ import { put } from '@vercel/blob'
 import { sendMail } from '@/lib/mailer'
 import { inspectionCustomer, inspectionAdmin } from '@/lib/emailTemplates'
 
-const uploadFile = async (field, formData) => {
+const uploadOneFile = async (file, field, index) => {
   try {
-    const file = formData.get(field)
-    if (!file || typeof file === 'string') return null
-
-    // Try Vercel Blob if token is available
+    if (!file || typeof file === 'string' || file.size === 0) return null
     if (process.env.BLOB_READ_WRITE_TOKEN) {
-      const nameParts = file.name.split('.')
-      const ext = nameParts.length > 1 ? nameParts[nameParts.length - 1] : 'pdf'
-      const filename = `inspections/${field}-${Date.now()}.${ext}`
+      const ext = file.name.split('.').pop() || 'pdf'
+      const filename = `inspections/${field}-${Date.now()}-${index}.${ext}`
       const blob = await put(filename, file, { access: 'public' })
       return blob.url
     }
-
-    // Fallback: local filesystem (dev only)
     const { writeFile, mkdir } = await import('fs/promises')
     const path = await import('path')
     const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'inspections')
     await mkdir(uploadDir, { recursive: true })
-    const nameParts = file.name.split('.')
-    const ext = nameParts.length > 1 ? nameParts.pop() : 'pdf'
-    const filename = `${field}-${Date.now()}.${ext}`
+    const ext = file.name.split('.').pop() || 'pdf'
+    const filename = `${field}-${Date.now()}-${index}.${ext}`
     const bytes = await file.arrayBuffer()
     await writeFile(path.join(uploadDir, filename), Buffer.from(bytes))
     return `/uploads/inspections/${filename}`
   } catch (e) {
-    console.error(`File upload failed for ${field}:`, e.message)
+    console.error(`File upload failed for ${field}[${index}]:`, e.message)
     return null
   }
+}
+
+const uploadFiles = async (field, formData) => {
+  const files = formData.getAll(field).filter(f => f && typeof f !== 'string' && f.size > 0)
+  if (!files.length) return null
+  const urls = await Promise.all(files.map((f, i) => uploadOneFile(f, field, i)))
+  const valid = urls.filter(Boolean)
+  if (!valid.length) return null
+  return valid.length === 1 ? valid[0] : JSON.stringify(valid)
 }
 
 export async function POST(req) {
@@ -46,9 +48,9 @@ export async function POST(req) {
     const partsChanged = formData.get('partsChanged') || ''
 
     const [salvageTitle, validId, receipts] = await Promise.all([
-      uploadFile('salvageTitle', formData),
-      uploadFile('validId', formData),
-      uploadFile('receipts', formData),
+      uploadFiles('salvageTitle', formData),
+      uploadFiles('validId', formData),
+      uploadFiles('receipts', formData),
     ])
 
     await prisma.$executeRaw`
