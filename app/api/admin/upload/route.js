@@ -31,12 +31,24 @@ export async function POST(req) {
 
   const filename = `vehicles/${carId}/${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
 
-  if (process.env.BLOB_READ_WRITE_TOKEN) {
-    const blob = await put(filename, file, { access: 'public' })
-    return Response.json({ url: blob.url })
+  const token = process.env.BLOB_READ_WRITE_TOKEN || ''
+  const tokenValid = token.startsWith('vercel_blob_rw_')
+
+  if (tokenValid) {
+    try {
+      const blob = await put(filename, file, { access: 'public' })
+      return Response.json({ url: blob.url })
+    } catch (blobErr) {
+      console.error('Blob upload failed:', blobErr.message)
+      return Response.json({ error: 'Storage upload failed: ' + blobErr.message }, { status: 500 })
+    }
   }
 
-  // Local dev fallback
+  // Local dev fallback (only works outside Vercel)
+  if (process.env.VERCEL) {
+    return Response.json({ error: 'BLOB_READ_WRITE_TOKEN is missing or invalid. Go to Vercel dashboard → Storage → create a Blob store → copy the token to env vars.' }, { status: 500 })
+  }
+
   const { writeFile, mkdir } = await import('fs/promises')
   const { join } = await import('path')
   const dir = join(process.cwd(), 'public', 'uploads', String(carId), folder)
