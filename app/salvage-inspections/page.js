@@ -153,8 +153,15 @@ export default function SalvageInspectionsPage() {
     if (Object.keys(errs).length) { setErrors(errs); return; }
     setSubmitting(true);
     try {
-      const fd = new FormData(formRef.current);
+      const fd = new FormData();
+      fd.set('firstName', form.firstName.trim());
+      fd.set('lastName', form.lastName.trim());
+      fd.set('phone', form.phone.trim());
+      fd.set('email', form.email.trim());
       fd.set('partsChanged', form.notes);
+      salvageFiles.forEach(f => fd.append('salvageTitle', f));
+      idFiles.forEach(f => fd.append('validId', f));
+      receiptFiles.forEach(f => fd.append('receipts', f));
       const res = await fetch('/api/inspection', { method: 'POST', body: fd });
       if (!res.ok) throw new Error('Failed');
       setSubmitted(true);
