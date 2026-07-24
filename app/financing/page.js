@@ -150,8 +150,12 @@ export default function FinancingPage() {
       if (!noIncome && form.employmentStatus) {
         if (!form.monthlyIncome.trim()) errs.monthlyIncome = 'Monthly Income cannot be blank.'
         if (showEmployer) {
-          if (!form.occupation.trim())  errs.occupation  = 'Occupation cannot be blank.'
-          if (!form.employer.trim())    errs.employer    = 'Employer Name cannot be blank.'
+          if (!form.occupation.trim())    errs.occupation    = 'Occupation cannot be blank.'
+          if (!form.employer.trim())      errs.employer      = 'Employer Name cannot be blank.'
+          if (!form.employerCity.trim())  errs.employerCity  = 'Employer City cannot be blank.'
+          if (!form.employerState)        errs.employerState = 'Employer State cannot be blank.'
+          if (!form.employerPhone.trim()) errs.employerPhone = 'Employer Phone cannot be blank.'
+          if (!form.supervisor.trim())    errs.supervisor    = 'Supervisor Name cannot be blank.'
         }
         if (form.addlIncome === 'yes') {
           if (!form.addlIncomeSource.trim()) errs.addlIncomeSource = 'Income source cannot be blank.'
@@ -413,7 +417,6 @@ export default function FinancingPage() {
                           <option value="employed">Employed</option>
                           <option value="self-employed">Self Employed</option>
                           <option value="retired">Retired</option>
-                          <option value="retired-military">Retired Military</option>
                           <option value="military">Active Military</option>
                           <option value="student">Student</option>
                           <option value="unemployed">Unemployed</option>
@@ -436,13 +439,14 @@ export default function FinancingPage() {
                           <Field label="Income Source" req>
                             <select name="incomeSource" value={form.incomeSource} onChange={upd}>
                               <option value="">Select</option>
+                              <option value="salary">Salary</option>
                               <option value="fixed-income">Fixed Income</option>
                               <option value="ssi">SSI</option>
                               <option value="cash">Cash Income</option>
                               <option value="other">Other</option>
                             </select>
                           </Field>
-                          <Field label="Monthly Income Amount" req error={errors.monthlyIncome}><input name="monthlyIncome" value={form.monthlyIncome} onChange={upd} placeholder="$0" className={errors.monthlyIncome ? styles.inputError : ''} /></Field>
+                          <Field label="Income Amount" req error={errors.monthlyIncome}><input name="monthlyIncome" value={form.monthlyIncome} onChange={upd} placeholder="$0" className={errors.monthlyIncome ? styles.inputError : ''} /></Field>
                           <Field label="Income Frequency" req>
                             <select name="incomeFrequency" value={form.incomeFrequency} onChange={upd}>
                               <option value="">Select</option>
@@ -464,15 +468,15 @@ export default function FinancingPage() {
                             <div className={styles.grid3}>
                               <Field label="Occupation" req error={errors.occupation}><input name="occupation" value={form.occupation} onChange={upd} placeholder="Job Title / Occupation" className={errors.occupation ? styles.inputError : ''} /></Field>
                               <Field label="Employer Name" req error={errors.employer}><input name="employer" value={form.employer} onChange={upd} placeholder="Employer Name" className={errors.employer ? styles.inputError : ''} /></Field>
-                              <Field label="Employer City"><input name="employerCity" value={form.employerCity} onChange={upd} placeholder="City" /></Field>
-                              <Field label="Employer State">
-                                <select name="employerState" value={form.employerState} onChange={upd}>
+                              <Field label="Employer City" req error={errors.employerCity}><input name="employerCity" value={form.employerCity} onChange={upd} placeholder="City" className={errors.employerCity ? styles.inputError : ''} /></Field>
+                              <Field label="Employer State" req error={errors.employerState}>
+                                <select name="employerState" value={form.employerState} onChange={upd} className={errors.employerState ? styles.inputError : ''}>
                                   <option value="">Select State</option>
                                   {US_STATES.map(s => <option key={s}>{s}</option>)}
                                 </select>
                               </Field>
-                              <Field label="Employer Phone"><input name="employerPhone" value={form.employerPhone} onChange={upd} placeholder="(000) 000-0000" /></Field>
-                              <Field label="Supervisor Name"><input name="supervisor" value={form.supervisor} onChange={upd} placeholder="Supervisor Name" /></Field>
+                              <Field label="Employer Phone" req error={errors.employerPhone}><input name="employerPhone" value={form.employerPhone} onChange={upd} placeholder="(000) 000-0000" className={errors.employerPhone ? styles.inputError : ''} /></Field>
+                              <Field label="Supervisor Name" req error={errors.supervisor}><input name="supervisor" value={form.supervisor} onChange={upd} placeholder="Supervisor Name" className={errors.supervisor ? styles.inputError : ''} /></Field>
                             </div>
 
                             <SectionLabel title="Time at Current Job" />
