@@ -104,9 +104,9 @@ export default function CarForm({ car }) {
 
   const handleGenerate = async () => {
     if (!genFile) return
-    if (!isEdit && !form.stock.trim()) { setError('Enter a Stock # before generating.'); return }
-    if (!form.price) { setError('Enter a Cash Price before generating.'); return }
-    if (!form.make || !form.model) { setError('Enter Make and Model before generating.'); return }
+    if (!isEdit && !form.stock.trim()) { setGenError('Enter a Stock # before generating.'); return }
+    if (!form.price) { setGenError('Enter a Cash Price before generating.'); return }
+    if (!form.make || !form.model) { setGenError('Enter Make and Model before generating.'); return }
     setGenerating(true)
     setGenStep('Preparing image...')
     setGenError('')
