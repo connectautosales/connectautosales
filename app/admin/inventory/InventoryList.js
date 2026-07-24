@@ -114,14 +114,15 @@ export default function InventoryList({ initialCars }) {
   async function handleMarkSold(car) {
     if (markingSold) return
     setMarkingSold(car.id)
+    const newStatus = car.status === 'sold' ? 'available' : 'sold'
     try {
-      const res = await fetch(`/api/admin/cars/${car.id}`, {
-        method: 'PUT',
+      const res = await fetch(`/api/admin/cars/${car.id}/status`, {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...car, status: car.status === 'sold' ? 'available' : 'sold' }),
+        body: JSON.stringify({ status: newStatus }),
       })
       if (!res.ok) throw new Error('Failed')
-      setCars(prev => prev.map(c => c.id === car.id ? { ...c, status: c.status === 'sold' ? 'available' : 'sold' } : c))
+      setCars(prev => prev.map(c => c.id === car.id ? { ...c, status: newStatus } : c))
     } catch {
       setDialog({ type: 'error', message: 'Failed to update status.' })
     } finally {
