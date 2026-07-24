@@ -31,12 +31,12 @@ export async function POST(req) {
 
   const filename = `vehicles/${carId}/${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
 
-  const token = process.env.BLOB_READ_WRITE_TOKEN || ''
+  const token = process.env.STORAGE_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN || ''
   const tokenValid = token.startsWith('vercel_blob_rw_')
 
   if (tokenValid) {
     try {
-      const blob = await put(filename, file, { access: 'public' })
+      const blob = await put(filename, file, { access: 'public', token })
       return Response.json({ url: blob.url })
     } catch (blobErr) {
       console.error('Blob upload failed:', blobErr.message)
