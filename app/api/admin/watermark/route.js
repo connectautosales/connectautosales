@@ -39,30 +39,28 @@ export async function POST(req) {
       .toBuffer()
     const imageFile = await toFile(resized, 'car.png', { type: 'image/png' })
 
-    const prompt = `You are adding a professional car dealership advertisement overlay on top of this car photo. Keep the car photo fully visible as the background. Add these exact overlay elements:
+    const prompt = `Add a professional car dealership advertisement overlay to this car photo. The car must stay fully visible as the background. Replicate this EXACT layout:
 
-TOP LEFT: ConnectAuto-Sales.com logo text with checkered flag racing design in black and white, website URL "www.ConnectAuto-Sales.com" in stylized text
+TOP-LEFT CORNER: A logo area showing a small racing checkered flag icon followed by "ConnectAuto-Sales.com" in bold stylized text, with "www.ConnectAuto-Sales.com" in smaller text below it. Black/white colors.
 
-TOP RIGHT: A black rounded rectangle badge with a thick red border. Inside: a red circle with a white phone handset icon on the left, then bold white text "313-413-3400" in large font
+TOP-RIGHT CORNER: A wide black pill/badge with a thick red border. Left side has a red filled circle with a white phone handset icon. Right side has bold white text "313-413-3400" in very large font (about 36px).
 
-LEFT SIDE (middle area):
-- Line 1: "${year} ${make.toUpperCase()}" in bold white text, medium size
-- Line 2: "${model.toUpperCase()}${trimLine}" in VERY LARGE bold red text, taking up significant space
-${trim ? `- Below model name: a small red rounded badge with white text "${trim.toUpperCase()}"` : ''}
+LEFT SIDE TEXT BLOCK (upper-middle area):
+- "${year} ${make.toUpperCase()}" in bold white text, medium size (~46px)
+- "${model.toUpperCase()}" in MASSIVE bold italic red text with a strong black drop shadow/outline, taking up most of the left side height. Font size very large (~180-220px). The text should look 3D and dramatic like a sports advertisement.
+${trim ? `- A small red rounded rectangle badge below the model name with white bold text "${trim.toUpperCase()}"` : ''}
 
-BOTTOM LEFT: A black semi-transparent rounded box containing:
-- Small grey text "FINANCE PRICE" at top
-- Large white bold text "${finStr}" with a red diagonal strikethrough line across it
+BOTTOM-LEFT: A dark black semi-transparent rounded rectangle box containing:
+- Top: small grey uppercase text "FINANCE PRICE"
+- Bottom: large bold white text "${finStr}" with a red horizontal strikethrough line drawn across it
 
-CENTER BOTTOM: A large red arrow pointing right (→)
+BOTTOM-CENTER: A large bold red arrow (→) pointing right
 
-BOTTOM RIGHT: Two stacked sections:
-- Top section: bright yellow rounded rectangle with bold black text "-$1,000 DISCOUNT!"
-- Bottom section: dark red rounded rectangle with:
-  - White text "WHEN PAY IN FULL"
-  - Very large bold yellow text "${cashStr}"
+BOTTOM-RIGHT: Two stacked boxes:
+- Top box: bright yellow rounded rectangle with bold black text "-$1,000 DISCOUNT!"
+- Bottom box: dark crimson/red rounded rectangle with white uppercase text "WHEN PAY IN FULL" on top and very large bold yellow text "${cashStr}" below it
 
-Style: Professional car dealership advertisement, high contrast, bold graphics. The overlay elements should be clearly visible but the car should remain the main focus.`
+IMPORTANT: Keep exact proportions. The model name must be the dominant visual element on the left. All text must be crisp and legible. Professional car dealership ad style.`
 
     step = 'generate_image'
     const response = await openai.images.edit({
