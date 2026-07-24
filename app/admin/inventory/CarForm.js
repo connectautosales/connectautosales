@@ -30,7 +30,7 @@ export default function CarForm({ car }) {
     color:        car?.color || '',
     description:  car?.description || '',
     features:     car?.features ? JSON.parse(car.features).join('\n') : '',
-    status:       car?.status || 'active',
+    status:       car?.status || 'available',
     isNewArrival: car?.isNewArrival || false,
   })
 
@@ -448,7 +448,7 @@ export default function CarForm({ car }) {
               <div className={styles.field}>
                 <label>Status</label>
                 <select name="status" value={form.status} onChange={set}>
-                  <option value="active">Active</option>
+                  <option value="available">Available</option>
                   <option value="sold">Sold</option>
                   <option value="hidden">Hidden</option>
                 </select>

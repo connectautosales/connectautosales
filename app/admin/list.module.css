@@ -121,6 +121,7 @@
 .clean     { background: #dcfce7; color: #166534; }
 .rebuilt   { background: #fef9c3; color: #854d0e; }
 .active    { background: #dbeafe; color: #1d4ed8; }
+.available { background: #dcfce7; color: #166534; }
 .sold      { background: #f1f5f9; color: #64748b; }
 .hidden    { background: #fee2e2; color: #991b1b; }
 .new       { background: #fef9c3; color: #854d0e; }
