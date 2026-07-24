@@ -39,13 +39,12 @@ function FileUpload({ label, icon, name, hasError, onFileChange, maxFiles = 1 })
           combined.push(f);
         }
       }
-      // sync to input
       const dt = new DataTransfer();
       combined.forEach(f => dt.items.add(f));
       if (inputRef.current) inputRef.current.files = dt.files;
+      onFileChange?.(combined);
       return combined;
     });
-    onFileChange?.();
   }
 
   function removeFile(idx) {
@@ -54,6 +53,7 @@ function FileUpload({ label, icon, name, hasError, onFileChange, maxFiles = 1 })
       const dt = new DataTransfer();
       next.forEach(f => dt.items.add(f));
       if (inputRef.current) inputRef.current.files = dt.files;
+      onFileChange?.(next);
       return next;
     });
   }
@@ -112,6 +112,9 @@ export default function SalvageInspectionsPage() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
+  const [salvageFiles, setSalvageFiles] = useState([]);
+  const [idFiles, setIdFiles] = useState([]);
+  const [receiptFiles, setReceiptFiles] = useState([]);
   const formRef = useRef(null);
   const [fees, setFees] = useState(null);
 
@@ -144,12 +147,9 @@ export default function SalvageInspectionsPage() {
     else if (!phoneRe.test(form.phone.trim())) errs.phone = 'Enter a valid phone number.';
     if (!form.email.trim())     errs.email     = 'Email cannot be blank.';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) errs.email = 'Enter a valid email address.';
-    const salvageFile = formRef.current?.querySelector('[name="salvageTitle"]')?.files?.[0];
-    const idFile      = formRef.current?.querySelector('[name="validId"]')?.files?.[0];
-    const receiptsFile = formRef.current?.querySelector('[name="receipts"]')?.files?.[0];
-    if (!salvageFile)  errs.salvageTitle = 'Please upload your Salvage Title.';
-    if (!idFile)       errs.validId      = 'Please upload a Valid ID.';
-    if (!noMajorParts && !receiptsFile) errs.receipts = 'Please upload Receipts for Major Parts.';
+    if (salvageFiles.length === 0)  errs.salvageTitle = 'Please upload your Salvage Title.';
+    if (idFiles.length === 0)       errs.validId      = 'Please upload a Valid ID.';
+    if (!noMajorParts && receiptFiles.length === 0) errs.receipts = 'Please upload Receipts for Major Parts.';
     if (Object.keys(errs).length) { setErrors(errs); return; }
     setSubmitting(true);
     try {
@@ -322,7 +322,7 @@ export default function SalvageInspectionsPage() {
                         maxFiles={5}
                         icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4b5563" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="12 18 12 12"/><polyline points="9 15 12 12 15 15"/></svg>}
                         hasError={!!errors.salvageTitle}
-                        onFileChange={() => setErrors(p => { const n={...p}; delete n.salvageTitle; return n })}
+                        onFileChange={files => { setSalvageFiles(files); setErrors(p => { const n={...p}; delete n.salvageTitle; return n }) }}
                       />
                       {errors.salvageTitle && <span className={styles.fieldError}>{errors.salvageTitle}</span>}
                     </div>
@@ -333,7 +333,7 @@ export default function SalvageInspectionsPage() {
                         maxFiles={2}
                         icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4b5563" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><path d="M14 10h4M14 14h3"/></svg>}
                         hasError={!!errors.validId}
-                        onFileChange={() => setErrors(p => { const n={...p}; delete n.validId; return n })}
+                        onFileChange={files => { setIdFiles(files); setErrors(p => { const n={...p}; delete n.validId; return n }) }}
                       />
                       {errors.validId && <span className={styles.fieldError}>{errors.validId}</span>}
                     </div>
@@ -355,7 +355,7 @@ export default function SalvageInspectionsPage() {
                             maxFiles={10}
                             icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4b5563" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>}
                             hasError={!!errors.receipts}
-                            onFileChange={() => setErrors(p => { const n={...p}; delete n.receipts; return n })}
+                            onFileChange={files => { setReceiptFiles(files); setErrors(p => { const n={...p}; delete n.receipts; return n }) }}
                           />
                           {errors.receipts && <span className={styles.fieldError}>{errors.receipts}</span>}
                         </>
