@@ -14,27 +14,36 @@ export async function POST(req, { params }) {
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { id } = await params
-  const rows = await prisma.$queryRaw`SELECT * FROM car WHERE id = ${parseInt(id)} LIMIT 1`
+  const srcId = parseInt(id)
+
+  const rows = await prisma.$queryRaw`SELECT * FROM car WHERE id = ${srcId} LIMIT 1`
   if (!rows[0]) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
   const src = rows[0]
-  delete src.id
-  // Convert BigInt fields to Number so they can be passed to executeRawUnsafe
-  Object.keys(src).forEach(k => {
-    if (typeof src[k] === 'bigint') src[k] = Number(src[k])
-  })
-  src.stock = src.stock ? `${src.stock}-COPY` : 'COPY'
-  src.slug = null
-  src.status = 'hidden'
-  src.createdAt = new Date()
 
-  const cols = Object.keys(src).map(k => `\`${k}\``).join(', ')
-  const vals = Object.values(src)
-  const placeholders = vals.map(() => '?').join(', ')
-  await prisma.$executeRawUnsafe(`INSERT INTO car (${cols}) VALUES (${placeholders})`, ...vals)
-  const [newCar] = await prisma.$queryRaw`SELECT * FROM car ORDER BY id DESC LIMIT 1`
+  // Build a unique stock number (avoid unique constraint collision)
+  const baseStock = (src.stock || `CAR-${srcId}`).replace(/-COPY\d*$/, '')
+  let newStock = `${baseStock}-COPY`
+  const existing = await prisma.$queryRaw`SELECT stock FROM car WHERE stock LIKE ${`${baseStock}-COPY%`}`
+  if (existing.length > 0) newStock = `${baseStock}-COPY${existing.length + 1}`
+
+  await prisma.$executeRawUnsafe(
+    `INSERT INTO car
+      (stock, year, make, model, trim, vin, price, financePrice, mileage,
+       titleType, drivetrain, transmission, fuelType, color, description,
+       type, features, images, damageImages, status, slug, isNewArrival, createdAt, updatedAt)
+     SELECT
+      ?, year, make, model, trim, NULL, price, financePrice, mileage,
+      titleType, drivetrain, transmission, fuelType, color, description,
+      type, features, images, damageImages, 'hidden', NULL, 0, NOW(), NOW()
+     FROM car WHERE id = ?`,
+    newStock, srcId
+  )
+
+  const [newCar] = await prisma.$queryRaw`SELECT id, year, make, model, trim FROM car ORDER BY id DESC LIMIT 1`
   const newId = Number(newCar.id)
   const slug = makeSlug(newCar.year, newCar.make, newCar.model, newCar.trim, newId)
-  await prisma.$executeRaw`UPDATE car SET slug = ${slug} WHERE id = ${newId}`
+  await prisma.$executeRawUnsafe(`UPDATE car SET slug = ? WHERE id = ?`, slug, newId)
+
   return NextResponse.json({ id: newId })
 }
