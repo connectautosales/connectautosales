@@ -4,6 +4,59 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import styles from '../list.module.css'
 
+/* ── Inline dialog (replaces alert / confirm) ── */
+function Dialog({ type, message, onConfirm, onClose }) {
+  if (!message) return null
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 9999,
+      background: 'rgba(0,0,0,0.45)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+    }}>
+      <div style={{
+        background: '#fff', borderRadius: 12, padding: '28px 32px',
+        maxWidth: 400, width: '90%', boxShadow: '0 20px 60px rgba(0,0,0,0.2)',
+        textAlign: 'center',
+      }}>
+        <div style={{
+          width: 48, height: 48, borderRadius: '50%',
+          background: type === 'confirm' ? '#fee2e2' : type === 'error' ? '#fee2e2' : '#dcfce7',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          margin: '0 auto 16px',
+        }}>
+          {type === 'confirm' ? (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          ) : type === 'error' ? (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          ) : (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          )}
+        </div>
+        <p style={{ fontSize: 15, color: '#111827', fontWeight: 600, margin: '0 0 20px', lineHeight: 1.5 }}>{message}</p>
+        <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
+          {type === 'confirm' ? (
+            <>
+              <button onClick={onClose} style={{
+                padding: '9px 20px', borderRadius: 8, border: '1px solid #e5e7eb',
+                background: '#fff', color: '#374151', fontWeight: 600, fontSize: 14, cursor: 'pointer',
+              }}>Cancel</button>
+              <button onClick={onConfirm} style={{
+                padding: '9px 20px', borderRadius: 8, border: 'none',
+                background: '#dc2626', color: '#fff', fontWeight: 700, fontSize: 14, cursor: 'pointer',
+              }}>Delete</button>
+            </>
+          ) : (
+            <button onClick={onClose} style={{
+              padding: '9px 24px', borderRadius: 8, border: 'none',
+              background: '#0f172a', color: '#fff', fontWeight: 700, fontSize: 14, cursor: 'pointer',
+            }}>OK</button>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function InventoryList({ initialCars }) {
   const router = useRouter()
   const [cars, setCars] = useState(initialCars)
@@ -11,6 +64,10 @@ export default function InventoryList({ initialCars }) {
   const [sortBy, setSortBy] = useState('newest')
   const [deleting, setDeleting] = useState(null)
   const [duplicating, setDuplicating] = useState(null)
+  const [dialog, setDialog] = useState(null) // { type, message, onConfirm? }
+
+  const showDialog = (type, message, onConfirm) => setDialog({ type, message, onConfirm })
+  const closeDialog = () => setDialog(null)
 
   const filtered = useMemo(() => {
     let list = [...cars]
@@ -24,27 +81,33 @@ export default function InventoryList({ initialCars }) {
       )
     }
     switch (sortBy) {
-      case 'newest': list.sort((a, b) => b.id - a.id); break
-      case 'oldest': list.sort((a, b) => a.id - b.id); break
-      case 'stock':  list.sort((a, b) => (a.stock || '').localeCompare(b.stock || '')); break
-      case 'make':   list.sort((a, b) => (a.make || '').localeCompare(b.make || '')); break
-      case 'model':  list.sort((a, b) => (a.model || '').localeCompare(b.model || '')); break
+      case 'newest':    list.sort((a, b) => b.id - a.id); break
+      case 'oldest':    list.sort((a, b) => a.id - b.id); break
+      case 'stock':     list.sort((a, b) => (a.stock || '').localeCompare(b.stock || '')); break
+      case 'make':      list.sort((a, b) => (a.make || '').localeCompare(b.make || '')); break
+      case 'model':     list.sort((a, b) => (a.model || '').localeCompare(b.model || '')); break
       case 'year_desc': list.sort((a, b) => (b.year || 0) - (a.year || 0)); break
       case 'year_asc':  list.sort((a, b) => (a.year || 0) - (b.year || 0)); break
       case 'price_asc': list.sort((a, b) => (a.price || 0) - (b.price || 0)); break
-      case 'price_desc': list.sort((a, b) => (b.price || 0) - (a.price || 0)); break
+      case 'price_desc':list.sort((a, b) => (b.price || 0) - (a.price || 0)); break
     }
     return list
   }, [cars, search, sortBy])
 
-  async function handleDelete(car) {
-    if (!confirm(`Delete ${car.year} ${car.make} ${car.model}? This cannot be undone.`)) return
-    setDeleting(car.id)
-    try {
-      await fetch(`/api/admin/cars/${car.id}`, { method: 'DELETE' })
-      setCars(prev => prev.filter(c => c.id !== car.id))
-    } catch { alert('Delete failed.') }
-    finally { setDeleting(null) }
+  function confirmDelete(car) {
+    showDialog('confirm', `Delete ${car.year} ${car.make} ${car.model}? This cannot be undone.`, async () => {
+      closeDialog()
+      setDeleting(car.id)
+      try {
+        const res = await fetch(`/api/admin/cars/${car.id}`, { method: 'DELETE' })
+        if (!res.ok) throw new Error()
+        setCars(prev => prev.filter(c => c.id !== car.id))
+      } catch {
+        showDialog('error', 'Delete failed. Please try again.')
+      } finally {
+        setDeleting(null)
+      }
+    })
   }
 
   async function handleDuplicate(car) {
@@ -52,13 +115,24 @@ export default function InventoryList({ initialCars }) {
     try {
       const res = await fetch(`/api/admin/cars/${car.id}/duplicate`, { method: 'POST' })
       const data = await res.json()
-      if (data.id) router.push(`/admin/inventory/${data.id}`)
-    } catch { alert('Duplicate failed.') }
-    finally { setDuplicating(null) }
+      if (!res.ok || !data.id) throw new Error(data.error || 'Failed')
+      router.push(`/admin/inventory/${data.id}`)
+    } catch (e) {
+      showDialog('error', `Duplicate failed: ${e.message}`)
+    } finally {
+      setDuplicating(null)
+    }
   }
 
   return (
     <>
+      <Dialog
+        type={dialog?.type}
+        message={dialog?.message}
+        onConfirm={dialog?.onConfirm}
+        onClose={closeDialog}
+      />
+
       <div className={styles.filterBar}>
         <input
           className={styles.searchInput}
@@ -122,15 +196,13 @@ export default function InventoryList({ initialCars }) {
                     className={styles.dupBtn}
                     onClick={() => handleDuplicate(car)}
                     disabled={duplicating === car.id}
-                    title="Duplicate"
                   >
                     {duplicating === car.id ? '...' : <><i className="fa-solid fa-copy" /> Copy</>}
                   </button>
                   <button
                     className={styles.deleteBtn}
-                    onClick={() => handleDelete(car)}
+                    onClick={() => confirmDelete(car)}
                     disabled={deleting === car.id}
-                    title="Delete"
                   >
                     {deleting === car.id ? '...' : <><i className="fa-solid fa-trash" /> Del</>}
                   </button>

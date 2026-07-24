@@ -19,6 +19,10 @@ export async function POST(req, { params }) {
 
   const src = rows[0]
   delete src.id
+  // Convert BigInt fields to Number so they can be passed to executeRawUnsafe
+  Object.keys(src).forEach(k => {
+    if (typeof src[k] === 'bigint') src[k] = Number(src[k])
+  })
   src.stock = src.stock ? `${src.stock}-COPY` : 'COPY'
   src.slug = null
   src.status = 'hidden'
