@@ -64,6 +64,7 @@ export default function InventoryList({ initialCars }) {
   const [sortBy, setSortBy] = useState('newest')
   const [deleting, setDeleting] = useState(null)
   const [duplicating, setDuplicating] = useState(null)
+  const [markingSold, setMarkingSold] = useState(null)
   const [dialog, setDialog] = useState(null) // { type, message, onConfirm? }
 
   const showDialog = (type, message, onConfirm) => setDialog({ type, message, onConfirm })
@@ -108,6 +109,24 @@ export default function InventoryList({ initialCars }) {
         setDeleting(null)
       }
     })
+  }
+
+  async function handleMarkSold(car) {
+    if (markingSold) return
+    setMarkingSold(car.id)
+    try {
+      const res = await fetch(`/api/admin/cars/${car.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...car, status: car.status === 'sold' ? 'available' : 'sold' }),
+      })
+      if (!res.ok) throw new Error('Failed')
+      setCars(prev => prev.map(c => c.id === car.id ? { ...c, status: c.status === 'sold' ? 'available' : 'sold' } : c))
+    } catch {
+      setDialog({ type: 'error', message: 'Failed to update status.' })
+    } finally {
+      setMarkingSold(null)
+    }
   }
 
   async function handleDuplicate(car) {
@@ -192,6 +211,13 @@ export default function InventoryList({ initialCars }) {
                   <Link href={`/inventory/${car.slug || car.id}`} target="_blank" className={styles.viewBtn}>
                     <i className="fa-solid fa-arrow-up-right-from-square" /> View
                   </Link>
+                  <button
+                    className={car.status === 'sold' ? styles.dupBtn : styles.soldBtn}
+                    onClick={() => handleMarkSold(car)}
+                    disabled={markingSold === car.id}
+                  >
+                    {markingSold === car.id ? '...' : car.status === 'sold' ? <><i className="fa-solid fa-rotate-left" /> Unsold</> : <><i className="fa-solid fa-tag" /> Sold</>}
+                  </button>
                   <button
                     className={styles.dupBtn}
                     onClick={() => handleDuplicate(car)}
