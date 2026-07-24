@@ -32,7 +32,7 @@ export default async function AdminDashboard() {
     prisma.$queryRaw`SELECT COUNT(*) as count FROM auctionrequest WHERE status = 'new'`,
     prisma.$queryRaw`SELECT COUNT(*) as count FROM salvageinspection WHERE status = 'new'`,
     prisma.$queryRaw`SELECT COUNT(*) as count FROM car WHERE status = 'sold'`,
-    prisma.$queryRaw`SELECT COUNT(*) as count FROM car WHERE status = 'active'`,
+    prisma.$queryRaw`SELECT COUNT(*) as count FROM car WHERE status = 'available'`,
   ])
 
   const recentFinancing = await prisma.$queryRaw`SELECT id, firstName, lastName, status, createdAt FROM financingapplication ORDER BY createdAt DESC LIMIT 5`
