@@ -122,10 +122,12 @@ export default function CarForm({ car }) {
       fd.append('trim', form.trim)
       fd.append('price', form.price)
       fd.append('financePrice', form.financePrice || '')
-      setGenStep('Applying watermark template...')
-      setGenStep('Applying watermark template...')
+      setGenStep('Generating image with AI...')
+      setGenStep('Generating image with AI...')
       const res = await fetch('/api/admin/watermark', { method: 'POST', body: fd })
-      const data = await res.json()
+      const text = await res.text()
+      let data
+      try { data = JSON.parse(text) } catch { throw new Error(text.slice(0, 200) || 'Generation failed') }
       if (!res.ok) throw new Error(data.error || 'Generation failed')
 
       // Convert base64 to File and upload via existing upload route
@@ -142,7 +144,9 @@ export default function CarForm({ car }) {
       uploadFd.append('carId', isEdit ? car.id : `stock-${form.stock}`)
       uploadFd.append('folder', 'main-photos')
       const uploadRes = await fetch('/api/admin/upload', { method: 'POST', body: uploadFd })
-      const uploadData = await uploadRes.json()
+      const uploadText = await uploadRes.text()
+      let uploadData
+      try { uploadData = JSON.parse(uploadText) } catch { throw new Error(uploadText.slice(0, 200) || 'Upload failed') }
       if (!uploadRes.ok) throw new Error(uploadData.error || 'Upload failed')
 
       setGenStep('Done!')
@@ -537,10 +541,10 @@ export default function CarForm({ car }) {
                                 {[
                                   { label: 'Preparing image',           step: 'Preparing image...' },
                                   { label: 'Uploading photo to server', step: 'Uploading photo to server...' },
-                                  { label: 'Applying watermark',        step: 'Applying watermark template...' },
+                                  { label: 'Generating AI image',        step: 'Generating image with AI...' },
                                   { label: 'Saving to cloud',           step: 'Saving to cloud...' },
                                 ].map((s, idx) => {
-                                  const steps = ['Preparing image...', 'Uploading photo to server...', 'Applying watermark template...', 'Saving to cloud...']
+                                  const steps = ['Preparing image...', 'Uploading photo to server...', 'Generating image with AI...', 'Saving to cloud...']
                                   const currentIdx = steps.indexOf(genStep)
                                   const isDone = currentIdx > idx
                                   const isActive = currentIdx === idx
