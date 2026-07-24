@@ -42,6 +42,15 @@ export default function CarForm({ car }) {
 
   const mainInputRef   = useRef()
   const damageInputRef = useRef()
+  const genInputRef    = useRef()
+
+  // Watermark generator state
+  const [featTab,     setFeatTab]     = useState('upload') // 'upload' | 'generate'
+  const [genFile,     setGenFile]     = useState(null)
+  const [genPreview,  setGenPreview]  = useState(null)
+  const [generating,  setGenerating]  = useState(false)
+  const [genResult,   setGenResult]   = useState(null)
+  const [genError,    setGenError]    = useState('')
 
   const set = (e) => {
     const v = e.target.type === 'checkbox' ? e.target.checked : e.target.value
@@ -80,6 +89,54 @@ export default function CarForm({ car }) {
 
   const handleMainDrop   = (e) => { e.preventDefault(); uploadFiles([...e.dataTransfer.files], 'main-photos', setMainPhotos) }
   const handleDamageDrop = (e) => { e.preventDefault(); uploadFiles([...e.dataTransfer.files], 'damage-history', setDamagePhotos) }
+
+  const handleGenFileChange = (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+    setGenFile(file)
+    setGenResult(null)
+    setGenError('')
+    const reader = new FileReader()
+    reader.onload = (ev) => setGenPreview(ev.target.result)
+    reader.readAsDataURL(file)
+  }
+
+  const handleGenerate = async () => {
+    if (!genFile) return
+    if (!isEdit && !form.stock.trim()) { setError('Enter a Stock # before generating.'); return }
+    if (!form.price) { setError('Enter a Cash Price before generating.'); return }
+    setGenerating(true)
+    setGenError('')
+    setGenResult(null)
+    try {
+      const fd = new FormData()
+      fd.append('photo', genFile)
+      fd.append('carId', isEdit ? car.id : `stock-${form.stock}`)
+      fd.append('year', form.year)
+      fd.append('make', form.make)
+      fd.append('model', form.model)
+      fd.append('trim', form.trim)
+      fd.append('price', form.price)
+      fd.append('financePrice', form.financePrice || '')
+      const res = await fetch('/api/admin/watermark', { method: 'POST', body: fd })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Generation failed')
+      setGenResult(data.url)
+    } catch (err) {
+      setGenError(err.message)
+    } finally {
+      setGenerating(false)
+    }
+  }
+
+  const useGenAsFeature = () => {
+    if (!genResult) return
+    setMainPhotos(p => [genResult, ...p.filter(u => u !== genResult)])
+    setGenResult(null)
+    setGenFile(null)
+    setGenPreview(null)
+    setFeatTab('upload')
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -316,45 +373,168 @@ export default function CarForm({ car }) {
                     <span className={styles.photoCount}>{mainPhotos.length} photos</span>
                   </div>
 
-                  {/* Drop Zone */}
-                  <div
-                    className={styles.dropZone}
-                    onClick={() => mainInputRef.current.click()}
-                    onDragOver={e => e.preventDefault()}
-                    onDrop={handleMainDrop}
-                  >
-                    {uploading.main ? (
-                      <><i className="fa-solid fa-spinner fa-spin" /><span>Uploading...</span></>
-                    ) : (
-                      <>
-                        <i className="fa-solid fa-cloud-arrow-up" />
-                        <span>Click or drag photos here</span>
-                        <small>JPG, PNG, WEBP — multiple files allowed</small>
-                      </>
-                    )}
+                  {/* Tab Toggle */}
+                  <div style={{ display: 'flex', gap: 0, marginBottom: 12, border: '1px solid #e2e8f0', borderRadius: 8, overflow: 'hidden', width: 'fit-content' }}>
+                    <button
+                      type="button"
+                      onClick={() => setFeatTab('upload')}
+                      style={{
+                        padding: '7px 18px', fontSize: '0.82rem', fontWeight: 600, border: 'none', cursor: 'pointer',
+                        background: featTab === 'upload' ? '#0f172a' : '#f8fafc',
+                        color: featTab === 'upload' ? '#fff' : '#64748b',
+                        display: 'flex', alignItems: 'center', gap: 6,
+                      }}
+                    >
+                      <i className="fa-solid fa-cloud-arrow-up" /> Upload Photos
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setFeatTab('generate')}
+                      style={{
+                        padding: '7px 18px', fontSize: '0.82rem', fontWeight: 600, border: 'none', cursor: 'pointer',
+                        background: featTab === 'generate' ? '#e50202' : '#f8fafc',
+                        color: featTab === 'generate' ? '#fff' : '#64748b',
+                        display: 'flex', alignItems: 'center', gap: 6,
+                      }}
+                    >
+                      <i className="fa-solid fa-wand-magic-sparkles" /> Generate Feature Image
+                    </button>
                   </div>
-                  <input
-                    ref={mainInputRef}
-                    type="file"
-                    accept="image/jpeg,image/png,image/webp,image/avif"
-                    multiple
-                    style={{ display: 'none' }}
-                    onChange={e => uploadFiles([...e.target.files], 'main-photos', setMainPhotos)}
-                  />
 
-                  {uploadError.main && (
-                    <div className={styles.uploadErr}>
-                      <i className="fa-solid fa-triangle-exclamation" />
-                      {uploadError.main}
+                  {featTab === 'upload' ? (
+                    <>
+                      {/* Drop Zone */}
+                      <div
+                        className={styles.dropZone}
+                        onClick={() => mainInputRef.current.click()}
+                        onDragOver={e => e.preventDefault()}
+                        onDrop={handleMainDrop}
+                      >
+                        {uploading.main ? (
+                          <><i className="fa-solid fa-spinner fa-spin" /><span>Uploading...</span></>
+                        ) : (
+                          <>
+                            <i className="fa-solid fa-cloud-arrow-up" />
+                            <span>Click or drag photos here</span>
+                            <small>JPG, PNG, WEBP — multiple files allowed</small>
+                          </>
+                        )}
+                      </div>
+                      <input
+                        ref={mainInputRef}
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/avif"
+                        multiple
+                        style={{ display: 'none' }}
+                        onChange={e => uploadFiles([...e.target.files], 'main-photos', setMainPhotos)}
+                      />
+                      {uploadError.main && (
+                        <div className={styles.uploadErr}>
+                          <i className="fa-solid fa-triangle-exclamation" />
+                          {uploadError.main}
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    /* Generate Feature Image Panel */
+                    <div style={{ border: '1px solid #fecaca', borderRadius: 10, padding: 20, background: '#fff5f5' }}>
+                      <p style={{ fontSize: '0.82rem', color: '#64748b', margin: '0 0 14px' }}>
+                        Upload a plain car photo — the system will auto-apply the branded template (logo, phone, price overlay) and add it as the first photo.
+                      </p>
+
+                      {/* Plain photo upload */}
+                      <div
+                        style={{
+                          border: '2px dashed #fca5a5', borderRadius: 8, padding: '24px 16px',
+                          textAlign: 'center', cursor: 'pointer', background: '#fff',
+                          marginBottom: 14,
+                        }}
+                        onClick={() => genInputRef.current.click()}
+                      >
+                        {genPreview ? (
+                          /* eslint-disable-next-line @next/next/no-img-element */
+                          <img src={genPreview} alt="preview" style={{ maxHeight: 160, maxWidth: '100%', borderRadius: 6, objectFit: 'contain' }} />
+                        ) : (
+                          <>
+                            <i className="fa-solid fa-image" style={{ fontSize: 28, color: '#fca5a5', marginBottom: 8, display: 'block' }} />
+                            <span style={{ fontSize: '0.84rem', color: '#64748b' }}>Click to select a plain car photo</span>
+                          </>
+                        )}
+                      </div>
+                      <input
+                        ref={genInputRef}
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        style={{ display: 'none' }}
+                        onChange={handleGenFileChange}
+                      />
+
+                      {genFile && !genResult && (
+                        <button
+                          type="button"
+                          onClick={handleGenerate}
+                          disabled={generating}
+                          style={{
+                            width: '100%', padding: '10px 0', background: generating ? '#94a3b8' : '#e50202',
+                            color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700,
+                            fontSize: '0.9rem', cursor: generating ? 'not-allowed' : 'pointer',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                          }}
+                        >
+                          {generating
+                            ? <><i className="fa-solid fa-spinner fa-spin" /> Generating...</>
+                            : <><i className="fa-solid fa-wand-magic-sparkles" /> Generate Watermark</>
+                          }
+                        </button>
+                      )}
+
+                      {genError && (
+                        <div className={styles.uploadErr} style={{ marginTop: 10 }}>
+                          <i className="fa-solid fa-triangle-exclamation" /> {genError}
+                        </div>
+                      )}
+
+                      {genResult && (
+                        <div style={{ marginTop: 14 }}>
+                          <p style={{ fontSize: '0.78rem', color: '#16a34a', fontWeight: 600, margin: '0 0 10px' }}>
+                            <i className="fa-solid fa-circle-check" /> Generated successfully — preview:
+                          </p>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={genResult} alt="generated" style={{ width: '100%', borderRadius: 8, marginBottom: 12 }} />
+                          <button
+                            type="button"
+                            onClick={useGenAsFeature}
+                            style={{
+                              width: '100%', padding: '10px 0', background: '#16a34a',
+                              color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700,
+                              fontSize: '0.9rem', cursor: 'pointer',
+                              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                            }}
+                          >
+                            <i className="fa-solid fa-star" /> Use as Feature Image
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => { setGenResult(null); setGenFile(null); setGenPreview(null) }}
+                            style={{
+                              width: '100%', marginTop: 8, padding: '8px 0', background: 'transparent',
+                              color: '#64748b', border: '1px solid #e2e8f0', borderRadius: 8,
+                              fontWeight: 600, fontSize: '0.84rem', cursor: 'pointer',
+                            }}
+                          >
+                            Try Again
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
 
                   {/* Preview Grid */}
                   {mainPhotos.length > 0 && (
-                    <div className={styles.photoGrid}>
+                    <div className={styles.photoGrid} style={{ marginTop: 14 }}>
                       {mainPhotos.map((url, i) => (
                         <div key={i} className={styles.photoThumb}>
-                          {i === 0 && <span className={styles.mainBadge}>Main</span>}
+                          {i === 0 && <span className={styles.mainBadge}>Feature</span>}
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img src={url} alt="" />
                           <button
