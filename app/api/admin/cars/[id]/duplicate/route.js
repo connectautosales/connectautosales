@@ -33,7 +33,8 @@ export async function POST(req, { params }) {
   const placeholders = vals.map(() => '?').join(', ')
   await prisma.$executeRawUnsafe(`INSERT INTO car (${cols}) VALUES (${placeholders})`, ...vals)
   const [newCar] = await prisma.$queryRaw`SELECT * FROM car ORDER BY id DESC LIMIT 1`
-  const slug = makeSlug(newCar.year, newCar.make, newCar.model, newCar.trim, newCar.id)
-  await prisma.$executeRaw`UPDATE car SET slug = ${slug} WHERE id = ${newCar.id}`
-  return NextResponse.json({ id: newCar.id })
+  const newId = Number(newCar.id)
+  const slug = makeSlug(newCar.year, newCar.make, newCar.model, newCar.trim, newId)
+  await prisma.$executeRaw`UPDATE car SET slug = ${slug} WHERE id = ${newId}`
+  return NextResponse.json({ id: newId })
 }
