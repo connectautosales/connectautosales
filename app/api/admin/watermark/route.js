@@ -50,67 +50,38 @@ export async function POST(req) {
       .toBuffer()
     const imageFile = await toFile(resized, 'car.png', { type: 'image/png' })
 
-    // Build mask: transparent = AI can edit, opaque black = preserve original
-    // Top 22% = transparent (header area)
-    // Middle 53% = black/opaque (vehicle — must NOT be altered)
-    // Bottom 25% = transparent (pricing area)
-    const SIZE = 1024
-    const headerH  = Math.round(SIZE * 0.22)  // 225px
-    const pricingH = Math.round(SIZE * 0.25)  // 256px
-    const vehicleH = SIZE - headerH - pricingH // 543px
 
-    // RGBA mask: alpha=0 means editable, alpha=255 means locked
-    const maskData = Buffer.alloc(SIZE * SIZE * 4)
-    for (let y = 0; y < SIZE; y++) {
-      for (let x = 0; x < SIZE; x++) {
-        const i = (y * SIZE + x) * 4
-        if (y < headerH || y >= headerH + vehicleH) {
-          // editable zone — fully transparent
-          maskData[i] = 0; maskData[i+1] = 0; maskData[i+2] = 0; maskData[i+3] = 0
-        } else {
-          // vehicle zone — fully opaque (preserve)
-          maskData[i] = 0; maskData[i+1] = 0; maskData[i+2] = 0; maskData[i+3] = 255
-        }
-      }
-    }
-    const maskBuf = await sharp(maskData, { raw: { width: SIZE, height: SIZE, channels: 4 } })
-      .png()
-      .toBuffer()
-    const maskFile = await toFile(maskBuf, 'mask.png', { type: 'image/png' })
+    const defaultPrompt = `This is a PHOTO EDITING task, not image generation. You are given a real dealership car photo. Your job is to add graphic text overlays on top of it — like a designer would in Photoshop. The photo must look like a real photograph throughout.
 
-    const defaultPrompt = `Replicate the exact graphic style of the FIRST reference image, but use the car from the SECOND photo as the vehicle. The car photo background must remain completely unaltered — do NOT repaint, recolor, or alter the vehicle or its background in any way.
+CRITICAL: The car and its surroundings must look like a REAL PHOTOGRAPH — not illustrated, not painted, not cartoon. Preserve the original photographic realism of the vehicle and background completely.
 
-Output: 1080x1080 square advertisement image.
+Use the layout and style from the reference image provided.
 
-OVERLAY ELEMENTS TO ADD (matching reference style exactly):
+ADD THESE OVERLAYS ON TOP OF THE REAL PHOTO:
 
 TOP-LEFT:
-- Thin checkered flag strip across the very top
-- "www.ConnectAuto-Sales.com" bold text, "Auto-Sales" in red
-- "{{year}} {{make}}" in large black bold text on next line
-- "{{model}}" in MASSIVE ultra-bold red text with black outline — largest text element, nearly full width
-- Red rounded badge below model name: white bold text "{{trim}}"
+- Thin checkered flag border strip at the very top edge
+- "www.ConnectAuto-Sales.com" — bold black text, "Auto-Sales" in red
+- "{{year}} {{make}}" — large black bold text
+- "{{model}}" — HUGE red bold text with black stroke, nearly full width, largest element
+- Red rounded badge: white bold "{{trim}}"
 
 TOP-RIGHT:
-- Black rounded rectangle, red border, red phone icon + bold white "313-413-3400"
+- Black rounded pill, red border, phone icon, white bold "313-413-3400"
 
-BOTTOM-LEFT floating black box:
-- Label: "FINANCE PRICE" in small white bold
-- Price: "{{finance_price}}" in large white bold — show this price ONCE with a red strikethrough line across it. DO NOT show this price a second time without strikethrough.
+BOTTOM-LEFT black box:
+- "FINANCE PRICE" small white label
+- "{{finance_price}}" large white text, red strikethrough line through it ONLY ONCE
 
 BOTTOM-CENTER:
-- Bold red arrow → pointing right
+- Red arrow →
 
-BOTTOM-RIGHT floating red box:
-- Yellow pill badge at top: "-$1,000 DISCOUNT!" in black bold
-- "WHEN PAY IN FULL" in small white text
-- "{{cash_price}}" in very large yellow/gold bold text
+BOTTOM-RIGHT red box:
+- Yellow badge top: "-$1,000 DISCOUNT!"
+- "WHEN PAY IN FULL" white small text
+- "{{cash_price}}" very large yellow bold text
 
-RULES:
-- Vehicle and background photo must be 100% preserved — no alterations whatsoever
-- Finance price appears ONLY ONCE in the bottom-left box, with strikethrough
-- Cash price appears ONLY ONCE in the bottom-right box, no strikethrough
-- No extra badges, descriptions, or text beyond what is listed above`
+The background car photo must remain a real photograph. No cartoon, no illustration, no painting effect.`
 
     const rawPrompt = savedPrompt || defaultPrompt
     const prompt = rawPrompt
@@ -138,7 +109,6 @@ RULES:
     const editParams = {
       model: 'gpt-image-1',
       image: refFile ? [refFile, imageFile] : imageFile,
-      mask: maskFile,
       prompt,
       n: 1,
       size: '1024x1024',
