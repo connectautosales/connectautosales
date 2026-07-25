@@ -2,9 +2,8 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
-import Link from 'next/link'
 import styles from '../list.module.css'
-import DeleteRowBtn from '../DeleteRowBtn'
+import BulkTable from '../BulkTable'
 
 export default async function AdminTransport() {
   const session = await getServerSession(authOptions)
@@ -12,6 +11,20 @@ export default async function AdminTransport() {
 
   const items = await prisma.$queryRaw`SELECT * FROM transportrequest ORDER BY createdAt DESC`
   const newCount = items.filter(t => t.status === 'new').length
+
+  const rows = items.map(t => ({
+    id: t.id,
+    status: t.status || 'new',
+    cells: [
+      t.name || '—',
+      t.phone || '—',
+      t.email || '—',
+      t.from || '—',
+      t.to || '—',
+      t.vehicle || '—',
+      new Date(t.createdAt).toLocaleDateString(),
+    ],
+  }))
 
   return (
     <div className={styles.page}>
@@ -21,48 +34,21 @@ export default async function AdminTransport() {
           <p className={styles.sub}>{items.length} total · {newCount} new</p>
         </div>
       </div>
-
       <div className={styles.content}>
-        <div className={styles.tableWrap}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Email</th>
-                <th>From</th>
-                <th>To</th>
-                <th>Vehicle</th>
-                <th>Status</th>
-                <th>Date</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.length === 0 && (
-                <tr><td colSpan={9} className={styles.empty}>No transport requests yet.</td></tr>
-              )}
-              {items.map(t => (
-                <tr key={t.id}>
-                  <td><strong>{t.name || '—'}</strong></td>
-                  <td>{t.phone || '—'}</td>
-                  <td>{t.email || '—'}</td>
-                  <td>{t.from || '—'}</td>
-                  <td>{t.to || '—'}</td>
-                  <td>{t.vehicle || '—'}</td>
-                  <td><span className={`${styles.badge} ${styles[t.status]}`}>{t.status}</span></td>
-                  <td>{new Date(t.createdAt).toLocaleDateString()}</td>
-                  <td className={styles.actions}>
-                    <Link href={`/admin/transport/${t.id}`} className={styles.editBtn}>
-                      <i className="fa-solid fa-eye" /> View
-                    </Link>
-                    <DeleteRowBtn table="transportrequest" id={t.id} label="transport request" />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <BulkTable
+          rows={rows}
+          headers={['Name', 'Phone', 'Email', 'From', 'To', 'Vehicle', 'Date']}
+          statusOptions={[
+            { value: 'new',       label: 'New' },
+            { value: 'reviewed',  label: 'Reviewed' },
+            { value: 'contacted', label: 'Contacted' },
+            { value: 'completed', label: 'Completed' },
+          ]}
+          type="transport"
+          detailBase="/admin/transport"
+          deleteTable="transportrequest"
+          deleteLabel="transport request"
+        />
       </div>
     </div>
   )

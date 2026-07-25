@@ -2,9 +2,8 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
-import Link from 'next/link'
 import styles from '../list.module.css'
-import DeleteRowBtn from '../DeleteRowBtn'
+import BulkTable from '../BulkTable'
 
 export default async function AdminInspections() {
   const session = await getServerSession(authOptions)
@@ -12,6 +11,26 @@ export default async function AdminInspections() {
 
   const items = await prisma.$queryRaw`SELECT * FROM salvageinspection ORDER BY createdAt DESC`
   const newCount = items.filter(i => i.status === 'new').length
+
+  const rows = items.map(i => {
+    const docs = [
+      i.salvageTitle ? 'Title' : null,
+      i.validId ? 'ID' : null,
+      i.receipts ? 'Receipts' : null,
+    ].filter(Boolean).join(', ') || '—'
+
+    return {
+      id: i.id,
+      status: i.status || 'new',
+      cells: [
+        `${i.firstName || ''} ${i.lastName || ''}`.trim() || '—',
+        i.phone || '—',
+        i.email || '—',
+        docs,
+        new Date(i.createdAt).toLocaleDateString(),
+      ],
+    }
+  })
 
   return (
     <div className={styles.page}>
@@ -21,49 +40,21 @@ export default async function AdminInspections() {
           <p className={styles.sub}>{items.length} total · {newCount} new</p>
         </div>
       </div>
-
       <div className={styles.content}>
-        <div className={styles.tableWrap}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Email</th>
-                <th>Documents</th>
-                <th>Status</th>
-                <th>Date</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.length === 0 && (
-                <tr><td colSpan={7} className={styles.empty}>No inspection requests yet.</td></tr>
-              )}
-              {items.map(i => (
-                <tr key={i.id}>
-                  <td><strong>{i.firstName || '—'} {i.lastName || ''}</strong></td>
-                  <td>{i.phone || '—'}</td>
-                  <td>{i.email || '—'}</td>
-                  <td>
-                    {i.salvageTitle && <span className={styles.docBadge}><i className="fa-solid fa-file" /> Title</span>}
-                    {i.validId && <span className={styles.docBadge}><i className="fa-solid fa-id-card" /> ID</span>}
-                    {i.receipts && <span className={styles.docBadge}><i className="fa-solid fa-receipt" /> Receipts</span>}
-                    {!i.salvageTitle && !i.validId && !i.receipts && '—'}
-                  </td>
-                  <td><span className={`${styles.badge} ${styles[i.status?.replace(/ /g, '-')]}`}>{i.status}</span></td>
-                  <td>{new Date(i.createdAt).toLocaleDateString()}</td>
-                  <td className={styles.actions}>
-                    <Link href={`/admin/inspections/${i.id}`} className={styles.editBtn}>
-                      <i className="fa-solid fa-eye" /> View
-                    </Link>
-                    <DeleteRowBtn table="salvageinspection" id={i.id} label="inspection" />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <BulkTable
+          rows={rows}
+          headers={['Name', 'Phone', 'Email', 'Documents', 'Date']}
+          statusOptions={[
+            { value: 'new',                label: 'New' },
+            { value: 'documents-reviewed', label: 'Documents Reviewed' },
+            { value: 'scheduled',          label: 'Scheduled' },
+            { value: 'completed',          label: 'Completed' },
+          ]}
+          type="inspection"
+          detailBase="/admin/inspections"
+          deleteTable="salvageinspection"
+          deleteLabel="inspection"
+        />
       </div>
     </div>
   )

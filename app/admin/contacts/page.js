@@ -2,9 +2,8 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
-import Link from 'next/link'
 import styles from '../list.module.css'
-import DeleteRowBtn from '../DeleteRowBtn'
+import BulkTable from '../BulkTable'
 
 export default async function AdminContacts() {
   const session = await getServerSession(authOptions)
@@ -12,6 +11,18 @@ export default async function AdminContacts() {
 
   const msgs = await prisma.$queryRaw`SELECT * FROM contactmessage ORDER BY createdAt DESC`
   const unread = msgs.filter(m => !m.isRead).length
+
+  const rows = msgs.map(m => ({
+    id: m.id,
+    status: m.isRead ? 'read' : 'unread',
+    cells: [
+      m.name || '—',
+      m.phone || '—',
+      m.email || '—',
+      m.subject || '—',
+      new Date(m.createdAt).toLocaleDateString(),
+    ],
+  }))
 
   return (
     <div className={styles.page}>
@@ -21,44 +32,20 @@ export default async function AdminContacts() {
           <p className={styles.sub}>{unread} unread · {msgs.length} total</p>
         </div>
       </div>
-
       <div className={styles.content}>
-        <div className={styles.tableWrap}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th style={{ width: 20 }}></th>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Email</th>
-                <th>Subject</th>
-                <th>Date</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {msgs.length === 0 && (
-                <tr><td colSpan={7} className={styles.empty}>No messages yet.</td></tr>
-              )}
-              {msgs.map(m => (
-                <tr key={m.id} style={{ fontWeight: m.isRead ? 400 : 600 }}>
-                  <td>{!m.isRead && <span className={styles.unreadDot} />}</td>
-                  <td>{m.name || '—'}</td>
-                  <td>{m.phone || '—'}</td>
-                  <td>{m.email || '—'}</td>
-                  <td>{m.subject || '—'}</td>
-                  <td>{new Date(m.createdAt).toLocaleDateString()}</td>
-                  <td className={styles.actions}>
-                    <Link href={`/admin/contacts/${m.id}`} className={styles.editBtn}>
-                      <i className="fa-solid fa-eye" /> View
-                    </Link>
-                    <DeleteRowBtn table="contactmessage" id={m.id} label="message" />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <BulkTable
+          rows={rows}
+          headers={['Name', 'Phone', 'Email', 'Subject', 'Date']}
+          statusOptions={[
+            { value: 'unread', label: 'Unread' },
+            { value: 'read',   label: 'Read / Replied' },
+          ]}
+          type="contact"
+          detailBase="/admin/contacts"
+          deleteTable="contactmessage"
+          deleteLabel="message"
+          isContactType
+        />
       </div>
     </div>
   )

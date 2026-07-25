@@ -271,6 +271,92 @@
 
 .sortSelect:focus { border-color: #e50202; }
 
+/* Selectable rows */
+.selectableRow { cursor: pointer; }
+.selectableRow:hover td { background: #fef2f2 !important; }
+
+/* Checkbox */
+.checkbox {
+  width: 15px;
+  height: 15px;
+  accent-color: #e50202;
+  cursor: pointer;
+}
+
+/* Bulk action bar */
+.bulkBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #0f172a;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 10px 10px 0 0;
+  flex-wrap: wrap;
+}
+
+.bulkCount {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  white-space: nowrap;
+}
+
+.bulkActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.bulkSelect {
+  padding: 7px 12px;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 6px;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+}
+
+.bulkSelect option { background: #0f172a; color: #fff; }
+
+.bulkApplyBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  background: #e50202;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.bulkApplyBtn:hover:not(:disabled) { background: #c50000; }
+.bulkApplyBtn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+.bulkClearBtn {
+  padding: 7px 12px;
+  background: transparent;
+  color: rgba(255,255,255,0.6);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.bulkClearBtn:hover { color: #fff; border-color: rgba(255,255,255,0.5); }
+
 /* pageHeader kept for backward compat */
 .pageHeader { display: none; }
 

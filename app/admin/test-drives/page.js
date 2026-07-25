@@ -2,9 +2,8 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
-import Link from 'next/link'
 import styles from '../list.module.css'
-import DeleteRowBtn from '../DeleteRowBtn'
+import BulkTable from '../BulkTable'
 
 export default async function AdminTestDrives() {
   const session = await getServerSession(authOptions)
@@ -12,6 +11,20 @@ export default async function AdminTestDrives() {
 
   const items = await prisma.$queryRaw`SELECT * FROM testdriverequest ORDER BY createdAt DESC`
   const newCount = items.filter(i => i.status === 'new').length
+
+  const rows = items.map(i => ({
+    id: i.id,
+    status: i.status || 'new',
+    cells: [
+      `${i.firstName} ${i.lastName}`,
+      i.phone || '—',
+      i.email || '—',
+      i.vehicle || '—',
+      i.preferredDate || '—',
+      i.preferredTime || '—',
+      new Date(i.createdAt).toLocaleDateString(),
+    ],
+  }))
 
   return (
     <div className={styles.page}>
@@ -21,48 +34,22 @@ export default async function AdminTestDrives() {
           <p className={styles.sub}>{items.length} total · {newCount} new</p>
         </div>
       </div>
-
       <div className={styles.content}>
-        <div className={styles.tableWrap}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Email</th>
-                <th>Vehicle</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Status</th>
-                <th>Submitted</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.length === 0 && (
-                <tr><td colSpan={9} className={styles.empty}>No test drive requests yet.</td></tr>
-              )}
-              {items.map(i => (
-                <tr key={i.id}>
-                  <td><strong>{i.firstName} {i.lastName}</strong></td>
-                  <td>{i.phone || '—'}</td>
-                  <td>{i.email || '—'}</td>
-                  <td>{i.vehicle || '—'}</td>
-                  <td>{i.preferredDate || '—'}</td>
-                  <td>{i.preferredTime || '—'}</td>
-                  <td><span className={`${styles.badge} ${styles[i.status?.replace(/ /g, '-')]}`}>{i.status}</span></td>
-                  <td>{new Date(i.createdAt).toLocaleDateString()}</td>
-                  <td className={styles.actions}>
-                    <Link href={`/admin/test-drives/${i.id}`} className={styles.editBtn}>
-                      <i className="fa-solid fa-eye" /> View
-                    </Link>
-                    <DeleteRowBtn table="testdriverequest" id={i.id} label="test drive request" />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <BulkTable
+          rows={rows}
+          headers={['Name', 'Phone', 'Email', 'Vehicle', 'Pref. Date', 'Pref. Time', 'Submitted']}
+          statusOptions={[
+            { value: 'new',       label: 'New' },
+            { value: 'contacted', label: 'Contacted' },
+            { value: 'confirmed', label: 'Confirmed' },
+            { value: 'completed', label: 'Completed' },
+            { value: 'cancelled', label: 'Cancelled' },
+          ]}
+          type="testDrive"
+          detailBase="/admin/test-drives"
+          deleteTable="testdriverequest"
+          deleteLabel="test drive request"
+        />
       </div>
     </div>
   )
