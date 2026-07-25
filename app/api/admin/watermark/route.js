@@ -5,6 +5,8 @@ import { NextResponse } from 'next/server'
 import OpenAI from 'openai'
 import { toFile } from 'openai'
 import { prisma } from '@/lib/prisma'
+import path from 'path'
+import fs from 'fs'
 
 export async function POST(req) {
   let step = 'init'
@@ -76,42 +78,39 @@ export async function POST(req) {
       .toBuffer()
     const maskFile = await toFile(maskBuf, 'mask.png', { type: 'image/png' })
 
-    const defaultPrompt = `You are overlaying graphic text elements onto the uploaded car photo. DO NOT repaint, redraw, or alter the vehicle or background in any way. The uploaded photo is the complete background — keep it 100% intact.
+    const defaultPrompt = `Replicate the exact graphic style of the FIRST reference image, but use the car from the SECOND photo as the vehicle. The car photo background must remain completely unaltered — do NOT repaint, recolor, or alter the vehicle or its background in any way.
 
-Output: 1080x1080 square image. The uploaded photo fills the entire canvas exactly as-is.
+Output: 1080x1080 square advertisement image.
 
-Add these graphic overlays on top of the photo:
+OVERLAY ELEMENTS TO ADD (matching reference style exactly):
 
-TOP-LEFT AREA:
-- A thin horizontal checkered flag strip (black and white squares) running across the very top edge
-- Below it: website text "www.ConnectAuto-Sales.com" — black bold text, "Auto-Sales" portion in red
-- Below that on next line: "{{year}} {{make}}" in large black bold text
-- Below that: "{{model}}" in a MASSIVE font — ultra-bold, red gradient color (bright red to dark red), with a thick black outline/stroke. This should be the largest text on the entire image, spanning almost the full width
-- Below the model name: a red rounded rectangle badge with white bold text "{{trim}}" (only if trim is provided)
+TOP-LEFT:
+- Thin checkered flag strip across the very top
+- "www.ConnectAuto-Sales.com" bold text, "Auto-Sales" in red
+- "{{year}} {{make}}" in large black bold text on next line
+- "{{model}}" in MASSIVE ultra-bold red text with black outline — largest text element, nearly full width
+- Red rounded badge below model name: white bold text "{{trim}}"
 
-TOP-RIGHT AREA:
-- A black rounded rectangle with a red border outline, containing: a red phone icon on the left, then bold white text "313-413-3400" — large and prominent
+TOP-RIGHT:
+- Black rounded rectangle, red border, red phone icon + bold white "313-413-3400"
 
-BOTTOM-LEFT (floating box, does not span full width):
-- A small black rounded rectangle box, semi-transparent black background
-- Inside: "FINANCE PRICE" in small bold white text on top
-- Below: "{{finance_price}}" in large bold white text with a red diagonal strikethrough line across the price number
+BOTTOM-LEFT floating black box:
+- Label: "FINANCE PRICE" in small white bold
+- Price: "{{finance_price}}" in large white bold — show this price ONCE with a red strikethrough line across it. DO NOT show this price a second time without strikethrough.
 
 BOTTOM-CENTER:
-- A bold solid red arrow pointing right → between the two pricing boxes
+- Bold red arrow → pointing right
 
-BOTTOM-RIGHT (floating box, larger than left box):
-- A large red rounded rectangle box
-- At the top of this box: a small yellow badge/pill with black bold text "-$1,000 DISCOUNT!"
-- Below: "WHEN PAY IN FULL" in small white text
-- Below: "{{cash_price}}" in very large bold yellow/gold text
+BOTTOM-RIGHT floating red box:
+- Yellow pill badge at top: "-$1,000 DISCOUNT!" in black bold
+- "WHEN PAY IN FULL" in small white text
+- "{{cash_price}}" in very large yellow/gold bold text
 
-STRICT RULES:
-- The vehicle photo background must remain completely unaltered — same colors, same lighting, same background
-- Do NOT add any banners, strips, or overlays that cover the vehicle itself
-- Do NOT add: Clean Title Guaranteed, Great Value, Buy With Confidence, Luxury & Performance, Reliable & Efficient, or any other badges not listed above
-- All text elements float on top of the photo naturally
-- Overall style: bold, high-contrast automotive advertisement`
+RULES:
+- Vehicle and background photo must be 100% preserved — no alterations whatsoever
+- Finance price appears ONLY ONCE in the bottom-left box, with strikethrough
+- Cash price appears ONLY ONCE in the bottom-right box, no strikethrough
+- No extra badges, descriptions, or text beyond what is listed above`
 
     const rawPrompt = savedPrompt || defaultPrompt
     const prompt = rawPrompt
@@ -124,14 +123,27 @@ STRICT RULES:
       .replace(/\{\{trim_line\}\}/g, trimBadgeLine)
 
     step = 'generate_image'
-    const response = await openai.images.edit({
+    // Try to load reference template image to guide AI style
+    let refFile = null
+    try {
+      const refPath = path.join(process.cwd(), 'public', 'images', 'ad-template-reference.jpg')
+      const refBuf  = fs.readFileSync(refPath)
+      const refResized = await sharp(refBuf)
+        .resize(1024, 1024, { fit: 'cover' })
+        .png()
+        .toBuffer()
+      refFile = await toFile(refResized, 'reference.png', { type: 'image/png' })
+    } catch { /* no reference image, proceed without */ }
+
+    const editParams = {
       model: 'gpt-image-1',
-      image: imageFile,
+      image: refFile ? [refFile, imageFile] : imageFile,
       mask: maskFile,
       prompt,
       n: 1,
       size: '1024x1024',
-    })
+    }
+    const response = await openai.images.edit(editParams)
 
     step = 'encode_result'
     let base64
