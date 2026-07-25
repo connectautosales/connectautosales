@@ -123,16 +123,28 @@ export default function CarForm({ car }) {
       fd.append('price', form.price)
       fd.append('financePrice', form.financePrice || '')
       setGenStep('Generating image with AI...')
-      setGenStep('Generating image with AI...')
       const res = await fetch('/api/admin/watermark', { method: 'POST', body: fd })
       const text = await res.text()
       let data
       try { data = JSON.parse(text) } catch { throw new Error(text.slice(0, 200) || 'Generation failed') }
       if (!res.ok) throw new Error(data.error || 'Generation failed')
 
+      // Poll for result
+      const { requestId } = data
+      if (!requestId) throw new Error('No requestId returned')
+      setGenStep('AI generating image...')
+      const deadline = Date.now() + 180000
+      let base64 = null
+      while (Date.now() < deadline) {
+        await new Promise(r => setTimeout(r, 4000))
+        const poll = await fetch(`/api/admin/watermark-status?requestId=${requestId}`)
+        const pollData = await poll.json()
+        if (pollData.done) { base64 = pollData.base64; break }
+      }
+      if (!base64) throw new Error('Image generation timed out. Try again.')
+
       // Convert base64 to File and upload via existing upload route
       setGenStep('Saving to cloud...')
-      const base64 = data.base64
       const byteStr = atob(base64.split(',')[1])
       const ab = new ArrayBuffer(byteStr.length)
       const ia = new Uint8Array(ab)
