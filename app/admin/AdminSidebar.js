@@ -16,6 +16,7 @@ const nav = [
   { href: '/admin/contacts',     label: 'Contact Messages',  icon: 'fa-solid fa-envelope' },
   { href: '/admin/transport',    label: 'Transport Quotes',  icon: 'fa-solid fa-truck' },
   { href: '/admin/visitors',     label: 'Visitors',          icon: 'fa-solid fa-chart-bar' },
+  { href: '/admin/image-template', label: 'Image Template',   icon: 'fa-solid fa-wand-magic-sparkles' },
   { href: '/admin/settings',     label: 'Website Settings',  icon: 'fa-solid fa-gear' },
 ]
 

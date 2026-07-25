@@ -4,6 +4,7 @@ export const maxDuration = 60
 import { NextResponse } from 'next/server'
 import OpenAI from 'openai'
 import { toFile } from 'openai'
+import { prisma } from '@/lib/prisma'
 
 export async function POST(req) {
   let step = 'init'
@@ -23,7 +24,14 @@ export async function POST(req) {
     const fmt = (n) => '$' + Math.round(n).toLocaleString('en-US')
     const cashStr    = fmt(price)
     const finStr     = fmt(financePrice && financePrice > price ? financePrice : price + 1000)
-    const trimLine   = trim ? ` ${trim.toUpperCase()}` : ''
+    const trimBadgeLine = trim ? `- A small red rounded rectangle badge below the model name with white bold text "${trim.toUpperCase()}"` : ''
+
+    step = 'load_prompt'
+    let savedPrompt = ''
+    try {
+      const rows = await prisma.$queryRawUnsafe(`SELECT watermark_prompt FROM sitesettings LIMIT 1`)
+      savedPrompt = rows[0]?.watermark_prompt || ''
+    } catch { /* use default */ }
 
     step = 'init_openai'
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
@@ -39,7 +47,7 @@ export async function POST(req) {
       .toBuffer()
     const imageFile = await toFile(resized, 'car.png', { type: 'image/png' })
 
-    const prompt = `Add a professional car dealership advertisement overlay to this car photo. The car must stay fully visible as the background. Replicate this EXACT layout:
+    const defaultPrompt = `Add a professional car dealership advertisement overlay to this car photo. The car must stay fully visible as the background. Replicate this EXACT layout:
 
 TOP-LEFT CORNER: A logo area showing a small racing checkered flag icon followed by "ConnectAuto-Sales.com" in bold stylized text, with "www.ConnectAuto-Sales.com" in smaller text below it. Black/white colors.
 
@@ -61,6 +69,16 @@ BOTTOM-RIGHT: Two stacked boxes:
 - Bottom box: dark crimson/red rounded rectangle with white uppercase text "WHEN PAY IN FULL" on top and very large bold yellow text "${cashStr}" below it
 
 IMPORTANT: Keep exact proportions. The model name must be the dominant visual element on the left. All text must be crisp and legible. Professional car dealership ad style.`
+
+    const rawPrompt = savedPrompt || defaultPrompt
+    const prompt = rawPrompt
+      .replace(/\{\{year\}\}/g, year)
+      .replace(/\{\{make\}\}/g, make.toUpperCase())
+      .replace(/\{\{model\}\}/g, model.toUpperCase())
+      .replace(/\{\{trim\}\}/g, trim.toUpperCase())
+      .replace(/\{\{cash_price\}\}/g, cashStr)
+      .replace(/\{\{finance_price\}\}/g, finStr)
+      .replace(/\{\{trim_line\}\}/g, trimBadgeLine)
 
     step = 'generate_image'
     const response = await openai.images.edit({
