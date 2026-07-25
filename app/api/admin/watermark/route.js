@@ -40,9 +40,11 @@ export async function POST(req) {
 
     step = 'load_prompt'
     let savedPrompt = ''
+    let templateUrl = ''
     try {
-      const rows = await prisma.$queryRawUnsafe(`SELECT watermark_prompt FROM sitesettings LIMIT 1`)
+      const rows = await prisma.$queryRawUnsafe(`SELECT watermark_prompt, watermark_template_url FROM sitesettings LIMIT 1`)
       savedPrompt = rows[0]?.watermark_prompt || ''
+      templateUrl = rows[0]?.watermark_template_url || ''
     } catch { /* use default */ }
 
     const defaultPrompt = `You are a graphic designer adding text and shape overlays onto a real car dealership photo. DO NOT alter, repaint, redraw, or modify the car or background in any way. The photo is the background — keep it 100% untouched.
@@ -123,7 +125,7 @@ STRICT RULES:
     const makeRes = await fetch(MAKE_WEBHOOK, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ photoUrl, prompt, requestId }),
+      body: JSON.stringify({ photoUrl, templateUrl, prompt, requestId }),
     })
     if (!makeRes.ok) {
       throw new Error(`Make.com webhook failed: ${makeRes.status}`)

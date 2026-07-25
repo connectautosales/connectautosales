@@ -48,6 +48,11 @@ export default function ImageTemplatePage() {
   const [error, setError]       = useState('')
   const [loading, setLoading]   = useState(true)
 
+  const [templateUrl,      setTemplateUrl]      = useState('')
+  const [templateUploading, setTemplateUploading] = useState(false)
+  const [templateSaved,    setTemplateSaved]    = useState(false)
+  const templateRef = useRef()
+
   const [previewFile,    setPreviewFile]    = useState(null)
   const [previewImg,     setPreviewImg]     = useState(null)
   const [previewYear,    setPreviewYear]    = useState('2021')
@@ -65,8 +70,41 @@ export default function ImageTemplatePage() {
   useEffect(() => {
     fetch('/api/admin/watermark-prompt')
       .then(r => r.json())
-      .then(d => { setPrompt(d.prompt || DEFAULT_PROMPT); setLoading(false) })
+      .then(d => {
+        setPrompt(d.prompt || DEFAULT_PROMPT)
+        setTemplateUrl(d.templateUrl || '')
+        setLoading(false)
+      })
   }, [])
+
+  const handleTemplateUpload = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+    setTemplateUploading(true)
+    setTemplateSaved(false)
+    try {
+      const fd = new FormData()
+      fd.append('file', file)
+      fd.append('folder', 'watermark-template')
+      const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Upload failed')
+      const url = data.url
+      setTemplateUrl(url)
+      // Save to settings
+      await fetch('/api/admin/watermark-prompt', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, templateUrl: url }),
+      })
+      setTemplateSaved(true)
+      setTimeout(() => setTemplateSaved(false), 3000)
+    } catch (err) {
+      alert(err.message)
+    } finally {
+      setTemplateUploading(false)
+    }
+  }
 
   const handleSave = async () => {
     setSaving(true); setSaved(false); setError('')
@@ -175,6 +213,34 @@ export default function ImageTemplatePage() {
           <i className="fa-solid fa-circle-xmark" /> {error}
         </div>
       )}
+
+      {/* Template Image Section */}
+      <div style={{ padding: '20px 32px', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: 20 }}>
+        <div>
+          <p style={{ fontSize: '0.84rem', fontWeight: 700, color: '#0f172a', margin: '0 0 2px' }}>Reference Template Image</p>
+          <p style={{ fontSize: '0.78rem', color: '#64748b', margin: 0 }}>Upload the branded template — AI will use this as the design base and only update the car photo and text values.</p>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
+          {templateUrl && (
+            <img src={templateUrl} alt="Template" style={{ height: 60, width: 60, objectFit: 'cover', borderRadius: 6, border: '1px solid #e2e8f0' }} />
+          )}
+          <button
+            onClick={() => templateRef.current.click()}
+            disabled={templateUploading}
+            style={{
+              padding: '8px 16px', background: templateUploading ? '#94a3b8' : '#0f172a',
+              color: '#fff', border: 'none', borderRadius: 8, fontSize: '0.82rem',
+              fontWeight: 600, cursor: templateUploading ? 'not-allowed' : 'pointer',
+              display: 'flex', alignItems: 'center', gap: 6,
+            }}
+          >
+            <i className={`fa-solid ${templateUploading ? 'fa-spinner fa-spin' : 'fa-upload'}`} />
+            {templateUploading ? 'Uploading...' : templateUrl ? 'Change Template' : 'Upload Template'}
+          </button>
+          {templateSaved && <span style={{ fontSize: '0.78rem', color: '#16a34a', fontWeight: 600 }}><i className="fa-solid fa-circle-check" /> Saved</span>}
+          <input ref={templateRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleTemplateUpload} />
+        </div>
+      </div>
 
       <div style={{ padding: '28px 32px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, alignItems: 'start' }}>
 
