@@ -131,3 +131,9 @@
 .viewBtn:hover {
   background: #333;
 }
+
+@media (max-width: 768px) {
+  .imageWrap {
+    height: 367px;
+  }
+}

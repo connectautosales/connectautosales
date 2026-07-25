@@ -308,6 +308,8 @@
 
   .mobileMenuBtn {
     display: block;
+    padding: 8px;
+    font-size: 28px;
   }
 
   .logoImg {
