@@ -46,41 +46,42 @@ export async function POST(req) {
       .toBuffer()
     const imageFile = await toFile(resized, 'car.png', { type: 'image/png' })
 
-    const defaultPrompt = `Create a professional automotive dealership advertisement. Output size: 640x640 square. Premium red, black and white color theme.
+    const defaultPrompt = `You are overlaying graphic text elements onto the uploaded car photo. DO NOT repaint, redraw, or alter the vehicle or background in any way. The uploaded photo is the complete background — keep it 100% intact.
 
-MASTER TEMPLATE RULES — DO NOT DEVIATE:
+Output: 1080x1080 square image. The uploaded photo fills the entire canvas exactly as-is.
 
-HEADER:
-- Top left: Connect Auto Sales logo (checkered flag + bold text)
-- Top right: Black pill badge with red border, phone icon, bold white text "313-413-3400"
+Add these graphic overlays on top of the photo:
 
-VEHICLE TITLE (left side):
-- Line 1: "{{year}} {{make}}" — bold white text, medium size
-- Line 2: "{{model}}" — very large bold white text
-- Line 3: {{trim_line}}
+TOP-LEFT AREA:
+- A thin horizontal checkered flag strip (black and white squares) running across the very top edge
+- Below it: website text "www.ConnectAuto-Sales.com" — black bold text, "Auto-Sales" portion in red
+- Below that on next line: "{{year}} {{make}}" in large black bold text
+- Below that: "{{model}}" in a MASSIVE font — ultra-bold, red gradient color (bright red to dark red), with a thick black outline/stroke. This should be the largest text on the entire image, spanning almost the full width
+- Below the model name: a red rounded rectangle badge with white bold text "{{trim}}" (only if trim is provided)
 
-VEHICLE IMAGE:
-- Largest element on the page, placed on the right side
-- Use uploaded photo exactly — do NOT repaint, recolor, or alter the vehicle
-- Preserve original color, reflections, wheels, and lighting
-- Background: blend the original photo with a mild semi-realistic dealership lot enhancement. The vehicle must stand out significantly more than the background. Not fully AI, not fully original.
+TOP-RIGHT AREA:
+- A black rounded rectangle with a red border outline, containing: a red phone icon on the left, then bold white text "313-413-3400" — large and prominent
 
-BOTTOM PRICING LAYOUT:
-- Bottom left black box: label "FINANCE PRICE" (small grey text), then "{{finance_price}}" in large white bold with a red horizontal strike-through line across it
-- Bottom center: large bold red arrow →
-- Bottom right red box: label "WHEN PAY IN FULL" (small white text), then "{{cash_price}}" in large bold yellow text
-- Yellow banner across bottom: "-$1,000 DISCOUNT!"
+BOTTOM-LEFT (floating box, does not span full width):
+- A small black rounded rectangle box, semi-transparent black background
+- Inside: "FINANCE PRICE" in small bold white text on top
+- Below: "{{finance_price}}" in large bold white text with a red diagonal strikethrough line across the price number
 
-REMOVE PERMANENTLY — never include any of these:
-- Clean Title Guaranteed
-- Great Value
-- Buy With Confidence
-- Luxury & Performance
-- Reliable & Efficient
-- Great Price Great Value
-- Any extra descriptions, badges, or text not listed above
+BOTTOM-CENTER:
+- A bold solid red arrow pointing right → between the two pricing boxes
 
-Same font hierarchy, trim badge style, pricing box style, and overall composition as the master Connect Auto Sales template.`
+BOTTOM-RIGHT (floating box, larger than left box):
+- A large red rounded rectangle box
+- At the top of this box: a small yellow badge/pill with black bold text "-$1,000 DISCOUNT!"
+- Below: "WHEN PAY IN FULL" in small white text
+- Below: "{{cash_price}}" in very large bold yellow/gold text
+
+STRICT RULES:
+- The vehicle photo background must remain completely unaltered — same colors, same lighting, same background
+- Do NOT add any banners, strips, or overlays that cover the vehicle itself
+- Do NOT add: Clean Title Guaranteed, Great Value, Buy With Confidence, Luxury & Performance, Reliable & Efficient, or any other badges not listed above
+- All text elements float on top of the photo naturally
+- Overall style: bold, high-contrast automotive advertisement`
 
     const rawPrompt = savedPrompt || defaultPrompt
     const prompt = rawPrompt
