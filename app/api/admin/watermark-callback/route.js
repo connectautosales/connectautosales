@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
+export async function GET() {
+  return NextResponse.json({ ok: true, route: 'watermark-callback' })
+}
+
 export async function POST(req) {
   try {
     const { image, requestId } = await req.json()
