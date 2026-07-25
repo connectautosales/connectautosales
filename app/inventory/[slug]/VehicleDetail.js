@@ -474,6 +474,30 @@ export default function VehicleDetail({ car, settings }) {
       </div>
     </div>
 
+    {/* Browse Inventory CTA */}
+    <div style={{
+      background: '#111', padding: '40px 20px', textAlign: 'center',
+    }}>
+      <p style={{ color: '#9ca3af', fontSize: '0.9rem', margin: '0 0 6px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+        Looking for more options?
+      </p>
+      <h3 style={{ color: '#fff', fontSize: '1.5rem', fontWeight: 800, margin: '0 0 20px' }}>
+        Browse Our Full Inventory
+      </h3>
+      <Link href="/inventory" style={{
+        display: 'inline-flex', alignItems: 'center', gap: 10,
+        background: '#e50202', color: '#fff',
+        padding: '14px 36px', borderRadius: 8,
+        fontWeight: 800, fontSize: '1rem', letterSpacing: '0.05em',
+        textDecoration: 'none', textTransform: 'uppercase',
+      }}>
+        View All Vehicles
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </Link>
+    </div>
+
     <TestDriveModal
       isOpen={testDriveOpen}
       onClose={() => setTestDriveOpen(false)}
