@@ -309,6 +309,14 @@
   .mobileMenuBtn {
     display: block;
   }
+
+  .logoImg {
+    height: 90px !important;
+  }
+
+  .scrolled .logoImg {
+    height: 70px !important;
+  }
 }
 
 @media (max-width: 640px) {

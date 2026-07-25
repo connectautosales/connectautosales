@@ -117,19 +117,10 @@ export default function HomePage() {
       <section className={styles.featuredSection}>
         <div className="container">
           <div className={styles.featuredHead}>
-            <div className={styles.featuredHeadLeft}>
-              <h2 className={styles.featuredTitle}>
-                FEATURED VEHICLES
-                <span className={styles.titleLine} />
-              </h2>
-              <span className={styles.vehicleCount}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v4h-7V8z"/>
-                  <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
-                </svg>
-                {featuredCars.length > 0 ? `${featuredCars.length} Vehicles Available` : 'View our inventory'}
-              </span>
-            </div>
+            <h2 className={styles.featuredTitle}>
+              FEATURED VEHICLES
+              <span className={styles.titleLine} />
+            </h2>
             <Link href="/inventory" className={styles.viewAllLink}>
               VIEW ALL INVENTORY
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -142,6 +133,21 @@ export default function HomePage() {
             {featuredCars.map(car => (
               <CarCard key={car.id} car={car} />
             ))}
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: 36 }}>
+            <Link href="/inventory" style={{
+              display: 'inline-flex', alignItems: 'center', gap: 10,
+              background: '#e50202', color: '#fff',
+              padding: '14px 36px', borderRadius: 8,
+              fontWeight: 800, fontSize: '1rem', letterSpacing: '0.05em',
+              textDecoration: 'none', textTransform: 'uppercase',
+            }}>
+              View All Inventory
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </Link>
           </div>
         </div>
       </section>
