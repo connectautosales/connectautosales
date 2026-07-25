@@ -40,11 +40,41 @@ export async function POST(req) {
     const bytes  = await photo.arrayBuffer()
     const buffer = Buffer.from(bytes)
     const sharp = (await import('sharp')).default
+
+    // Resize photo to 1024x1024
     const resized = await sharp(buffer)
-      .resize(1024, 1024, { fit: 'inside', withoutEnlargement: true })
+      .resize(1024, 1024, { fit: 'cover', position: 'centre' })
       .png({ compressionLevel: 6 })
       .toBuffer()
     const imageFile = await toFile(resized, 'car.png', { type: 'image/png' })
+
+    // Build mask: transparent = AI can edit, opaque black = preserve original
+    // Top 22% = transparent (header area)
+    // Middle 53% = black/opaque (vehicle — must NOT be altered)
+    // Bottom 25% = transparent (pricing area)
+    const SIZE = 1024
+    const headerH  = Math.round(SIZE * 0.22)  // 225px
+    const pricingH = Math.round(SIZE * 0.25)  // 256px
+    const vehicleH = SIZE - headerH - pricingH // 543px
+
+    // RGBA mask: alpha=0 means editable, alpha=255 means locked
+    const maskData = Buffer.alloc(SIZE * SIZE * 4)
+    for (let y = 0; y < SIZE; y++) {
+      for (let x = 0; x < SIZE; x++) {
+        const i = (y * SIZE + x) * 4
+        if (y < headerH || y >= headerH + vehicleH) {
+          // editable zone — fully transparent
+          maskData[i] = 0; maskData[i+1] = 0; maskData[i+2] = 0; maskData[i+3] = 0
+        } else {
+          // vehicle zone — fully opaque (preserve)
+          maskData[i] = 0; maskData[i+1] = 0; maskData[i+2] = 0; maskData[i+3] = 255
+        }
+      }
+    }
+    const maskBuf = await sharp(maskData, { raw: { width: SIZE, height: SIZE, channels: 4 } })
+      .png()
+      .toBuffer()
+    const maskFile = await toFile(maskBuf, 'mask.png', { type: 'image/png' })
 
     const defaultPrompt = `You are overlaying graphic text elements onto the uploaded car photo. DO NOT repaint, redraw, or alter the vehicle or background in any way. The uploaded photo is the complete background — keep it 100% intact.
 
@@ -97,6 +127,7 @@ STRICT RULES:
     const response = await openai.images.edit({
       model: 'gpt-image-1',
       image: imageFile,
+      mask: maskFile,
       prompt,
       n: 1,
       size: '1024x1024',
