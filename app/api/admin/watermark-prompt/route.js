@@ -22,10 +22,12 @@ export async function PUT(req) {
   const { prompt } = await req.json()
 
   try {
-    // Add column if missing
-    await prisma.$executeRawUnsafe(
-      `ALTER TABLE sitesettings ADD COLUMN IF NOT EXISTS watermark_prompt TEXT`
-    )
+    // Add column if missing (MySQL compatible)
+    try {
+      await prisma.$executeRawUnsafe(
+        `ALTER TABLE sitesettings ADD COLUMN watermark_prompt TEXT`
+      )
+    } catch { /* column already exists */ }
     await prisma.$executeRawUnsafe(
       `UPDATE sitesettings SET watermark_prompt = ? WHERE id = 1`,
       prompt
