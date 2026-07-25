@@ -126,7 +126,7 @@ RULES:
     // Try to load reference template image to guide AI style
     let refFile = null
     try {
-      const refPath = path.join(process.cwd(), 'public', 'images', 'ad-template-reference.jpg')
+      const refPath = path.join(process.cwd(), 'public', 'images', 'ad-template-reference.png')
       const refBuf  = fs.readFileSync(refPath)
       const refResized = await sharp(refBuf)
         .resize(1024, 1024, { fit: 'cover' })
