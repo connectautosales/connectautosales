@@ -47,28 +47,7 @@ export async function POST(req) {
       .toBuffer()
     const imageFile = await toFile(resized, 'car.png', { type: 'image/png' })
 
-    const defaultPrompt = `Add a professional car dealership advertisement overlay to this car photo. The car must stay fully visible as the background. Replicate this EXACT layout:
-
-TOP-LEFT CORNER: A logo area showing a small racing checkered flag icon followed by "ConnectAuto-Sales.com" in bold stylized text, with "www.ConnectAuto-Sales.com" in smaller text below it. Black/white colors.
-
-TOP-RIGHT CORNER: A wide black pill/badge with a thick red border. Left side has a red filled circle with a white phone handset icon. Right side has bold white text "313-413-3400" in very large font (about 36px).
-
-LEFT SIDE TEXT BLOCK (upper-middle area):
-- "${year} ${make.toUpperCase()}" in bold white text, medium size (~46px)
-- "${model.toUpperCase()}" in MASSIVE bold italic red text with a strong black drop shadow/outline, taking up most of the left side height. Font size very large (~180-220px). The text should look 3D and dramatic like a sports advertisement.
-${trim ? `- A small red rounded rectangle badge below the model name with white bold text "${trim.toUpperCase()}"` : ''}
-
-BOTTOM-LEFT: A dark black semi-transparent rounded rectangle box containing:
-- Top: small grey uppercase text "FINANCE PRICE"
-- Bottom: large bold white text "${finStr}" with a red horizontal strikethrough line drawn across it
-
-BOTTOM-CENTER: A large bold red arrow (→) pointing right
-
-BOTTOM-RIGHT: Two stacked boxes:
-- Top box: bright yellow rounded rectangle with bold black text "-$1,000 DISCOUNT!"
-- Bottom box: dark crimson/red rounded rectangle with white uppercase text "WHEN PAY IN FULL" on top and very large bold yellow text "${cashStr}" below it
-
-IMPORTANT: Keep exact proportions. The model name must be the dominant visual element on the left. All text must be crisp and legible. Professional car dealership ad style.`
+    const defaultPrompt = `Create a professional automotive dealership advertisement using the uploaded vehicle photo. Style: Modern luxury dealership advertising. Canvas: Square (1080x1080). Use the uploaded vehicle photo exactly as provided. Do not change the vehicle. Place the vehicle large on the right side. On the left side display: {{year}} {{make}} {{model}} — large bold white text. {{trim_line}} Top right: Connect Auto Sales logo. Below logo: 313-413-3400. Bottom pricing box: LEFT: Finance Price {{finance_price}} — use a red strike-through line across the finance price. Center: Large red arrow →. RIGHT: When Pay In Full {{cash_price}}. Bottom: Yellow banner -$1,000 DISCOUNT! Use a premium red, black and white color theme. Professional dealership marketing. No additional feature list. No descriptions. No extra badges. No unnecessary decorations. High-end commercial automotive advertising quality.`
 
     const rawPrompt = savedPrompt || defaultPrompt
     const prompt = rawPrompt
