@@ -20,6 +20,9 @@ export async function POST(req) {
 
   try {
     const data = await req.json()
+    const now = new Date()
+    if (!data.createdAt) data.createdAt = now
+    data.updatedAt = now
     const cols = Object.keys(data).map(k => `\`${k}\``).join(', ')
     const vals = Object.values(data)
     const placeholders = vals.map(() => '?').join(', ')

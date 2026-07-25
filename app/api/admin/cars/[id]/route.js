@@ -20,6 +20,7 @@ export async function PUT(req, { params }) {
 
     delete data.id
     if (data.vin === '' || data.vin === undefined) data.vin = null
+    data.updatedAt = new Date()
 
     // Always regenerate slug from year/make/model/trim
     data.slug = makeSlug(data.year, data.make, data.model, data.trim, numId)
