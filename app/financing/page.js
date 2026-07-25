@@ -186,6 +186,7 @@ export default function FinancingPage() {
     if (Object.keys(errs).length) { setErrors(errs); return }
     setErrors({})
     setStep(s => s + 1)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   // Conditional: show previous address if < 2 yrs at current address
@@ -640,7 +641,7 @@ export default function FinancingPage() {
 
                 <div className={styles.navRow}>
                   {step > 1 && (
-                    <button type="button" onClick={() => { setErrors({}); setStep(s => s - 1) }} className={styles.prevBtn}>&larr; PREV STEP</button>
+                    <button type="button" onClick={() => { setErrors({}); setStep(s => s - 1); window.scrollTo({ top: 0, behavior: 'smooth' }) }} className={styles.prevBtn}>&larr; PREV STEP</button>
                   )}
                   {step < 6
                     ? <button type="button" onClick={goNext} className={styles.nextBtn}>NEXT STEP <span style={{fontSize:'1.1em',lineHeight:1}}>&#8250;</span></button>

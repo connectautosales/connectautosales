@@ -251,12 +251,12 @@
   user-select: none;
   white-space: nowrap;
 }
-.radioOption input[type="radio"] { accent-color: #e50202; }
+.radioOption input[type="radio"] { display: none; }
 .radioChecked {
   border-color: #e50202;
-  background: rgba(227,28,37,.05);
-  color: #e50202;
-  font-weight: 600;
+  background: #e50202;
+  color: #fff;
+  font-weight: 700;
 }
 
 /* ── Warning Box ── */
