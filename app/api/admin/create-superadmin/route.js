@@ -15,27 +15,27 @@ export async function POST(req) {
     return NextResponse.json({ error: 'email, password, and name required' }, { status: 400 })
   }
 
-  // Check if super-admin already exists
+  const hash = await bcrypt.hash(password, 10)
+
   try {
-    const existing = await prisma.$queryRaw`SELECT id FROM admin WHERE role = 'super-admin' LIMIT 1`
-    if (existing.length > 0) {
-      return NextResponse.json({ error: 'Super-admin already exists' }, { status: 409 })
+    // If account with this email exists, update it to super-admin (allows password reset)
+    const existingEmail = await prisma.$queryRaw`SELECT id, role FROM admin WHERE email = ${email} LIMIT 1`
+    if (existingEmail.length > 0) {
+      await prisma.$executeRaw`UPDATE admin SET role = 'super-admin', name = ${name}, password = ${hash} WHERE email = ${email}`
+      return NextResponse.json({ ok: true, action: 'updated account to super-admin' })
     }
+
+    // If a different super-admin already exists, block creating a second one
+    const existingSA = await prisma.$queryRaw`SELECT id FROM admin WHERE role = 'super-admin' LIMIT 1`
+    if (existingSA.length > 0) {
+      return NextResponse.json({ error: 'Super-admin already exists with a different email' }, { status: 409 })
+    }
+
+    await prisma.$executeRaw`
+      INSERT INTO admin (email, password, name, role) VALUES (${email}, ${hash}, ${name}, 'super-admin')
+    `
+    return NextResponse.json({ ok: true, action: 'created new super-admin account' })
   } catch {
     return NextResponse.json({ error: 'Migration not run yet — call /api/admin/migrate first' }, { status: 400 })
   }
-
-  const hash = await bcrypt.hash(password, 10)
-
-  // Check if email already exists (update role) or create new
-  const existingEmail = await prisma.$queryRaw`SELECT id FROM admin WHERE email = ${email} LIMIT 1`
-  if (existingEmail.length > 0) {
-    await prisma.$executeRaw`UPDATE admin SET role = 'super-admin', name = ${name}, password = ${hash} WHERE email = ${email}`
-    return NextResponse.json({ ok: true, action: 'updated existing account to super-admin' })
-  }
-
-  await prisma.$executeRaw`
-    INSERT INTO admin (email, password, name, role) VALUES (${email}, ${hash}, ${name}, 'super-admin')
-  `
-  return NextResponse.json({ ok: true, action: 'created new super-admin account' })
 }
