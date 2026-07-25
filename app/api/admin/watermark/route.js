@@ -54,7 +54,7 @@ Output: 1080x1080 square image.
 OVERLAY ELEMENTS (add exactly these, nothing else):
 
 1. TOP EDGE — Checkered strip:
-A bold black-and-white checkered flag pattern strip spanning the full width at the very top. Each square is clearly visible, about 20px tall.
+A crisp black-and-white only checkered flag strip (NO yellow, NO color, ONLY pure black #000000 and pure white #ffffff squares) spanning the full width at the very top edge. Each square ~18px. This is a classic racing flag pattern.
 
 2. TOP-LEFT — Website URL:
 "www.Connect" in black bold sans-serif, "Auto-Sales" in bright red bold, ".com" in black bold. Font size ~28px. Positioned just below the checkered strip on the left side.
