@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma'
-import Link from 'next/link'
 import styles from './visitors.module.css'
+import ClearVisitorsBtn from './ClearVisitorsBtn'
 
 export const dynamic = 'force-dynamic'
 
@@ -31,9 +31,12 @@ export default async function VisitorsPage() {
     <div className={styles.page}>
       <div className={styles.topBar}>
         <h1 className={styles.title}>Visitor Analytics</h1>
-        <form method="GET">
-          <button type="submit" className={styles.refreshBtn}>Refresh</button>
-        </form>
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+          <ClearVisitorsBtn total={total} />
+          <form method="GET">
+            <button type="submit" className={styles.refreshBtn}>Refresh</button>
+          </form>
+        </div>
       </div>
 
       <div className={styles.statsGrid}>

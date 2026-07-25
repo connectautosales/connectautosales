@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { signOut } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import { useSettings } from '@/context/SettingsContext'
 import styles from './AdminSidebar.module.css'
 
@@ -23,6 +23,8 @@ const nav = [
 export default function AdminSidebar() {
   const pathname  = usePathname()
   const { logoUrl } = useSettings()
+  const { data: session } = useSession()
+  const isSuperAdmin = session?.user?.role === 'super-admin'
 
   const isActive = (href) => {
     if (href === '/admin') return pathname === '/admin'
@@ -69,6 +71,23 @@ export default function AdminSidebar() {
           ))}
         </nav>
       </div>
+
+      {/* Super-admin section */}
+      {isSuperAdmin && (
+        <div className={styles.navSection} style={{ marginTop: 0 }}>
+          <p className={styles.navLabel} style={{ color: '#f59e0b' }}>SUPER ADMIN</p>
+          <nav className={styles.nav}>
+            <Link
+              href="/admin/archive"
+              className={`${styles.navItem} ${isActive('/admin/archive') ? styles.active : ''}`}
+            >
+              <span className={styles.iconWrap}><i className="fa-solid fa-box-archive" /></span>
+              <span>Deleted Archive</span>
+              {isActive('/admin/archive') && <span className={styles.activeDot} />}
+            </Link>
+          </nav>
+        </div>
+      )}
 
       {/* Bottom */}
       <div className={styles.bottom}>
