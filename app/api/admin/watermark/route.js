@@ -6,6 +6,7 @@ import { prisma } from '@/lib/prisma'
 import { randomUUID } from 'crypto'
 
 const MAKE_WEBHOOK = 'https://hook.eu1.make.com/9q6s7rugszzcmom1grtyov5chk9rjlf7'
+// Webhook module in Make.com scenario: 15
 
 async function ensureTable() {
   await prisma.$executeRawUnsafe(`
@@ -83,10 +84,21 @@ The background car photo must remain a real photograph. No cartoon, no illustrat
       .replace(/\{\{finance_price\}\}/g, finStr)
       .replace(/\{\{trim_line\}\}/g, trimBadgeLine)
 
-    step = 'encode_photo'
-    const bytes    = await photo.arrayBuffer()
-    const photoB64 = Buffer.from(bytes).toString('base64')
-    const mimeType = photo.type || 'image/jpeg'
+    step = 'upload_photo'
+    const bytes  = await photo.arrayBuffer()
+    const buffer = Buffer.from(bytes)
+    const sharp  = (await import('sharp')).default
+    // Convert to PNG (gpt-image-2 requires PNG)
+    const pngBuf = await sharp(buffer).png().toBuffer()
+
+    // Upload to Vercel Blob to get a public URL
+    const { put } = await import('@vercel/blob')
+    const token = process.env.STORAGE_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN
+    const blobResult = await put(`watermark-input/${Date.now()}.png`, pngBuf, {
+      access: 'public',
+      token,
+    })
+    const photoUrl = blobResult.url
 
     step = 'create_job'
     await ensureTable()
@@ -100,7 +112,7 @@ The background car photo must remain a real photograph. No cartoon, no illustrat
     fetch(MAKE_WEBHOOK, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ photo: photoB64, mimeType, prompt, requestId }),
+      body: JSON.stringify({ photoUrl, prompt, requestId }),
     }).catch(e => console.error('Make.com webhook error:', e))
 
     step = 'poll_result'
