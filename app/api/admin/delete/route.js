@@ -16,9 +16,17 @@ export async function DELETE(req) {
   const session = await getServerSession(authOptions)
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { table, id } = await req.json()
+  const { table, id, ids } = await req.json()
   if (!ALLOWED_TABLES.includes(table)) {
     return NextResponse.json({ error: 'Invalid table' }, { status: 400 })
+  }
+
+  if (Array.isArray(ids) && ids.length > 0) {
+    const numIds = ids.map(i => parseInt(i)).filter(i => !isNaN(i))
+    await prisma.$executeRawUnsafe(
+      `DELETE FROM \`${table}\` WHERE id IN (${numIds.join(',')})`,
+    )
+    return NextResponse.json({ ok: true, deleted: numIds.length })
   }
 
   await prisma.$executeRawUnsafe(`DELETE FROM \`${table}\` WHERE id = ?`, parseInt(id))

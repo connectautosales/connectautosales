@@ -29,6 +29,8 @@ export default function BulkTable({
   const [bulkStatus, setBulkStatus] = useState(statusOptions[1]?.value || statusOptions[0]?.value || '')
   const [applying, setApplying] = useState(false)
   const [done, setDone] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   const allIds = rows.map(r => r.id)
   const allSelected = allIds.length > 0 && allIds.every(id => selected.has(id))
@@ -70,6 +72,25 @@ export default function BulkTable({
     }
   }
 
+  async function bulkDelete() {
+    if (selected.size === 0) return
+    setDeleting(true)
+    try {
+      await fetch('/api/admin/delete', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ table: deleteTable, ids: [...selected] }),
+      })
+      setSelected(new Set())
+      router.refresh()
+    } catch {
+      // silent
+    } finally {
+      setDeleting(false)
+      setConfirmDelete(false)
+    }
+  }
+
   const badgeClass = (status) => {
     const s = status?.replace(/ /g, '-') || ''
     return `${styles.badge} ${styles[s] || ''}`
@@ -77,6 +98,52 @@ export default function BulkTable({
 
   return (
     <div style={{ position: 'relative' }}>
+      {/* Confirm delete dialog */}
+      {confirmDelete && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 9999,
+          background: 'rgba(0,0,0,0.5)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <div style={{
+            background: '#fff', borderRadius: 12, padding: '28px 32px',
+            maxWidth: 400, width: '90%', textAlign: 'center',
+            boxShadow: '0 20px 60px rgba(0,0,0,0.25)',
+          }}>
+            <div style={{
+              width: 48, height: 48, borderRadius: '50%', background: '#fee2e2',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px',
+            }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2.5">
+                <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/>
+                <path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/>
+              </svg>
+            </div>
+            <p style={{ fontSize: 15, fontWeight: 600, color: '#111827', margin: '0 0 6px' }}>
+              Delete {selected.size} {selected.size === 1 ? 'record' : 'records'}?
+            </p>
+            <p style={{ fontSize: 13, color: '#6b7280', margin: '0 0 20px' }}>
+              This cannot be undone.
+            </p>
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
+              <button
+                onClick={() => setConfirmDelete(false)}
+                style={{ padding: '9px 20px', borderRadius: 8, border: '1px solid #e5e7eb', background: '#fff', color: '#374151', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={bulkDelete}
+                disabled={deleting}
+                style={{ padding: '9px 20px', borderRadius: 8, border: 'none', background: '#dc2626', color: '#fff', fontWeight: 700, fontSize: 14, cursor: 'pointer', opacity: deleting ? 0.7 : 1 }}
+              >
+                {deleting ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Bulk action bar */}
       {someSelected && (
         <div className={styles.bulkBar}>
@@ -104,6 +171,13 @@ export default function BulkTable({
                 ? <><i className="fa-solid fa-spinner fa-spin" /> Applying...</>
                 : <><i className="fa-solid fa-bolt" /> Apply</>
               }
+            </button>
+            <button
+              onClick={() => setConfirmDelete(true)}
+              disabled={deleting}
+              className={styles.bulkDeleteBtn}
+            >
+              <i className="fa-solid fa-trash" /> Delete
             </button>
             <button
               onClick={() => setSelected(new Set())}
