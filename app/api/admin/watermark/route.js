@@ -2,35 +2,11 @@ export const runtime = 'nodejs'
 export const maxDuration = 60
 
 import { NextResponse } from 'next/server'
+import OpenAI from 'openai'
+import { toFile } from 'openai'
 import { prisma } from '@/lib/prisma'
 import path from 'path'
 import fs from 'fs'
-
-let _antonB64 = null
-function getAntonB64() {
-  if (_antonB64) return _antonB64
-  try {
-    const p = path.join(process.cwd(), 'public', 'fonts', 'Anton-Regular.ttf')
-    _antonB64 = fs.readFileSync(p).toString('base64')
-  } catch { _antonB64 = '' }
-  return _antonB64
-}
-
-function fmt(n) {
-  return '$' + Math.round(n).toLocaleString('en-US')
-}
-
-function esc(s) {
-  return String(s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
-}
-
-// Dynamic font size for model name based on length
-function modelFontSize(model) {
-  const len = model.length
-  return Math.min(240, Math.max(80, Math.floor(920 / (len * 0.62))))
-}
 
 export async function POST(req) {
   let step = 'init'
@@ -47,129 +23,106 @@ export async function POST(req) {
 
     if (!photo) return NextResponse.json({ error: 'No photo provided' }, { status: 400 })
 
-    const cashStr = fmt(price)
-    const finStr  = fmt(financePrice && financePrice > price ? financePrice : price + 1000)
+    const fmt = (n) => '$' + Math.round(n).toLocaleString('en-US')
+    const cashStr    = fmt(price)
+    const finStr     = fmt(financePrice && financePrice > price ? financePrice : price + 1000)
+    const trimBadgeLine = trim ? `- A small red rounded rectangle badge below the model name with white bold text "${trim.toUpperCase()}"` : ''
+
+    step = 'load_prompt'
+    let savedPrompt = ''
+    try {
+      const rows = await prisma.$queryRawUnsafe(`SELECT watermark_prompt FROM sitesettings LIMIT 1`)
+      savedPrompt = rows[0]?.watermark_prompt || ''
+    } catch { /* use default */ }
+
+    step = 'init_openai'
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
     step = 'prepare_image'
     const bytes  = await photo.arrayBuffer()
     const buffer = Buffer.from(bytes)
     const sharp  = (await import('sharp')).default
-
-    const SIZE = 1080
-    const bg = await sharp(buffer)
-      .resize(SIZE, SIZE, { fit: 'cover', position: 'centre' })
-      .png()
+    const resized = await sharp(buffer)
+      .resize(1024, 1024, { fit: 'inside', withoutEnlargement: true })
+      .png({ compressionLevel: 6 })
       .toBuffer()
+    const imageFile = await toFile(resized, 'car.png', { type: 'image/png' })
 
-    step = 'build_overlay'
-    const antonB64 = getAntonB64()
-    const fontFace = antonB64
-      ? `@font-face { font-family: 'Anton'; src: url('data:font/truetype;base64,${antonB64}') format('truetype'); }`
-      : ''
+    const defaultPrompt = `This is a PHOTO EDITING task, not image generation. You are given a real dealership car photo. Your job is to add graphic text overlays on top of it — like a designer would in Photoshop. The photo must look like a real photograph throughout.
 
-    const mSize   = modelFontSize(model)
-    // vertical positions
-    const checkH  = 18   // checkered strip height
-    const urlY    = checkH + 44
-    const yearY   = urlY + 46
-    const modelY  = yearY + mSize + 8
-    const trimY   = modelY + 16
+CRITICAL: The car and its surroundings must look like a REAL PHOTOGRAPH — not illustrated, not painted, not cartoon. Preserve the original photographic realism of the vehicle and background completely.
 
-    // Trim badge
-    const trimEl = trim ? (() => {
-      const tw = Math.max(80, trim.length * 22 + 40)
-      return `<rect x="36" y="${trimY}" width="${tw}" height="54" rx="10" fill="#cc0000"/>
-      <text x="${36 + tw / 2}" y="${trimY + 37}" font-family="Anton" font-size="30" fill="white" text-anchor="middle" dominant-baseline="auto">${esc(trim.toUpperCase())}</text>`
-    })() : ''
+Use the layout and style from the reference image provided.
 
-    // Phone badge dimensions
-    const phoneText  = '313-413-3400'
-    const phoneBadgeW = 370
-    const phoneBadgeH = 76
-    const phoneBadgeX = SIZE - phoneBadgeW - 28
-    const phoneBadgeY = checkH + 20
+ADD THESE OVERLAYS ON TOP OF THE REAL PHOTO:
 
-    // Bottom pricing layout
-    const bottomY   = SIZE - 240   // start of pricing area
-    const boxH      = 200
-    const leftBoxW  = 380
-    const rightBoxX = SIZE / 2 + 20
-    const rightBoxW = SIZE - rightBoxX - 28
+TOP-LEFT:
+- Thin checkered flag border strip at the very top edge
+- "www.ConnectAuto-Sales.com" — bold black text, "Auto-Sales" in red
+- "{{year}} {{make}}" — large black bold text
+- "{{model}}" — HUGE red bold text with black stroke, nearly full width, largest element
+- Red rounded badge: white bold "{{trim}}"
 
-    // Strikethrough Y
-    const finLabelY = bottomY + 44
-    const finPriceY = bottomY + 120
-    const strikeY   = finPriceY - 16
+TOP-RIGHT:
+- Black rounded pill, red border, phone icon, white bold "313-413-3400"
 
-    const cashLabelY    = bottomY + 36
-    const discountBadgeY = bottomY + 8
-    const cashPriceY    = bottomY + 148
+BOTTOM-LEFT black box:
+- "FINANCE PRICE" small white label
+- "{{finance_price}}" large white text, red strikethrough line through it ONLY ONCE
 
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${SIZE}" height="${SIZE}">
-  <defs>
-    <style>${fontFace}</style>
-  </defs>
+BOTTOM-CENTER:
+- Red arrow →
 
-  <!-- Checkered flag strip top -->
-  ${Array.from({ length: Math.ceil(SIZE / 18) }, (_, i) =>
-    `<rect x="${i * 18}" y="0" width="18" height="${checkH}" fill="${i % 2 === 0 ? '#000' : '#fff'}"/>`
-  ).join('')}
+BOTTOM-RIGHT red box:
+- Yellow badge top: "-$1,000 DISCOUNT!"
+- "WHEN PAY IN FULL" white small text
+- "{{cash_price}}" very large yellow bold text
 
-  <!-- Website URL -->
-  <text x="32" y="${urlY}" font-family="Anton" font-size="28" fill="#111111">www.Connect</text>
-  <text x="${32 + 10 * 16.5}" y="${urlY}" font-family="Anton" font-size="28" fill="#cc0000">Auto-Sales</text>
-  <text x="${32 + 10 * 16.5 + 10 * 16.5}" y="${urlY}" font-family="Anton" font-size="28" fill="#111111">.com</text>
+The background car photo must remain a real photograph. No cartoon, no illustration, no painting effect.`
 
-  <!-- Year Make -->
-  <text x="32" y="${yearY}" font-family="Anton" font-size="46" fill="#111111">${esc(year)} </text>
-  <text x="${32 + String(year).length * 28 + 10}" y="${yearY}" font-family="Anton" font-size="46" fill="#cc0000">${esc(make.toUpperCase())}</text>
+    const rawPrompt = savedPrompt || defaultPrompt
+    const prompt = rawPrompt
+      .replace(/\{\{year\}\}/g, year)
+      .replace(/\{\{make\}\}/g, make.toUpperCase())
+      .replace(/\{\{model\}\}/g, model.toUpperCase())
+      .replace(/\{\{trim\}\}/g, trim.toUpperCase())
+      .replace(/\{\{cash_price\}\}/g, cashStr)
+      .replace(/\{\{finance_price\}\}/g, finStr)
+      .replace(/\{\{trim_line\}\}/g, trimBadgeLine)
 
-  <!-- Model name — huge red with black stroke -->
-  <text x="30" y="${modelY}" font-family="Anton" font-size="${mSize}" fill="#cc0000"
-    paint-order="stroke" stroke="#111111" stroke-width="${Math.round(mSize * 0.065)}" stroke-linejoin="round"
-    letter-spacing="-2">${esc(model.toUpperCase())}</text>
+    step = 'load_reference'
+    let refFile = null
+    try {
+      const refPath = path.join(process.cwd(), 'public', 'images', 'ad-template-reference.png')
+      const refBuf  = fs.readFileSync(refPath)
+      const refResized = await sharp(refBuf)
+        .resize(1024, 1024, { fit: 'cover' })
+        .png()
+        .toBuffer()
+      refFile = await toFile(refResized, 'reference.png', { type: 'image/png' })
+    } catch { /* no reference image */ }
 
-  <!-- Trim badge -->
-  ${trimEl}
+    step = 'generate_image'
+    const response = await openai.images.edit({
+      model: 'gpt-image-1',
+      image: refFile ? [refFile, imageFile] : imageFile,
+      prompt,
+      n: 1,
+      size: '1024x1024',
+    })
 
-  <!-- Phone badge -->
-  <rect x="${phoneBadgeX}" y="${phoneBadgeY}" width="${phoneBadgeW}" height="${phoneBadgeH}" rx="${phoneBadgeH / 2}" fill="#111111" stroke="#cc0000" stroke-width="3"/>
-  <text x="${phoneBadgeX + 22}" y="${phoneBadgeY + phoneBadgeH / 2 + 4}" font-family="Anton" font-size="30" fill="#cc0000">&#9742;</text>
-  <text x="${phoneBadgeX + 62}" y="${phoneBadgeY + phoneBadgeH / 2 + 13}" font-family="Anton" font-size="36" fill="white">${phoneText}</text>
+    step = 'encode_result'
+    let base64
+    if (response.data[0].b64_json) {
+      base64 = `data:image/png;base64,${response.data[0].b64_json}`
+    } else if (response.data[0].url) {
+      const imgRes = await fetch(response.data[0].url)
+      const imgBuf = await imgRes.arrayBuffer()
+      base64 = `data:image/png;base64,${Buffer.from(imgBuf).toString('base64')}`
+    } else {
+      throw new Error('No image data in response')
+    }
 
-  <!-- Bottom-left black pricing box -->
-  <rect x="28" y="${bottomY}" width="${leftBoxW}" height="${boxH}" rx="16" fill="#111111" fill-opacity="0.92"/>
-  <text x="${28 + leftBoxW / 2}" y="${finLabelY}" font-family="Anton" font-size="24" fill="#aaaaaa" text-anchor="middle" letter-spacing="2">FINANCE PRICE</text>
-  <text x="${28 + leftBoxW / 2}" y="${finPriceY}" font-family="Anton" font-size="72" fill="white" text-anchor="middle">${esc(finStr)}</text>
-  <line x1="${28 + 30}" y1="${strikeY}" x2="${28 + leftBoxW - 30}" y2="${strikeY}" stroke="#cc0000" stroke-width="5"/>
-
-  <!-- Arrow -->
-  <text x="${leftBoxW + 40}" y="${bottomY + boxH / 2 + 24}" font-family="Anton" font-size="72" fill="#cc0000" text-anchor="middle">&#x27A4;</text>
-
-  <!-- Bottom-right red pricing box -->
-  <rect x="${rightBoxX}" y="${bottomY}" width="${rightBoxW}" height="${boxH}" rx="16" fill="#cc0000"/>
-
-  <!-- Discount badge inside right box -->
-  <rect x="${rightBoxX + 16}" y="${discountBadgeY}" width="${rightBoxW - 32}" height="46" rx="8" fill="#FFD700"/>
-  <text x="${rightBoxX + rightBoxW / 2}" y="${discountBadgeY + 32}" font-family="Anton" font-size="26" fill="#111111" text-anchor="middle" letter-spacing="1">-$1,000 DISCOUNT!</text>
-
-  <text x="${rightBoxX + rightBoxW / 2}" y="${cashLabelY + 50}" font-family="Anton" font-size="22" fill="white" text-anchor="middle" letter-spacing="2">WHEN PAY IN FULL</text>
-  <text x="${rightBoxX + rightBoxW / 2}" y="${cashPriceY}" font-family="Anton" font-size="78" fill="#FFD700" text-anchor="middle">${esc(cashStr)}</text>
-
-  <!-- Checkered flag strip bottom -->
-  ${Array.from({ length: Math.ceil(SIZE / 18) }, (_, i) =>
-    `<rect x="${i * 18}" y="${SIZE - checkH}" width="18" height="${checkH}" fill="${i % 2 === 0 ? '#000' : '#fff'}"/>`
-  ).join('')}
-</svg>`
-
-    step = 'composite'
-    const svgBuf = Buffer.from(svg, 'utf8')
-    const outBuf = await sharp(bg)
-      .composite([{ input: svgBuf, top: 0, left: 0 }])
-      .jpeg({ quality: 92 })
-      .toBuffer()
-
-    const base64 = `data:image/jpeg;base64,${outBuf.toString('base64')}`
     return NextResponse.json({ base64 })
 
   } catch (err) {
