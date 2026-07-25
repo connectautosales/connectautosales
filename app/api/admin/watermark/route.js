@@ -108,29 +108,18 @@ The background car photo must remain a real photograph. No cartoon, no illustrat
     )
 
     step = 'call_make'
-    // Fire and forget — Make.com will call our callback when done
-    fetch(MAKE_WEBHOOK, {
+    // Fire webhook — Make.com will call our callback when done
+    const makeRes = await fetch(MAKE_WEBHOOK, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ photoUrl, prompt, requestId }),
-    }).catch(e => console.error('Make.com webhook error:', e))
-
-    step = 'poll_result'
-    const deadline = Date.now() + 52000
-    while (Date.now() < deadline) {
-      await new Promise(r => setTimeout(r, 2500))
-      const rows = await prisma.$queryRawUnsafe(
-        `SELECT base64 FROM watermark_jobs WHERE id = ? AND base64 IS NOT NULL`, requestId
-      )
-      if (rows[0]?.base64) {
-        await prisma.$executeRawUnsafe(`DELETE FROM watermark_jobs WHERE id = ?`, requestId)
-        return NextResponse.json({ base64: rows[0].base64 })
-      }
+    })
+    if (!makeRes.ok) {
+      throw new Error(`Make.com webhook failed: ${makeRes.status}`)
     }
 
-    // Cleanup timed-out job
-    await prisma.$executeRawUnsafe(`DELETE FROM watermark_jobs WHERE id = ?`, requestId)
-    throw new Error('Image generation timed out. Please try again.')
+    // Return requestId immediately — frontend will poll /api/admin/watermark-status
+    return NextResponse.json({ requestId })
 
   } catch (err) {
     console.error(`Watermark failed at [${step}]:`, err)

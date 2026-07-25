@@ -88,7 +88,7 @@ export default function ImageTemplatePage() {
   const handleGenerate = async () => {
     if (!previewFile) { setGenError('Upload a car photo first.'); return }
     setGenerating(true); setGenResult(null); setGenError('')
-    setGenStep('Generating AI image...')
+    setGenStep('Uploading photo...')
     try {
       const fd = new FormData()
       fd.append('photo', previewFile)
@@ -103,8 +103,24 @@ export default function ImageTemplatePage() {
       let data
       try { data = JSON.parse(text) } catch { throw new Error(text.slice(0, 200)) }
       if (!res.ok) throw new Error(data.error || 'Generation failed')
-      setGenResult(data.base64)
-      setGenStep('')
+
+      const { requestId } = data
+      if (!requestId) throw new Error('No requestId returned')
+
+      // Poll for result — up to 3 minutes
+      setGenStep('AI generating image...')
+      const deadline = Date.now() + 180000
+      while (Date.now() < deadline) {
+        await new Promise(r => setTimeout(r, 4000))
+        const poll = await fetch(`/api/admin/watermark-status?requestId=${requestId}`)
+        const pollData = await poll.json()
+        if (pollData.done) {
+          setGenResult(pollData.base64)
+          setGenStep('')
+          return
+        }
+      }
+      throw new Error('Image generation timed out after 3 minutes. Try again.')
     } catch (err) {
       setGenError(err.message || 'Generation failed')
     } finally {
