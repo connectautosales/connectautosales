@@ -153,24 +153,26 @@ export default function SalvageInspectionsPage() {
     if (Object.keys(errs).length) { setErrors(errs); return; }
     setSubmitting(true);
     try {
-      const { upload } = await import('@vercel/blob/client');
+      const uploadOne = async (file) => {
+        const fd = new FormData();
+        fd.append('file', file);
+        const res = await fetch('/api/upload', { method: 'POST', body: fd });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Upload failed');
+        return data.url;
+      };
 
-      const uploadAll = async (files, prefix) => {
-        const urls = await Promise.all(files.map((file, i) => {
-          const ext = file.name.split('.').pop() || 'pdf';
-          return upload(`inspections/${prefix}-${Date.now()}-${i}.${ext}`, file, {
-            access: 'public',
-            handleUploadUrl: '/api/upload',
-          }).then(b => b.url);
-        }));
+      const uploadAll = async (files) => {
+        const urls = [];
+        for (const file of files) urls.push(await uploadOne(file));
         if (urls.length === 0) return null;
         return urls.length === 1 ? urls[0] : JSON.stringify(urls);
       };
 
       const [salvageTitleUrl, validIdUrl, receiptsUrl] = await Promise.all([
-        uploadAll(salvageFiles, 'salvage'),
-        uploadAll(idFiles, 'id'),
-        noMajorParts ? Promise.resolve(null) : uploadAll(receiptFiles, 'receipt'),
+        uploadAll(salvageFiles),
+        uploadAll(idFiles),
+        noMajorParts ? Promise.resolve(null) : uploadAll(receiptFiles),
       ]);
 
       const res = await fetch('/api/inspection', {
