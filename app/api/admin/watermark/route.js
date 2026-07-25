@@ -3,32 +3,18 @@ export const maxDuration = 60
 
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import path from 'path'
-import fs from 'fs'
+import { randomUUID } from 'crypto'
 
-let _antonB64 = null
-function getAntonB64() {
-  if (_antonB64) return _antonB64
-  try {
-    const p = path.join(process.cwd(), 'public', 'fonts', 'Anton-Regular.ttf')
-    _antonB64 = fs.readFileSync(p).toString('base64')
-  } catch { _antonB64 = '' }
-  return _antonB64
-}
+const MAKE_WEBHOOK = 'https://hook.eu1.make.com/9q6s7rugszzcmom1grtyov5chk9rjlf7'
 
-function fmt(n) {
-  return '$' + Math.round(n).toLocaleString('en-US')
-}
-
-function esc(s) {
-  return String(s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
-}
-
-function modelFontSize(model) {
-  const len = model.replace(/\s/g, '').length
-  return Math.min(220, Math.max(72, Math.floor(880 / (len * 0.60))))
+async function ensureTable() {
+  await prisma.$executeRawUnsafe(`
+    CREATE TABLE IF NOT EXISTS watermark_jobs (
+      id VARCHAR(36) PRIMARY KEY,
+      base64 LONGTEXT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `)
 }
 
 export async function POST(req) {
@@ -46,138 +32,93 @@ export async function POST(req) {
 
     if (!photo) return NextResponse.json({ error: 'No photo provided' }, { status: 400 })
 
-    const cashStr = fmt(price)
-    const finStr  = fmt(financePrice && financePrice > price ? financePrice : price + 1000)
+    const fmt = (n) => '$' + Math.round(n).toLocaleString('en-US')
+    const cashStr       = fmt(price)
+    const finStr        = fmt(financePrice && financePrice > price ? financePrice : price + 1000)
+    const trimBadgeLine = trim ? `- A small red rounded rectangle badge below the model name with white bold text "${trim.toUpperCase()}"` : ''
 
-    step = 'prepare_image'
-    const bytes  = await photo.arrayBuffer()
-    const buffer = Buffer.from(bytes)
-    const sharp  = (await import('sharp')).default
+    step = 'load_prompt'
+    let savedPrompt = ''
+    try {
+      const rows = await prisma.$queryRawUnsafe(`SELECT watermark_prompt FROM sitesettings LIMIT 1`)
+      savedPrompt = rows[0]?.watermark_prompt || ''
+    } catch { /* use default */ }
 
-    const SIZE = 1080
-    const bg = await sharp(buffer)
-      .resize(SIZE, SIZE, { fit: 'cover', position: 'centre' })
-      .png()
-      .toBuffer()
+    const defaultPrompt = `This is a PHOTO EDITING task. You are given a real dealership car photo. Add graphic text overlays on top of it exactly like a professional designer would in Photoshop. The photo must remain a real photograph — do NOT illustrate, paint, or cartoon-ify anything.
 
-    step = 'build_overlay'
-    const antonB64 = getAntonB64()
-    const fontFace = antonB64
-      ? `@font-face { font-family: 'Anton'; src: url('data:font/truetype;base64,${antonB64}') format('truetype'); }`
-      : ''
+KEEP THE CAR PHOTO 100% REALISTIC AND UNCHANGED.
 
-    const STRIPE = 20
+ADD THESE OVERLAYS:
 
-    // Top text positions
-    const urlY    = STRIPE + 48
-    const yearY   = urlY + 52
-    const mSize   = modelFontSize(model)
-    const modelY  = yearY + mSize + 4
-    const trimY   = modelY + 10
+TOP-LEFT:
+- Thin checkered flag border strip at the very top edge
+- "www.ConnectAuto-Sales.com" — bold black text, "Auto-Sales" in red
+- "{{year}} {{make}}" — large black bold text
+- "{{model}}" — HUGE red bold text with black stroke, nearly full width
+- Red rounded badge: white bold "{{trim}}"
 
-    // Trim badge
-    const trimEl = trim ? (() => {
-      const tw = Math.max(90, trim.length * 24 + 44)
-      return `
-      <rect x="32" y="${trimY}" width="${tw}" height="56" rx="10" fill="#cc0000"/>
-      <text x="${32 + tw / 2}" y="${trimY + 39}" font-family="Anton" font-size="32"
-        fill="white" text-anchor="middle">${esc(trim.toUpperCase())}</text>`
-    })() : ''
+TOP-RIGHT:
+- Black rounded pill, red border, phone icon, white bold "313-413-3400"
 
-    // Phone badge
-    const PBW = 380, PBH = 80
-    const PBX = SIZE - PBW - 24, PBY = STRIPE + 18
+BOTTOM-LEFT black box:
+- "FINANCE PRICE" small white label
+- "{{finance_price}}" large white text, red strikethrough ONCE only
 
-    // Bottom pricing
-    const BOTTOM_H  = 220
-    const BOTTOM_Y  = SIZE - BOTTOM_H - STRIPE
-    const L_BOX_W   = 390
-    const R_BOX_X   = SIZE / 2 + 28
-    const R_BOX_W   = SIZE - R_BOX_X - 24
-    const ARROW_X   = L_BOX_W + 32 + (SIZE / 2 - L_BOX_W - 32) / 2 + 24
+BOTTOM-CENTER: Red arrow →
 
-    const finLabelY  = BOTTOM_Y + 46
-    const finPriceY  = BOTTOM_Y + 128
-    const strikeY    = finPriceY - 18
+BOTTOM-RIGHT red box:
+- Yellow badge: "-$1,000 DISCOUNT!"
+- "WHEN PAY IN FULL" white small text
+- "{{cash_price}}" very large yellow bold text
 
-    const discBadgeY = BOTTOM_Y + 10
-    const discBadgeH = 46
-    const wpifY      = discBadgeY + discBadgeH + 38
-    const cashPriceY = BOTTOM_Y + BOTTOM_H - 18
+The background car photo must remain a real photograph. No cartoon, no illustration, no painting effect.`
 
-    // Build checkered stripe rows
-    const stripeCount = Math.ceil(SIZE / STRIPE)
-    const topStripe   = Array.from({ length: stripeCount }, (_, i) =>
-      `<rect x="${i * STRIPE}" y="0" width="${STRIPE}" height="${STRIPE}" fill="${i % 2 === 0 ? '#111' : '#fff'}"/>`
-    ).join('')
-    const botStripe   = Array.from({ length: stripeCount }, (_, i) =>
-      `<rect x="${i * STRIPE}" y="${SIZE - STRIPE}" width="${STRIPE}" height="${STRIPE}" fill="${i % 2 === 0 ? '#111' : '#fff'}"/>`
-    ).join('')
+    const rawPrompt = savedPrompt || defaultPrompt
+    const prompt = rawPrompt
+      .replace(/\{\{year\}\}/g, year)
+      .replace(/\{\{make\}\}/g, make.toUpperCase())
+      .replace(/\{\{model\}\}/g, model.toUpperCase())
+      .replace(/\{\{trim\}\}/g, trim.toUpperCase())
+      .replace(/\{\{cash_price\}\}/g, cashStr)
+      .replace(/\{\{finance_price\}\}/g, finStr)
+      .replace(/\{\{trim_line\}\}/g, trimBadgeLine)
 
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${SIZE}" height="${SIZE}">
-<defs><style>${fontFace}</style></defs>
+    step = 'encode_photo'
+    const bytes    = await photo.arrayBuffer()
+    const photoB64 = Buffer.from(bytes).toString('base64')
+    const mimeType = photo.type || 'image/jpeg'
 
-<!-- Top checkered strip -->
-${topStripe}
+    step = 'create_job'
+    await ensureTable()
+    const requestId = randomUUID()
+    await prisma.$executeRawUnsafe(
+      `INSERT INTO watermark_jobs (id) VALUES (?)`, requestId
+    )
 
-<!-- Website URL -->
-<text x="32" y="${urlY}" font-family="Anton" font-size="30" fill="#111111">www.Connect</text>
-<text x="${32 + 170}" y="${urlY}" font-family="Anton" font-size="30" fill="#cc0000">Auto-Sales</text>
-<text x="${32 + 340}" y="${urlY}" font-family="Anton" font-size="30" fill="#111111">.com</text>
+    step = 'call_make'
+    // Fire and forget — Make.com will call our callback when done
+    fetch(MAKE_WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ photo: photoB64, mimeType, prompt, requestId }),
+    }).catch(e => console.error('Make.com webhook error:', e))
 
-<!-- Year + Make -->
-<text x="32" y="${yearY}" font-family="Anton" font-size="50" fill="#111111">${esc(year)}&nbsp;</text>
-<text x="${32 + String(year).length * 30 + 12}" y="${yearY}" font-family="Anton" font-size="50" fill="#cc0000">${esc(make.toUpperCase())}</text>
+    step = 'poll_result'
+    const deadline = Date.now() + 52000
+    while (Date.now() < deadline) {
+      await new Promise(r => setTimeout(r, 2500))
+      const rows = await prisma.$queryRawUnsafe(
+        `SELECT base64 FROM watermark_jobs WHERE id = ? AND base64 IS NOT NULL`, requestId
+      )
+      if (rows[0]?.base64) {
+        await prisma.$executeRawUnsafe(`DELETE FROM watermark_jobs WHERE id = ?`, requestId)
+        return NextResponse.json({ base64: rows[0].base64 })
+      }
+    }
 
-<!-- Model name -->
-<text x="28" y="${modelY}"
-  font-family="Anton" font-size="${mSize}" fill="#cc0000"
-  paint-order="stroke" stroke="#111111" stroke-width="${Math.round(mSize * 0.07)}" stroke-linejoin="round"
-  letter-spacing="-1">${esc(model.toUpperCase())}</text>
-
-<!-- Trim badge -->
-${trimEl}
-
-<!-- Phone badge -->
-<rect x="${PBX}" y="${PBY}" width="${PBW}" height="${PBH}" rx="${PBH / 2}" fill="#111111" stroke="#cc0000" stroke-width="3"/>
-<text x="${PBX + 24}" y="${PBY + PBH / 2 + 5}" font-family="Anton" font-size="32" fill="#cc0000">&#9742;</text>
-<text x="${PBX + 68}" y="${PBY + PBH / 2 + 14}" font-family="Anton" font-size="38" fill="white">313-413-3400</text>
-
-<!-- Finance box (bottom-left) -->
-<rect x="24" y="${BOTTOM_Y}" width="${L_BOX_W}" height="${BOTTOM_H}" rx="16" fill="#111111" fill-opacity="0.88"/>
-<text x="${24 + L_BOX_W / 2}" y="${finLabelY}" font-family="Anton" font-size="26"
-  fill="#aaaaaa" text-anchor="middle" letter-spacing="2">FINANCE PRICE</text>
-<text x="${24 + L_BOX_W / 2}" y="${finPriceY}" font-family="Anton" font-size="76"
-  fill="white" text-anchor="middle">${esc(finStr)}</text>
-<line x1="${24 + 28}" y1="${strikeY}" x2="${24 + L_BOX_W - 28}" y2="${strikeY}"
-  stroke="#cc0000" stroke-width="5"/>
-
-<!-- Arrow -->
-<text x="${ARROW_X}" y="${BOTTOM_Y + BOTTOM_H / 2 + 28}"
-  font-family="Anton" font-size="80" fill="#cc0000" text-anchor="middle">&#x27A4;</text>
-
-<!-- Cash box (bottom-right) -->
-<rect x="${R_BOX_X}" y="${BOTTOM_Y}" width="${R_BOX_W}" height="${BOTTOM_H}" rx="16" fill="#cc0000"/>
-<rect x="${R_BOX_X + 14}" y="${discBadgeY}" width="${R_BOX_W - 28}" height="${discBadgeH}" rx="8" fill="#FFD700"/>
-<text x="${R_BOX_X + R_BOX_W / 2}" y="${discBadgeY + 33}"
-  font-family="Anton" font-size="26" fill="#111111" text-anchor="middle">-$1,000 DISCOUNT!</text>
-<text x="${R_BOX_X + R_BOX_W / 2}" y="${wpifY}"
-  font-family="Anton" font-size="24" fill="white" text-anchor="middle" letter-spacing="1">WHEN PAY IN FULL</text>
-<text x="${R_BOX_X + R_BOX_W / 2}" y="${cashPriceY}"
-  font-family="Anton" font-size="80" fill="#FFD700" text-anchor="middle">${esc(cashStr)}</text>
-
-<!-- Bottom checkered strip -->
-${botStripe}
-</svg>`
-
-    step = 'composite'
-    const outBuf = await sharp(bg)
-      .composite([{ input: Buffer.from(svg, 'utf8'), top: 0, left: 0 }])
-      .jpeg({ quality: 93 })
-      .toBuffer()
-
-    const base64 = `data:image/jpeg;base64,${outBuf.toString('base64')}`
-    return NextResponse.json({ base64 })
+    // Cleanup timed-out job
+    await prisma.$executeRawUnsafe(`DELETE FROM watermark_jobs WHERE id = ?`, requestId)
+    throw new Error('Image generation timed out. Please try again.')
 
   } catch (err) {
     console.error(`Watermark failed at [${step}]:`, err)
