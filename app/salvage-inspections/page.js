@@ -167,6 +167,7 @@ export default function SalvageInspectionsPage() {
       setSubmitted(true);
       setErrors({});
       setForm({ firstName: '', lastName: '', phone: '', email: '', notes: '' });
+      setTimeout(() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
     } catch {
       alert('Something went wrong. Please try again.');
     } finally {
@@ -275,7 +276,7 @@ export default function SalvageInspectionsPage() {
       </section>
 
       {/* ── Submit Documents Form ── */}
-      <section className={styles.formSection}>
+      <section ref={formRef} className={styles.formSection}>
         <div className="container">
           <div className={styles.formCard}>
             {submitted ? (

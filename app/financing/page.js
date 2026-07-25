@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Link from 'next/link'
 import styles from './page.module.css'
 
@@ -103,6 +103,11 @@ export default function FinancingPage() {
   const [signature, setSignature] = useState('')
   const [form, setForm]         = useState(EMPTY_FORM)
   const [errors, setErrors]     = useState({})
+  const formRef = useRef(null)
+
+  const scrollToForm = () => {
+    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   const upd = e => {
     const v = e.target.type === 'checkbox' ? e.target.checked : e.target.value
@@ -186,7 +191,7 @@ export default function FinancingPage() {
     if (Object.keys(errs).length) { setErrors(errs); return }
     setErrors({})
     setStep(s => s + 1)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    setTimeout(scrollToForm, 50)
   }
 
   // Conditional: show previous address if < 2 yrs at current address
@@ -257,7 +262,7 @@ export default function FinancingPage() {
       </section>
 
       {/* Form Card */}
-      <section className={styles.formSection}>
+      <section ref={formRef} className={styles.formSection}>
         <div className={styles.formCard}>
           <div className={styles.cardHeader}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#222" strokeWidth="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
@@ -641,7 +646,7 @@ export default function FinancingPage() {
 
                 <div className={styles.navRow}>
                   {step > 1 && (
-                    <button type="button" onClick={() => { setErrors({}); setStep(s => s - 1); window.scrollTo({ top: 0, behavior: 'smooth' }) }} className={styles.prevBtn}>&larr; PREV STEP</button>
+                    <button type="button" onClick={() => { setErrors({}); setStep(s => s - 1); setTimeout(scrollToForm, 50) }} className={styles.prevBtn}>&larr; PREV STEP</button>
                   )}
                   {step < 6
                     ? <button type="button" onClick={goNext} className={styles.nextBtn}>NEXT STEP <span style={{fontSize:'1.1em',lineHeight:1}}>&#8250;</span></button>
