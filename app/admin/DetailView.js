@@ -15,7 +15,7 @@ export default function DetailView({ type, item, fields, statusOptions, title, b
     await fetch('/api/admin/status', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type, id: item.id, status, adminNotes: notes, isRead: true }),
+      body: JSON.stringify({ type, id: item.id, status, adminNotes: notes, isRead: status !== 'unread' }),
     })
     setSaving(false)
     setSaved(true)
@@ -32,7 +32,7 @@ export default function DetailView({ type, item, fields, statusOptions, title, b
             <i className="fa-solid fa-arrow-left" /> Back
           </button>
           <h1 className={styles.title}>{title}</h1>
-          <p className={styles.sub}>
+          <p className={styles.sub} suppressHydrationWarning>
             <i className="fa-regular fa-clock" />
             Submitted: {new Date(item.createdAt).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}
           </p>
