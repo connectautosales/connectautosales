@@ -2,7 +2,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
-import nodemailer from 'nodemailer'
+import { sendMail } from '@/lib/mailer'
 import { statusUpdateCustomer } from '@/lib/emailTemplates'
 
 const TABLE_MAP = {
@@ -18,14 +18,17 @@ const TABLE_MAP = {
 const HAS_ISREAD = new Set(['contact'])
 
 const STATUS_LABELS = {
-  new:       'Received',
-  reviewed:  'Under Review',
-  contacted: 'We Have Contacted You',
-  approved:  'Approved',
-  rejected:  'Not Approved',
-  scheduled: 'Scheduled',
-  completed: 'Completed',
-  closed:    'Closed',
+  new:                'Received',
+  reviewed:           'Under Review',
+  contacted:          'We Have Contacted You',
+  approved:           'Approved',
+  rejected:           'Not Approved',
+  scheduled:          'Scheduled',
+  completed:          'Completed',
+  closed:             'Closed',
+  'documents-reviewed': 'Documents Reviewed',
+  confirmed:          'Confirmed',
+  cancelled:          'Cancelled',
 }
 
 const TYPE_LABELS = {
@@ -37,7 +40,10 @@ const TYPE_LABELS = {
   testDrive:  'Test Drive Request',
 }
 
-const NOTIFY_STATUSES = new Set(['reviewed', 'contacted', 'approved', 'rejected', 'scheduled', 'completed'])
+const NOTIFY_STATUSES = new Set([
+  'reviewed', 'contacted', 'approved', 'rejected',
+  'scheduled', 'completed', 'documents-reviewed', 'confirmed', 'cancelled',
+])
 
 async function sendStatusEmail({ type, record, status, adminNotes }) {
   const email = record.email
@@ -47,15 +53,7 @@ async function sendStatusEmail({ type, record, status, adminNotes }) {
   const typeLabel = TYPE_LABELS[type] || 'Request'
   const statusLabel = STATUS_LABELS[status] || status
 
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
-    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
-  })
-
-  await transporter.sendMail({
-    from: process.env.SMTP_FROM,
+  await sendMail({
     to: email,
     subject: `${typeLabel} Update — ${statusLabel} | Connect Auto Sales`,
     html: statusUpdateCustomer({ firstName, type, status, adminNotes }),
