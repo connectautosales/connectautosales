@@ -1,7 +1,41 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
 
-const DEFAULT_PROMPT = `Create a professional automotive dealership advertisement using the uploaded vehicle photo. Style: Modern luxury dealership advertising. Canvas: Square (1080x1080). Use the uploaded vehicle photo exactly as provided. Do not change the vehicle. Place the vehicle large on the right side. On the left side display: {{year}} {{make}} {{model}} Large bold white text. {{trim_line}} Top right: Connect Auto Sales logo. Below logo: 313-413-3400. Bottom pricing box: LEFT: Finance Price {{finance_price}} Use a red strike-through line across the finance price. Center: Large red arrow →. RIGHT: When Pay In Full {{cash_price}}. Bottom: Yellow banner -$1,000 DISCOUNT! Use a premium red, black and white color theme. Professional dealership marketing. No additional feature list. No descriptions. No extra badges. No unnecessary decorations. High-end commercial automotive advertising quality.`
+const DEFAULT_PROMPT = `Create a professional automotive dealership advertisement. Output size: 640x640 square. Premium red, black and white color theme.
+
+MASTER TEMPLATE RULES — DO NOT DEVIATE:
+
+HEADER:
+- Top left: Connect Auto Sales logo (checkered flag + bold text)
+- Top right: Black pill badge with red border, phone icon, bold white text "313-413-3400"
+
+VEHICLE TITLE (left side):
+- Line 1: "{{year}} {{make}}" — bold white text, medium size
+- Line 2: "{{model}}" — very large bold white text
+- Line 3: {{trim_line}}
+
+VEHICLE IMAGE:
+- Largest element on the page, placed on the right side
+- Use uploaded photo exactly — do NOT repaint, recolor, or alter the vehicle
+- Preserve original color, reflections, wheels, and lighting
+- Background: blend the original photo with a mild semi-realistic dealership lot enhancement. The vehicle must stand out significantly more than the background. Not fully AI, not fully original.
+
+BOTTOM PRICING LAYOUT:
+- Bottom left black box: label "FINANCE PRICE" (small grey text), then "{{finance_price}}" in large white bold with a red horizontal strike-through line across it
+- Bottom center: large bold red arrow →
+- Bottom right red box: label "WHEN PAY IN FULL" (small white text), then "{{cash_price}}" in large bold yellow text
+- Yellow banner across bottom: "-$1,000 DISCOUNT!"
+
+REMOVE PERMANENTLY — never include any of these:
+- Clean Title Guaranteed
+- Great Value
+- Buy With Confidence
+- Luxury & Performance
+- Reliable & Efficient
+- Great Price Great Value
+- Any extra descriptions, badges, or text not listed above
+
+Same font hierarchy, trim badge style, pricing box style, and overall composition as the master Connect Auto Sales template.`
 
 export default function ImageTemplatePage() {
   const [prompt, setPrompt]     = useState('')
