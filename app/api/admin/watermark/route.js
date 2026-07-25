@@ -45,34 +45,45 @@ export async function POST(req) {
       savedPrompt = rows[0]?.watermark_prompt || ''
     } catch { /* use default */ }
 
-    const defaultPrompt = `This is a PHOTO EDITING task. You are given a real dealership car photo. Add graphic text overlays on top of it exactly like a professional designer would in Photoshop. The photo must remain a real photograph — do NOT illustrate, paint, or cartoon-ify anything.
+    const defaultPrompt = `You are a graphic designer adding text and shape overlays onto a real car dealership photo. DO NOT alter, repaint, redraw, or modify the car or background in any way. The photo is the background — keep it 100% untouched.
 
-KEEP THE CAR PHOTO 100% REALISTIC AND UNCHANGED.
+Output: 1080x1080 square image.
 
-ADD THESE OVERLAYS:
+OVERLAY ELEMENTS (add exactly these, nothing else):
 
-TOP-LEFT:
-- Thin checkered flag border strip at the very top edge
-- "www.ConnectAuto-Sales.com" — bold black text, "Auto-Sales" in red
-- "{{year}} {{make}}" — large black bold text
-- "{{model}}" — HUGE red bold text with black stroke, nearly full width
-- Red rounded badge: white bold "{{trim}}"
+1. TOP EDGE — Checkered strip:
+A bold black-and-white checkered flag pattern strip spanning the full width at the very top. Each square is clearly visible, about 20px tall.
 
-TOP-RIGHT:
-- Black rounded pill, red border, phone icon, white bold "313-413-3400"
+2. TOP-LEFT — Website URL:
+"www.Connect" in black bold sans-serif, "Auto-Sales" in bright red bold, ".com" in black bold. Font size ~28px. Positioned just below the checkered strip on the left side.
 
-BOTTOM-LEFT black box:
-- "FINANCE PRICE" small white label
-- "{{finance_price}}" large white text, red strikethrough ONCE only
+3. TOP-LEFT — Year and Make:
+"{{year}} {{make}}" in large black bold italic text, font size ~48px, below the URL line.
 
-BOTTOM-CENTER: Red arrow →
+4. TOP-LEFT — Model name (LARGEST element):
+"{{model}}" in an enormous bold italic font — this must be the biggest text on the image, spanning nearly the full width. Use a red-to-dark-red gradient fill with a thick solid black outline/stroke (at least 4px). Font size approximately 120-150px.
 
-BOTTOM-RIGHT red box:
-- Yellow badge: "-$1,000 DISCOUNT!"
-- "WHEN PAY IN FULL" white small text
-- "{{cash_price}}" very large yellow bold text
+5. TOP-LEFT — Trim badge (only if trim provided):
+A small red rounded rectangle badge with white bold text "{{trim}}" inside. Positioned to the right of or below the model name.
 
-The background car photo must remain a real photograph. No cartoon, no illustration, no painting effect.`
+6. TOP-RIGHT — Phone number badge:
+A large black rounded rectangle with a 3px red border. Inside: a red telephone/phone icon on the left side, then "313-413-3400" in large white bold text. This badge is prominent and takes up the full top-right corner area.
+
+7. BOTTOM-LEFT — Finance price box:
+A solid black rounded rectangle box (not transparent). Inside: "FINANCE PRICE" in small white bold uppercase text on top line, then "{{finance_price}}" in large white bold text below it, with a red diagonal strikethrough line crossing out the price.
+
+8. BOTTOM-CENTER — Arrow:
+A large solid red arrow (→) pointing right, centered between the two price boxes.
+
+9. BOTTOM-RIGHT — Cash price box:
+A solid red rounded rectangle box (larger than the finance box). At the top: a yellow pill/badge with black bold text "-$1,000 DISCOUNT!". Below: "WHEN PAY IN FULL" in small white text. Below that: "{{cash_price}}" in very large bold yellow/gold text — this is the most prominent price.
+
+STRICT RULES:
+- Do NOT modify the car, background, sky, lot, or any part of the photo
+- Do NOT add any extra badges, watermarks, or text not listed above (no "Clean Title", "Great Value", "Certified", "Luxury", etc.)
+- Do NOT cover the car with overlays — overlays go in corners/edges only
+- Maintain high contrast — all text must be clearly readable
+- Style: professional automotive advertisement, bold and high-impact`
 
     const rawPrompt = savedPrompt || defaultPrompt
     const prompt = rawPrompt

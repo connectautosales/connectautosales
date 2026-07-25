@@ -1,42 +1,45 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
 
-const DEFAULT_PROMPT = `You are overlaying graphic text elements onto the uploaded car photo. DO NOT repaint, redraw, or alter the vehicle or background in any way. The uploaded photo is the complete background — keep it 100% intact.
+const DEFAULT_PROMPT = `You are a graphic designer adding text and shape overlays onto a real car dealership photo. DO NOT alter, repaint, redraw, or modify the car or background in any way. The photo is the background — keep it 100% untouched.
 
-Output: 1080x1080 square image. The uploaded photo fills the entire canvas exactly as-is.
+Output: 1080x1080 square image.
 
-Add these graphic overlays on top of the photo:
+OVERLAY ELEMENTS (add exactly these, nothing else):
 
-TOP-LEFT AREA:
-- A thin horizontal checkered flag strip (black and white squares) running across the very top edge
-- Below it: website text "www.ConnectAuto-Sales.com" — black bold text, "Auto-Sales" portion in red
-- Below that on next line: "{{year}} {{make}}" in large black bold text
-- Below that: "{{model}}" in a MASSIVE font — ultra-bold, red gradient color (bright red to dark red), with a thick black outline/stroke. This should be the largest text on the entire image, spanning almost the full width
-- Below the model name: a red rounded rectangle badge with white bold text "{{trim}}" (only if trim is provided)
+1. TOP EDGE — Checkered strip:
+A bold black-and-white checkered flag pattern strip spanning the full width at the very top. Each square is clearly visible, about 20px tall.
 
-TOP-RIGHT AREA:
-- A black rounded rectangle with a red border outline, containing: a red phone icon on the left, then bold white text "313-413-3400" — large and prominent
+2. TOP-LEFT — Website URL:
+"www.Connect" in black bold sans-serif, "Auto-Sales" in bright red bold, ".com" in black bold. Font size ~28px. Positioned just below the checkered strip on the left side.
 
-BOTTOM-LEFT (floating box, does not span full width):
-- A small black rounded rectangle box, semi-transparent black background
-- Inside: "FINANCE PRICE" in small bold white text on top
-- Below: "{{finance_price}}" in large bold white text with a red diagonal strikethrough line across the price number
+3. TOP-LEFT — Year and Make:
+"{{year}} {{make}}" in large black bold italic text, font size ~48px, below the URL line.
 
-BOTTOM-CENTER:
-- A bold solid red arrow pointing right → between the two pricing boxes
+4. TOP-LEFT — Model name (LARGEST element):
+"{{model}}" in an enormous bold italic font — this must be the biggest text on the image, spanning nearly the full width. Use a red-to-dark-red gradient fill with a thick solid black outline/stroke (at least 4px). Font size approximately 120-150px.
 
-BOTTOM-RIGHT (floating box, larger than left box):
-- A large red rounded rectangle box
-- At the top of this box: a small yellow badge/pill with black bold text "-$1,000 DISCOUNT!"
-- Below: "WHEN PAY IN FULL" in small white text
-- Below: "{{cash_price}}" in very large bold yellow/gold text
+5. TOP-LEFT — Trim badge (only if trim provided):
+A small red rounded rectangle badge with white bold text "{{trim}}" inside. Positioned to the right of or below the model name.
+
+6. TOP-RIGHT — Phone number badge:
+A large black rounded rectangle with a 3px red border. Inside: a red telephone/phone icon on the left side, then "313-413-3400" in large white bold text. This badge is prominent and takes up the full top-right corner area.
+
+7. BOTTOM-LEFT — Finance price box:
+A solid black rounded rectangle box (not transparent). Inside: "FINANCE PRICE" in small white bold uppercase text on top line, then "{{finance_price}}" in large white bold text below it, with a red diagonal strikethrough line crossing out the price.
+
+8. BOTTOM-CENTER — Arrow:
+A large solid red arrow (→) pointing right, centered between the two price boxes.
+
+9. BOTTOM-RIGHT — Cash price box:
+A solid red rounded rectangle box (larger than the finance box). At the top: a yellow pill/badge with black bold text "-$1,000 DISCOUNT!". Below: "WHEN PAY IN FULL" in small white text. Below that: "{{cash_price}}" in very large bold yellow/gold text — this is the most prominent price.
 
 STRICT RULES:
-- The vehicle photo background must remain completely unaltered — same colors, same lighting, same background
-- Do NOT add any banners, strips, or overlays that cover the vehicle itself
-- Do NOT add: Clean Title Guaranteed, Great Value, Buy With Confidence, Luxury & Performance, Reliable & Efficient, or any other badges not listed above
-- All text elements float on top of the photo naturally
-- Overall style: bold, high-contrast automotive advertisement`
+- Do NOT modify the car, background, sky, lot, or any part of the photo
+- Do NOT add any extra badges, watermarks, or text not listed above (no "Clean Title", "Great Value", "Certified", "Luxury", etc.)
+- Do NOT cover the car with overlays — overlays go in corners/edges only
+- Maintain high contrast — all text must be clearly readable
+- Style: professional automotive advertisement, bold and high-impact`
 
 export default function ImageTemplatePage() {
   const [prompt, setPrompt]     = useState('')
