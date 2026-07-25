@@ -33,6 +33,12 @@ export async function POST(req) {
     newCar.slug = slug
     return NextResponse.json(newCar)
   } catch (e) {
+    if (e.message?.includes('Duplicate entry') && e.message?.includes('stock')) {
+      return NextResponse.json({ error: 'Stock number already exists. Please use a different stock #.' }, { status: 409 })
+    }
+    if (e.message?.includes('Duplicate entry') && e.message?.includes('vin')) {
+      return NextResponse.json({ error: 'VIN already exists in inventory.' }, { status: 409 })
+    }
     return NextResponse.json({ error: e.message }, { status: 400 })
   }
 }
