@@ -10,7 +10,8 @@ export async function POST(req) {
     }
     const ext = file.name.split('.').pop() || 'bin'
     const filename = `inspections/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
-    const blob = await put(filename, file, { access: 'public' })
+    const token = process.env.STORAGE_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN
+    const blob = await put(filename, file, { access: 'public', token })
     return NextResponse.json({ url: blob.url })
   } catch (e) {
     console.error('Upload error:', e)
