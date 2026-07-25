@@ -12,7 +12,7 @@ export async function POST(req) {
     const filename = `inspections/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
-    const token = process.env.BLOB_READ_WRITE_TOKEN
+    const token = process.env.STORAGE_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN
     const blob = await put(filename, buffer, {
       access: 'public',
       token,
