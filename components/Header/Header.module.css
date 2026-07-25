@@ -78,6 +78,7 @@
   background: #ffffff;
   box-shadow: 0 2px 12px rgba(0,0,0,0.08);
   transition: padding 0.25s ease;
+  position: relative;
 }
 
 .mainNavInner {
@@ -226,9 +227,15 @@
 
 /* ── Mobile Menu ──────────────────────────────────── */
 .mobileMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 999;
   background: #ffffff;
   border-top: 1px solid #e5e7eb;
   padding: 8px 0 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
 }
 
 .mobileNavLink {

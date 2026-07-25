@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import styles from './page.module.css';
 
 const steps = [
@@ -134,6 +134,7 @@ const faqs = [
 ];
 
 export default function AuctionServicesPage() {
+  const formRef = useRef(null);
   const [openFaq, setOpenFaq] = useState(null);
   const [form, setForm] = useState({
     firstName: '', lastName: '', phone: '', email: '',
@@ -177,6 +178,7 @@ export default function AuctionServicesPage() {
       setSubmitted(true);
       setForm({ firstName: '', lastName: '', phone: '', email: '', auctionLink: '', lotNumber: '', notes: '' });
       setErrors({});
+      setTimeout(() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
     } catch {
       alert('Something went wrong. Please try again.');
     } finally {
@@ -274,7 +276,7 @@ export default function AuctionServicesPage() {
             </div>
 
             {/* Right: Form */}
-            <div className={styles.formCol}>
+            <div ref={formRef} className={styles.formCol}>
               <h2 className={styles.colTitle}>START MY AUCTION PURCHASE</h2>
               <div className={styles.colLine} />
               {submitted ? (

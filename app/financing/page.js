@@ -213,6 +213,7 @@ export default function FinancingPage() {
       })
       if (!res.ok) throw new Error('Failed')
       setSubmitted(true)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch {
       alert('Something went wrong. Please try again.')
     } finally {
