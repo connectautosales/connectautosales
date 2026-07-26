@@ -739,21 +739,43 @@ export default function CarForm({ car }) {
                 )}
 
                 {damagePhotos.length > 0 && (
-                  <div className={styles.photoGrid}>
-                    {damagePhotos.map((url, i) => (
-                      <div key={i} className={styles.photoThumb}>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={url} alt="" />
-                        <button
-                          type="button"
-                          className={styles.removePhoto}
-                          onClick={() => setDamagePhotos(p => p.filter((_, idx) => idx !== i))}
+                  <>
+                    <p style={{ fontSize: '0.75rem', color: '#94a3b8', margin: '10px 0 6px' }}>
+                      <i className="fa-solid fa-grip-dots" /> Drag to reorder
+                    </p>
+                    <div className={styles.photoGrid}>
+                      {damagePhotos.map((url, i) => (
+                        <div
+                          key={url}
+                          className={styles.photoThumb}
+                          draggable
+                          onDragStart={() => { dragIndex.current = i }}
+                          onDragOver={e => e.preventDefault()}
+                          onDrop={() => {
+                            if (dragIndex.current === null || dragIndex.current === i) return
+                            setDamagePhotos(p => {
+                              const arr = [...p]
+                              const [moved] = arr.splice(dragIndex.current, 1)
+                              arr.splice(i, 0, moved)
+                              dragIndex.current = null
+                              return arr
+                            })
+                          }}
+                          style={{ cursor: 'grab' }}
                         >
-                          <i className="fa-solid fa-xmark" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={url} alt="" />
+                          <button
+                            type="button"
+                            className={styles.removePhoto}
+                            onClick={() => setDamagePhotos(p => p.filter((_, idx) => idx !== i))}
+                          >
+                            <i className="fa-solid fa-xmark" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </>
                 )}
               </div>
             </div>
