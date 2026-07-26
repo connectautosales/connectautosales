@@ -1,6 +1,7 @@
 import './globals.css'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import { Outfit } from 'next/font/google'
+import Script from 'next/script'
 import Header from '@/components/Header/Header'
 import Footer from '@/components/Footer/Footer'
 import SessionWrapper from '@/components/SessionWrapper'
@@ -27,6 +28,10 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={outfit.className} suppressHydrationWarning>
+        <Script
+          src={`https://www.google.com/recaptcha/api.js?render=6LdhzWYtAAAAAOSA8uZed4Bxb2aFKTm75YA1L2UY`}
+          strategy="afterInteractive"
+        />
         <SessionWrapper>
           <SettingsProvider>
             <VisitorTracker />

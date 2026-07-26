@@ -1,5 +1,7 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
+import { useRecaptcha } from '@/hooks/useRecaptcha';
+import { useFormScroll } from '@/hooks/useFormScroll';
 import styles from './page.module.css';
 
 const faqs = [
@@ -106,6 +108,8 @@ function FileUpload({ label, icon, name, hasError, onFileChange, maxFiles = 1 })
 }
 
 export default function SalvageInspectionsPage() {
+  const { getToken } = useRecaptcha();
+  const { successRef, scrollToFirstError, scrollToSuccess } = useFormScroll();
   const [openFaq, setOpenFaq] = useState(null);
   const [form, setForm] = useState({ firstName: '', lastName: '', phone: '', email: '', notes: '' });
   const [noMajorParts, setNoMajorParts] = useState(false);
@@ -150,7 +154,7 @@ export default function SalvageInspectionsPage() {
     if (salvageFiles.length === 0)  errs.salvageTitle = 'Please upload your Salvage Title.';
     if (idFiles.length === 0)       errs.validId      = 'Please upload a Valid ID.';
     if (!noMajorParts && receiptFiles.length === 0) errs.receipts = 'Please upload Receipts for Major Parts.';
-    if (Object.keys(errs).length) { setErrors(errs); return; }
+    if (Object.keys(errs).length) { setErrors(errs); scrollToFirstError(errs); return; }
     setSubmitting(true);
     try {
       const uploadOne = async (file) => {
@@ -175,6 +179,7 @@ export default function SalvageInspectionsPage() {
         noMajorParts ? Promise.resolve(null) : uploadAll(receiptFiles),
       ]);
 
+      const recaptchaToken = await getToken('inspection');
       const res = await fetch('/api/inspection', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -187,11 +192,13 @@ export default function SalvageInspectionsPage() {
           salvageTitle: salvageTitleUrl,
           validId: validIdUrl,
           receipts: receiptsUrl,
+          recaptchaToken,
         }),
       });
       if (!res.ok) throw new Error('Failed');
       setSubmitted(true);
       setErrors({});
+      scrollToSuccess();
       setForm({ firstName: '', lastName: '', phone: '', email: '', notes: '' });
       setTimeout(() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
     } catch {
@@ -306,7 +313,7 @@ export default function SalvageInspectionsPage() {
         <div className="container">
           <div className={styles.formCard}>
             {submitted ? (
-              <div style={{padding:'48px',textAlign:'center'}}>
+              <div ref={successRef} style={{padding:'48px',textAlign:'center'}}>
                 <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 <h3 style={{marginTop:16}}>Documents Submitted!</h3>
                 <p style={{marginTop:8,color:'#6b7280'}}>We will contact you to schedule your inspection appointment.</p>

@@ -1,5 +1,7 @@
 'use client';
 import { useState, useRef } from 'react';
+import { useRecaptcha } from '@/hooks/useRecaptcha';
+import { useFormScroll } from '@/hooks/useFormScroll';
 import styles from './page.module.css';
 
 const steps = [
@@ -135,6 +137,8 @@ const faqs = [
 
 export default function AuctionServicesPage() {
   const formRef = useRef(null);
+  const { getToken } = useRecaptcha();
+  const { successRef, scrollToFirstError, scrollToSuccess } = useFormScroll();
   const [openFaq, setOpenFaq] = useState(null);
   const [form, setForm] = useState({
     firstName: '', lastName: '', phone: '', email: '',
@@ -166,19 +170,20 @@ export default function AuctionServicesPage() {
     else if (!phoneRe.test(form.phone.trim())) errs.phone = 'Enter a valid phone number.';
     if (!form.email.trim())     errs.email     = 'Email cannot be blank.';
     else if (!emailRe.test(form.email.trim())) errs.email = 'Enter a valid email address.';
-    if (Object.keys(errs).length) { setErrors(errs); return; }
+    if (Object.keys(errs).length) { setErrors(errs); scrollToFirstError(errs); return; }
     setSubmitting(true);
     try {
+      const recaptchaToken = await getToken('auction');
       const res = await fetch('/api/auction', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, recaptchaToken }),
       });
       if (!res.ok) throw new Error('Failed');
       setSubmitted(true);
       setForm({ firstName: '', lastName: '', phone: '', email: '', auctionLink: '', lotNumber: '', notes: '' });
       setErrors({});
-      setTimeout(() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+      scrollToSuccess();
     } catch {
       alert('Something went wrong. Please try again.');
     } finally {
@@ -280,7 +285,7 @@ export default function AuctionServicesPage() {
               <h2 className={styles.colTitle}>START MY AUCTION PURCHASE</h2>
               <div className={styles.colLine} />
               {submitted ? (
-                <div style={{padding:'32px 0',textAlign:'center'}}>
+                <div ref={successRef} style={{padding:'32px 0',textAlign:'center'}}>
                   <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                   <p style={{marginTop:12,fontWeight:600}}>Request submitted! We will contact you shortly.</p>
                 </div>

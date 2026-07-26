@@ -2,10 +2,16 @@ import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
 import { sendMail } from '@/lib/mailer'
 import { inspectionCustomer, inspectionAdmin } from '@/lib/emailTemplates'
+import { verifyRecaptcha } from '@/lib/recaptcha'
 
 export async function POST(req) {
   try {
     const data = await req.json()
+
+    const captcha = await verifyRecaptcha(data.recaptchaToken)
+    if (!captcha.success || captcha.score < 0.5) {
+      return NextResponse.json({ error: 'Bot detected. Please try again.' }, { status: 403 })
+    }
     const { firstName = '', lastName = '', phone = '', email = '', partsChanged = '', salvageTitle = null, validId = null, receipts = null } = data
 
     await prisma.$executeRaw`

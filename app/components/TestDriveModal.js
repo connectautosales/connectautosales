@@ -1,5 +1,6 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { useRecaptcha } from '@/hooks/useRecaptcha'
 import styles from './TestDriveModal.module.css'
 
 const phoneRe = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/
@@ -12,6 +13,9 @@ const timeSlots = [
 ]
 
 export default function TestDriveModal({ isOpen, onClose, vehicle = '' }) {
+  const { getToken } = useRecaptcha()
+  const modalBodyRef = useRef(null)
+  const successRef   = useRef(null)
   const [form, setForm] = useState({
     firstName: '', lastName: '', phone: '', email: '',
     vehicle: vehicle, preferredDate: '', preferredTime: '', notes: '',
@@ -56,16 +60,28 @@ export default function TestDriveModal({ isOpen, onClose, vehicle = '' }) {
   const handleSubmit = async e => {
     e.preventDefault()
     const errs = validate()
-    if (Object.keys(errs).length) { setErrors(errs); return }
+    if (Object.keys(errs).length) {
+      setErrors(errs)
+      const firstKey = Object.keys(errs)[0]
+      setTimeout(() => {
+        const el = modalBodyRef.current?.querySelector(`[name="${firstKey}"]`)
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }, 50)
+      return
+    }
     setSubmitting(true)
     try {
+      const recaptchaToken = await getToken('test_drive')
       const res = await fetch('/api/test-drive', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, recaptchaToken }),
       })
       if (!res.ok) throw new Error()
       setSubmitted(true)
+      setTimeout(() => {
+        successRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }, 100)
     } catch {
       alert('Something went wrong. Please try again.')
     } finally {
@@ -79,13 +95,13 @@ export default function TestDriveModal({ isOpen, onClose, vehicle = '' }) {
 
   return (
     <div className={styles.overlay} onClick={e => e.target === e.currentTarget && onClose()}>
-      <div className={styles.modal}>
+      <div ref={modalBodyRef} className={styles.modal}>
         <button className={styles.closeBtn} onClick={onClose} aria-label="Close">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
 
         {submitted ? (
-          <div className={styles.success}>
+          <div ref={successRef} className={styles.success}>
             <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
             <h3>Test Drive Scheduled!</h3>
             <p>We&apos;ll contact you shortly to confirm your appointment.</p>

@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import Link from 'next/link'
+import { useRecaptcha } from '@/hooks/useRecaptcha'
 import styles from './page.module.css'
 
 const US_STATES = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming']
@@ -96,6 +97,8 @@ function isAdult(dobStr) {
 }
 
 export default function FinancingPage() {
+  const { getToken } = useRecaptcha()
+  const successRef = useRef(null)
   const [step, setStep]         = useState(1)
   const [openFaq, setOpenFaq]   = useState(null)
   const [submitted, setSubmitted] = useState(false)
@@ -104,6 +107,15 @@ export default function FinancingPage() {
   const [form, setForm]         = useState(EMPTY_FORM)
   const [errors, setErrors]     = useState({})
   const formRef = useRef(null)
+
+  const scrollToFirstError = (errs) => {
+    const firstKey = Object.keys(errs)[0]
+    if (!firstKey) return
+    setTimeout(() => {
+      const el = document.querySelector(`[name="${firstKey}"]`) || document.getElementById(firstKey)
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }, 50)
+  }
 
   const scrollToForm = () => {
     formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -188,7 +200,7 @@ export default function FinancingPage() {
 
   function goNext() {
     const errs = validateStep(step)
-    if (Object.keys(errs).length) { setErrors(errs); return }
+    if (Object.keys(errs).length) { setErrors(errs); scrollToFirstError(errs); return }
     setErrors({})
     setStep(s => s + 1)
     setTimeout(scrollToForm, 50)
@@ -203,17 +215,18 @@ export default function FinancingPage() {
   const handleSubmit = async e => {
     e.preventDefault()
     const errs = validateStep(6)
-    if (Object.keys(errs).length) { setErrors(errs); return }
+    if (Object.keys(errs).length) { setErrors(errs); scrollToFirstError(errs); return }
     setSubmitting(true)
     try {
+      const recaptchaToken = await getToken('financing')
       const res = await fetch('/api/financing', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, signature }),
+        body: JSON.stringify({ ...form, signature, recaptchaToken }),
       })
       if (!res.ok) throw new Error('Failed')
       setSubmitted(true)
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      setTimeout(() => successRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100)
     } catch {
       alert('Something went wrong. Please try again.')
     } finally {
@@ -224,7 +237,7 @@ export default function FinancingPage() {
   if (submitted) {
     return (
       <div className={styles.successWrap}>
-        <div className={styles.successBox}>
+        <div ref={successRef} className={styles.successBox}>
           <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#e50202" strokeWidth="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
           <h2>Application Submitted!</h2>
           <p>Our financing team will contact you within 24 hours.</p>

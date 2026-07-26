@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useSettings } from '@/context/SettingsContext'
+import { useRecaptcha } from '@/hooks/useRecaptcha'
+import { useFormScroll } from '@/hooks/useFormScroll'
 import styles from './page.module.css'
 
 const faqs = [
@@ -40,6 +42,8 @@ export default function ContactPage() {
   const mapQ     = encodeURIComponent(address)
   const mapLink  = s.mapLink  || `https://maps.google.com/?q=${mapQ}`
 
+  const { getToken } = useRecaptcha()
+  const { successRef, scrollToFirstError, scrollToSuccess } = useFormScroll()
   const [openFaq, setOpenFaq] = useState(null)
   const [form, setForm] = useState({ firstName: '', phone: '', email: '', topic: '', message: '' })
   const [submitted, setSubmitted] = useState(false)
@@ -62,13 +66,14 @@ export default function ContactPage() {
     else if (!emailRe.test(form.email.trim())) errs.email = 'Enter a valid email address.'
     if (!form.message.trim())   errs.message   = 'Message cannot be blank.'
     if (form.phone.trim() && !phoneRe.test(form.phone.trim())) errs.phone = 'Enter a valid phone number.'
-    if (Object.keys(errs).length) { setErrors(errs); return }
+    if (Object.keys(errs).length) { setErrors(errs); scrollToFirstError(errs); return }
     setSubmitting(true)
     try {
+      const recaptchaToken = await getToken('contact')
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, recaptchaToken }),
       })
       if (!res.ok) throw new Error('Failed')
     } catch {}
@@ -76,6 +81,7 @@ export default function ContactPage() {
     setSubmitted(true)
     setForm({ firstName: '', phone: '', email: '', topic: '', message: '' })
     setErrors({})
+    scrollToSuccess()
     setTimeout(() => setSubmitted(false), 5000)
   }
 
@@ -219,7 +225,7 @@ export default function ContactPage() {
               <div className={styles.headingLine} />
 
               {submitted ? (
-                <div className={styles.successMsg}>
+                <div ref={successRef} className={styles.successMsg}>
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                   Message sent! We'll respond during business hours.
                 </div>
