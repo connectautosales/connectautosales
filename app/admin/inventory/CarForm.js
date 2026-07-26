@@ -1,5 +1,5 @@
 'use client'
-import { useState, useRef } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import styles from './CarForm.module.css'
 
@@ -43,6 +43,27 @@ export default function CarForm({ car }) {
   const mainInputRef   = useRef()
   const damageInputRef = useRef()
   const genInputRef    = useRef()
+  const dragIndex      = useRef(null)
+
+  const handleDragStart = useCallback((i) => { dragIndex.current = i }, [])
+  const handleDragOver  = useCallback((e) => { e.preventDefault() }, [])
+  const handleDropPhoto = useCallback((i) => {
+    if (dragIndex.current === null || dragIndex.current === i) return
+    setMainPhotos(p => {
+      const arr = [...p]
+      const [moved] = arr.splice(dragIndex.current, 1)
+      arr.splice(i, 0, moved)
+      dragIndex.current = null
+      return arr
+    })
+  }, [])
+  const setAsFeature = useCallback((i) => {
+    setMainPhotos(p => {
+      const arr = [...p]
+      const [picked] = arr.splice(i, 1)
+      return [picked, ...arr]
+    })
+  }, [])
 
   // Watermark generator state
   const [featTab,     setFeatTab]     = useState('upload') // 'upload' | 'generate'
@@ -621,22 +642,52 @@ export default function CarForm({ car }) {
 
                   {/* Preview Grid */}
                   {mainPhotos.length > 0 && (
-                    <div className={styles.photoGrid} style={{ marginTop: 14 }}>
-                      {mainPhotos.map((url, i) => (
-                        <div key={i} className={styles.photoThumb}>
-                          {i === 0 && <span className={styles.mainBadge}>Feature</span>}
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={url} alt="" />
-                          <button
-                            type="button"
-                            className={styles.removePhoto}
-                            onClick={() => setMainPhotos(p => p.filter((_, idx) => idx !== i))}
+                    <>
+                      <p style={{ fontSize: '0.75rem', color: '#94a3b8', margin: '10px 0 6px' }}>
+                        <i className="fa-solid fa-grip-dots" /> Drag to reorder &nbsp;·&nbsp; <i className="fa-solid fa-star" /> Set as feature
+                      </p>
+                      <div className={styles.photoGrid} style={{ marginTop: 4 }}>
+                        {mainPhotos.map((url, i) => (
+                          <div
+                            key={url}
+                            className={styles.photoThumb}
+                            draggable
+                            onDragStart={() => handleDragStart(i)}
+                            onDragOver={handleDragOver}
+                            onDrop={() => handleDropPhoto(i)}
+                            style={{ cursor: 'grab', position: 'relative' }}
                           >
-                            <i className="fa-solid fa-xmark" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
+                            {i === 0
+                              ? <span className={styles.mainBadge}>Feature</span>
+                              : (
+                                <button
+                                  type="button"
+                                  title="Set as Feature Image"
+                                  onClick={() => setAsFeature(i)}
+                                  style={{
+                                    position: 'absolute', top: 4, left: 4, zIndex: 2,
+                                    background: 'rgba(0,0,0,0.55)', border: 'none',
+                                    borderRadius: 4, color: '#facc15', cursor: 'pointer',
+                                    padding: '2px 5px', fontSize: 11, lineHeight: 1,
+                                  }}
+                                >
+                                  <i className="fa-solid fa-star" />
+                                </button>
+                              )
+                            }
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={url} alt="" />
+                            <button
+                              type="button"
+                              className={styles.removePhoto}
+                              onClick={() => setMainPhotos(p => p.filter((_, idx) => idx !== i))}
+                            >
+                              <i className="fa-solid fa-xmark" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </>
                   )}
                 </div>
 
