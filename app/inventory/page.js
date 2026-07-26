@@ -34,6 +34,7 @@ export default function InventoryPage() {
     }
 
     switch (sortBy) {
+      case 'default':     list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); break
       case 'price-asc':   list.sort((a, b) => a.price - b.price); break
       case 'price-desc':  list.sort((a, b) => b.price - a.price); break
       case 'year-desc':   list.sort((a, b) => b.year - a.year);   break
