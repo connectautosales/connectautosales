@@ -12,6 +12,10 @@ export default function CarForm({ car }) {
   const [error, setError]       = useState('')
   const [deleting, setDeleting] = useState(false)
 
+  const inList = MAKES.includes(car?.make)
+  const [customMake, setCustomMake] = useState(!inList && car?.make ? car.make : '')
+  const [makeSelect, setMakeSelect] = useState(inList ? (car?.make || '') : (car?.make ? 'Other' : ''))
+
   const [form, setForm] = useState({
     stock:        car?.stock || '',
     year:         car?.year || new Date().getFullYear(),
@@ -292,10 +296,35 @@ export default function CarForm({ car }) {
               </div>
               <div className={styles.field}>
                 <label>Make <span className={styles.req}>*</span></label>
-                <input name="make" value={form.make} onChange={set} placeholder="e.g. Ford, Harley-Davidson" list="makes-list" autoComplete="off" required />
-                <datalist id="makes-list">
-                  {MAKES.map(m => <option key={m} value={m} />)}
-                </datalist>
+                <select
+                  value={makeSelect}
+                  onChange={e => {
+                    const v = e.target.value
+                    setMakeSelect(v)
+                    if (v !== 'Other') {
+                      setCustomMake('')
+                      setForm(f => ({ ...f, make: v }))
+                    } else {
+                      setForm(f => ({ ...f, make: '' }))
+                    }
+                  }}
+                  required={makeSelect !== 'Other'}
+                >
+                  <option value="">Select Make</option>
+                  {MAKES.map(m => <option key={m}>{m}</option>)}
+                </select>
+                {makeSelect === 'Other' && (
+                  <input
+                    style={{ marginTop: 8 }}
+                    value={customMake}
+                    onChange={e => {
+                      setCustomMake(e.target.value)
+                      setForm(f => ({ ...f, make: e.target.value }))
+                    }}
+                    placeholder="Type make (e.g. Harley-Davidson, Big Tex)"
+                    required
+                  />
+                )}
               </div>
               <div className={styles.field}>
                 <label>Model <span className={styles.req}>*</span></label>
