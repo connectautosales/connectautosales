@@ -3,7 +3,7 @@ import { useState, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import styles from './CarForm.module.css'
 
-const MAKES = ['Acura','Audi','BMW','Buick','Cadillac','Chevrolet','Chrysler','Dodge','Ford','GMC','Honda','Hyundai','Infiniti','Jeep','Kia','Land Rover','Lexus','Lincoln','Mazda','Mercedes-Benz','Mitsubishi','Nissan','Ram','Subaru','Tesla','Toyota','Volkswagen','Volvo','Other']
+const MAKES = ['Acura','Audi','BMW','Buick','Cadillac','Chevrolet','Chrysler','Dodge','Ford','GMC','Honda','Hyundai','Infiniti','Jeep','Kia','Land Rover','Lexus','Lincoln','Mazda','Mercedes-Benz','Mitsubishi','Nissan','Ram','Subaru','Tesla','Toyota','Volkswagen','Volvo','Harley-Davidson','Kawasaki','Yamaha','Suzuki','Indian','Can-Am','Polaris','Ducati','KTM','Royal Enfield','Big Tex','PJ Trailers','Load Trail','Carry-On','Cargo Mate','Featherlite','Timpte','Utility Trailer','Other']
 
 export default function CarForm({ car }) {
   const router = useRouter()
@@ -292,10 +292,10 @@ export default function CarForm({ car }) {
               </div>
               <div className={styles.field}>
                 <label>Make <span className={styles.req}>*</span></label>
-                <select name="make" value={form.make} onChange={set} required>
-                  <option value="">Select Make</option>
-                  {MAKES.map(m => <option key={m}>{m}</option>)}
-                </select>
+                <input name="make" value={form.make} onChange={set} placeholder="e.g. Ford, Harley-Davidson" list="makes-list" autoComplete="off" required />
+                <datalist id="makes-list">
+                  {MAKES.map(m => <option key={m} value={m} />)}
+                </datalist>
               </div>
               <div className={styles.field}>
                 <label>Model <span className={styles.req}>*</span></label>
