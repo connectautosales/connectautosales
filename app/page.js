@@ -80,9 +80,8 @@ export default function HomePage() {
       .then(r => r.json())
       .then(data => {
         const all = data || []
-        const newArrivals = all.filter(c => c.isNewArrival || c.newArrival)
-        const rest = all.filter(c => !c.isNewArrival && !c.newArrival)
-        setFeaturedCars([...newArrivals, ...rest].slice(0, 6))
+        const featured = all.filter(c => c.featured)
+        setFeaturedCars(featured.length ? featured.slice(0, 6) : all.slice(0, 6))
       })
       .catch(() => {})
 

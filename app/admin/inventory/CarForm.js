@@ -36,6 +36,7 @@ export default function CarForm({ car }) {
     features:     car?.features ? JSON.parse(car.features).join('\n') : '',
     status:       car?.status || 'available',
     isNewArrival: car?.isNewArrival || false,
+    featured:     car?.featured || false,
   })
 
   // Images state: array of URLs
@@ -830,6 +831,13 @@ export default function CarForm({ car }) {
                 <label className={styles.toggle}>
                   <input type="checkbox" name="isNewArrival" checked={form.isNewArrival} onChange={set} />
                   <span>Show &quot;New Arrival&quot; badge</span>
+                </label>
+              </div>
+              <div className={styles.field}>
+                <label>Featured on Homepage</label>
+                <label className={styles.toggle}>
+                  <input type="checkbox" name="featured" checked={form.featured} onChange={set} />
+                  <span>Show on homepage featured section</span>
                 </label>
               </div>
             </div>

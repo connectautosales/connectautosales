@@ -43,5 +43,17 @@ export async function POST(req) {
     results.push(`❌ archivedrecord table: ${e.message}`)
   }
 
+  // Add featured column to car table
+  try {
+    await prisma.$executeRaw`ALTER TABLE car ADD COLUMN featured TINYINT(1) NOT NULL DEFAULT 0`
+    results.push('Added featured column to car table')
+  } catch (e) {
+    if (e.message?.includes('Duplicate column')) {
+      results.push('featured column already exists')
+    } else {
+      results.push(`featured column error: ${e.message}`)
+    }
+  }
+
   return NextResponse.json({ ok: true, results })
 }
