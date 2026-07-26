@@ -7,6 +7,7 @@ import Footer from '@/components/Footer/Footer'
 import SessionWrapper from '@/components/SessionWrapper'
 import { SettingsProvider } from '@/context/SettingsContext'
 import VisitorTracker from '@/app/components/VisitorTracker'
+import PageTransition from '@/app/components/PageTransition'
 import { headers } from 'next/headers'
 
 const outfit = Outfit({ subsets: ['latin'], display: 'swap' })
@@ -36,7 +37,7 @@ export default async function RootLayout({ children }) {
           <SettingsProvider>
             <VisitorTracker />
             {!isAdmin && <Header />}
-            <main>{children}</main>
+            <main><PageTransition>{children}</PageTransition></main>
             {!isAdmin && <Footer />}
           </SettingsProvider>
         </SessionWrapper>
