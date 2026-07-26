@@ -8,11 +8,18 @@ export async function POST(req) {
     const body = await req.json()
 
     const data = {
-      name:    body.name    || body.firstName || null,
-      phone:   body.phone   || null,
-      email:   body.email   || null,
-      subject: body.subject || body.topic     || null,
-      message: body.message || null,
+      name:    (body.name    || body.firstName || '').toString().slice(0, 100) || null,
+      phone:   (body.phone   || '').toString().slice(0, 20)  || null,
+      email:   (body.email   || '').toString().slice(0, 200) || null,
+      subject: (body.subject || body.topic || '').toString().slice(0, 200) || null,
+      message: (body.message || '').toString().slice(0, 5000) || null,
+    }
+
+    if (!data.name || !data.message) {
+      return NextResponse.json({ error: 'Name and message are required.' }, { status: 400 })
+    }
+    if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+      return NextResponse.json({ error: 'Invalid email address.' }, { status: 400 })
     }
 
     await prisma.$executeRaw`
