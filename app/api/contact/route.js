@@ -35,7 +35,7 @@ export async function POST(req) {
     const rows = await prisma.$queryRaw`SELECT * FROM contactmessage ORDER BY id DESC LIMIT 1`
     const msg = rows[0]
 
-    await Promise.allSettled([
+    const emailResults = await Promise.allSettled([
       data.email && sendMail({
         to: data.email,
         subject: 'We Received Your Message — Connect Auto Sales',
@@ -48,7 +48,13 @@ export async function POST(req) {
       }),
     ])
 
-    return NextResponse.json({ ok: true, id: msg.id })
+    const emailErrors = emailResults
+      .filter(r => r.status === 'rejected')
+      .map(r => r.reason?.message || String(r.reason))
+
+    if (emailErrors.length) console.error('Contact email errors:', emailErrors)
+
+    return NextResponse.json({ ok: true, id: msg.id, emailErrors })
   } catch (e) {
     console.error('Contact submit error:', e)
     return NextResponse.json({ error: 'Failed to send message.' }, { status: 500 })
