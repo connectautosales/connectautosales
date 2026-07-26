@@ -3,6 +3,7 @@ import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
+import { decryptSSN } from '@/lib/encrypt'
 import DetailView from '../../DetailView'
 
 export default async function FinancingDetail({ params }) {
@@ -19,7 +20,7 @@ export default async function FinancingDetail({ params }) {
     { label: 'Date of Birth', value: a.dob },
     { label: 'Phone', value: a.phone },
     { label: 'Email', value: a.email },
-    { label: 'SSN', value: a.ssn },
+    { label: 'SSN', value: decryptSSN(a.ssn) },
     { label: "Driver's License", value: a.driversLicense },
     { label: 'State of Issuance', value: a.stateIssuance },
     { label: 'Address', value: `${a.address}, ${a.city}, ${a.state} ${a.zip}` },

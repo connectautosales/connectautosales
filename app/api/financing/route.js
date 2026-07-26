@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 import { sendMail } from '@/lib/mailer'
 import { financingCustomer, financingAdmin } from '@/lib/emailTemplates'
 import { verifyRecaptcha } from '@/lib/recaptcha'
+import { encryptSSN } from '@/lib/encrypt'
 
 export async function POST(req) {
   try {
@@ -33,7 +34,7 @@ export async function POST(req) {
         hasReference, refName, refPhone, refRelation, refAddress,
         signature, agreeTerms, status, createdAt
       ) VALUES (
-        ${d.firstName || ''}, ${d.middleName || null}, ${d.lastName || ''}, ${d.dob || ''}, ${d.phone || ''}, ${d.homePhone || null}, ${d.email || ''}, ${d.ssn || ''},
+        ${d.firstName || ''}, ${d.middleName || null}, ${d.lastName || ''}, ${d.dob || ''}, ${d.phone || ''}, ${d.homePhone || null}, ${d.email || ''}, ${encryptSSN(d.ssn) || ''},
         ${d.idType || null}, ${d.driversLicense || ''}, ${d.idExpiration || null}, ${d.stateIssuance || ''},
         ${d.address || ''}, ${d.city || ''}, ${d.state || ''}, ${d.zip || ''},
         ${d.timeAtAddressYr || null}, ${d.timeAtAddressMo || null}, ${d.housingStatus || null}, ${d.monthlyRent || null},
