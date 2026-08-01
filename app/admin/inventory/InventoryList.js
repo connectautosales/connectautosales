@@ -209,7 +209,7 @@ export default function InventoryList({ initialCars }) {
                   <Link href={`/admin/inventory/${car.id}`} className={styles.editBtn}>
                     <i className="fa-solid fa-pen-to-square" /> Edit
                   </Link>
-                  <Link href={`/inventory/${car.slug || car.id}`} target="_blank" className={styles.viewBtn}>
+                  <Link href={`/inventory/${car.stock || car.slug || car.id}`} target="_blank" className={styles.viewBtn}>
                     <i className="fa-solid fa-arrow-up-right-from-square" /> View
                   </Link>
                   <button

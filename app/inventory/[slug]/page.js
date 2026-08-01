@@ -1,10 +1,9 @@
 import { prisma } from '@/lib/prisma'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import VehicleDetail from './VehicleDetail'
 
 async function getCar(slug) {
   if (/^\d+$/.test(slug)) {
-    // numeric: try stock number first, then DB id
     const byStock = await prisma.$queryRawUnsafe(`SELECT * FROM car WHERE stock = ? LIMIT 1`, slug)
     if (byStock[0]) return byStock[0]
     const byId = await prisma.$queryRawUnsafe(`SELECT * FROM car WHERE id = ? LIMIT 1`, parseInt(slug))
@@ -32,6 +31,11 @@ export default async function VehicleDetailPage({ params }) {
   ])
 
   if (!car) notFound()
+
+  // If accessed via old slug URL, redirect to stock number URL
+  if (car.stock && !/^\d+$/.test(slug)) {
+    redirect(`/inventory/${car.stock}`)
+  }
 
   const settings = settingsRows[0] || null
 
