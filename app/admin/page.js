@@ -52,6 +52,7 @@ export default async function AdminDashboard() {
       label: 'Financing Apps',
       value: Number(financing),
       sub: `${Number(newFinancing)} new applications`,
+      newCount: Number(newFinancing),
       icon: 'fa-solid fa-file-invoice-dollar',
       href: '/admin/financing',
       color: '#e50202',
@@ -61,6 +62,7 @@ export default async function AdminDashboard() {
       label: 'Auction Requests',
       value: Number(auction),
       sub: `${Number(newAuction)} new requests`,
+      newCount: Number(newAuction),
       icon: 'fa-solid fa-gavel',
       href: '/admin/auction',
       color: '#e50202',
@@ -70,6 +72,7 @@ export default async function AdminDashboard() {
       label: 'Inspections',
       value: Number(inspections),
       sub: `${Number(newInspections)} pending review`,
+      newCount: Number(newInspections),
       icon: 'fa-solid fa-magnifying-glass',
       href: '/admin/inspections',
       color: '#e50202',
@@ -78,7 +81,8 @@ export default async function AdminDashboard() {
     {
       label: 'Unread Messages',
       value: Number(contacts),
-      sub: 'from contact form',
+      sub: `${Number(contacts)} unread messages`,
+      newCount: Number(contacts),
       icon: 'fa-solid fa-envelope',
       href: '/admin/contacts',
       color: '#e50202',
@@ -88,6 +92,7 @@ export default async function AdminDashboard() {
       label: 'Transport Quotes',
       value: Number(transport),
       sub: 'total requests',
+      newCount: 0,
       icon: 'fa-solid fa-truck',
       href: '/admin/transport',
       color: '#e50202',
@@ -146,7 +151,7 @@ export default async function AdminDashboard() {
               </div>
             </div>
             <div className={styles.statSub}>
-              <span style={{ color: s.color }}>{s.sub}</span>
+              <span style={{ color: s.newCount > 0 ? '#16a34a' : s.color, fontWeight: s.newCount > 0 ? 700 : 400 }}>{s.sub}</span>
               <i className="fa-solid fa-arrow-right" style={{ color: s.color, fontSize: '0.7rem' }} />
             </div>
           </Link>
