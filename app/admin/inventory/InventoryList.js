@@ -62,6 +62,7 @@ export default function InventoryList({ initialCars }) {
   const [cars, setCars] = useState(initialCars)
   const [search, setSearch] = useState('')
   const [sortBy, setSortBy] = useState('newest')
+  const [statusFilter, setStatusFilter] = useState('all')
   const [deleting, setDeleting] = useState(null)
   const [duplicating, setDuplicating] = useState(null)
   const [markingSold, setMarkingSold] = useState(null)
@@ -72,6 +73,7 @@ export default function InventoryList({ initialCars }) {
 
   const filtered = useMemo(() => {
     let list = [...cars]
+    if (statusFilter !== 'all') list = list.filter(c => c.status === statusFilter)
     if (search.trim()) {
       const q = search.trim().toLowerCase()
       list = list.filter(c => {
@@ -93,7 +95,7 @@ export default function InventoryList({ initialCars }) {
       case 'price_desc':list.sort((a, b) => (b.price || 0) - (a.price || 0)); break
     }
     return list
-  }, [cars, search, sortBy])
+  }, [cars, search, sortBy, statusFilter])
 
   function confirmDelete(car) {
     showDialog('confirm', `Delete ${car.year} ${car.make} ${car.model}? This cannot be undone.`, async () => {
@@ -161,6 +163,11 @@ export default function InventoryList({ initialCars }) {
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
+        <select className={styles.sortSelect} value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
+          <option value="all">All Status</option>
+          <option value="available">Available Only</option>
+          <option value="sold">Sold Only</option>
+        </select>
         <select className={styles.sortSelect} value={sortBy} onChange={e => setSortBy(e.target.value)}>
           <option value="newest">Newest First</option>
           <option value="oldest">Oldest First</option>
