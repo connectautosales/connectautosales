@@ -7,7 +7,7 @@ import styles from './page.module.css';
 const faqs = [
   { q: 'Do I need an appointment?', a: 'Yes. An appointment is required. Please submit your documents through the website first. Connect Auto Sales will review your paperwork and contact you with an available inspection date and time.' },
   { q: 'What documents do I need?', a: 'You will need a salvage title, a valid ID, receipts for any replaced major parts, and the vehicle itself when you come for the inspection appointment.' },
-  { q: 'What major parts require receipts?', a: 'Receipts are required for any major parts that were replaced during the repair process, including the engine, transmission, passenger vehicle body or truck cab, frame, pickup cargo box, hood, deck lid, tailgate or hatchback, doors, fenders, quarter panels, front and rear bumpers, and trunk floor pan.' },
+  { q: 'What major parts require receipts?', a: 'Receipts are required for any major parts replaced during the repair process, including: Engine, Transmission or Transaxle, Frame, Passenger Vehicle Body or Truck Cab, Pickup Cargo Box, Hood, Front and Rear Bumpers, Front Fenders (Left and Right), Rear Quarter Panels (Left and Right), Doors (Left and Right), Deck Lid / Tailgate / Hatchback, and Trunk Floor Pan. Please upload receipts only for the parts that were actually replaced on your vehicle. Keep all other receipts in case the inspector requests additional documentation.' },
   { q: 'Can I bring my vehicle immediately after uploading documents?', a: 'No. Please wait until Connect Auto Sales contacts you with an approved inspection date and time before bringing your vehicle.' },
   { q: 'How long does the inspection take?', a: 'Most inspections take approximately 15 to 30 minutes once all paperwork has been reviewed and the appointment has been scheduled.' },
   { q: 'Can you inspect out-of-state salvage vehicles?', a: 'Yes. We can perform salvage vehicle inspections for out-of-state vehicles. Please submit your paperwork and our team will review the documentation and guide you through the process.' },
@@ -111,6 +111,7 @@ export default function SalvageInspectionsPage() {
   const { getToken } = useRecaptcha();
   const { successRef, scrollToFirstError, scrollToSuccess } = useFormScroll();
   const [openFaq, setOpenFaq] = useState(null);
+  const [showPartsModal, setShowPartsModal] = useState(false);
   const [form, setForm] = useState({ firstName: '', lastName: '', phone: '', email: '', notes: '' });
   const [noMajorParts, setNoMajorParts] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -432,6 +433,68 @@ export default function SalvageInspectionsPage() {
                       : <><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight:'8px',verticalAlign:'middle'}}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="9 12 11 14 15 10"/></svg>SUBMIT DOCUMENTS FOR REVIEW</>
                     }
                   </button>
+
+                  <button type="button" onClick={() => setShowPartsModal(true)} style={{
+                    marginTop: 12, width: '100%', padding: '12px 20px',
+                    background: '#fff', border: '2px solid #e50202', borderRadius: 6,
+                    color: '#e50202', fontSize: 14, fontWeight: 700, cursor: 'pointer',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                  }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    MAJOR PARTS LIST — WHAT REQUIRES A RECEIPT?
+                  </button>
+
+                  {/* Major Parts Modal */}
+                  {showPartsModal && (
+                    <div onClick={() => setShowPartsModal(false)} style={{
+                      position: 'fixed', inset: 0, zIndex: 9999,
+                      background: 'rgba(0,0,0,0.6)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      padding: '20px',
+                    }}>
+                      <div onClick={e => e.stopPropagation()} style={{
+                        background: '#fff', borderRadius: 10, maxWidth: 560, width: '100%',
+                        maxHeight: '90vh', overflowY: 'auto', padding: '32px 28px',
+                        position: 'relative',
+                      }}>
+                        <button onClick={() => setShowPartsModal(false)} style={{
+                          position: 'absolute', top: 14, right: 16,
+                          background: 'none', border: 'none', fontSize: 22, cursor: 'pointer', color: '#6b7280',
+                        }}>&#10005;</button>
+
+                        <h3 style={{margin:'0 0 6px', fontSize:18, fontWeight:800, color:'#111'}}>Major Parts Requiring Receipts</h3>
+                        <p style={{margin:'0 0 20px', fontSize:13, color:'#6b7280', lineHeight:1.5}}>
+                          Receipts are required for any of these parts that were replaced during the repair process.
+                        </p>
+
+                        <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'10px 20px', marginBottom:20}}>
+                          {[
+                            'Engine',
+                            'Transmission or Transaxle',
+                            'Frame',
+                            'Passenger Vehicle Body or Truck Cab',
+                            'Pickup Cargo Box',
+                            'Hood',
+                            'Front and Rear Bumpers',
+                            'Front Fenders (Left and Right)',
+                            'Rear Quarter Panels (Left and Right)',
+                            'Doors (Left and Right)',
+                            'Deck Lid / Tailgate / Hatchback',
+                            'Trunk Floor Pan',
+                          ].map((part, i) => (
+                            <div key={i} style={{display:'flex', alignItems:'center', gap:8, fontSize:14, color:'#1a1a1a', fontWeight:500}}>
+                              <span style={{width:8, height:8, borderRadius:'50%', background:'#e50202', flexShrink:0}} />
+                              {part}
+                            </div>
+                          ))}
+                        </div>
+
+                        <div style={{background:'#fef2f2', border:'1px solid #fecaca', borderRadius:6, padding:'12px 16px', fontSize:13, color:'#7f1d1d', lineHeight:1.6}}>
+                          Only upload receipts for the parts that were actually replaced on your vehicle. Keep receipts for all other parts in case the inspector requests additional documentation.
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </form>
