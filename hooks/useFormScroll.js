@@ -17,7 +17,10 @@ export function useFormScroll() {
 
   const scrollToSuccess = useCallback(() => {
     setTimeout(() => {
-      successRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      const el = successRef.current
+      if (!el) return
+      const top = el.getBoundingClientRect().top + window.pageYOffset - 80
+      window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
     }, 100)
   }, [])
 
