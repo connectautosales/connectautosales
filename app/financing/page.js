@@ -113,7 +113,10 @@ export default function FinancingPage() {
     if (!firstKey) return
     setTimeout(() => {
       const el = document.querySelector(`[name="${firstKey}"]`) || document.getElementById(firstKey)
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      if (el) {
+        const top = el.getBoundingClientRect().top + window.pageYOffset - 120
+        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
+      }
     }, 50)
   }
 
@@ -226,7 +229,12 @@ export default function FinancingPage() {
       })
       if (!res.ok) throw new Error('Failed')
       setSubmitted(true)
-      setTimeout(() => successRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100)
+      setTimeout(() => {
+        const el = successRef.current
+        if (!el) return
+        const top = el.getBoundingClientRect().top + window.pageYOffset - 80
+        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
+      }, 100)
     } catch {
       alert('Something went wrong. Please try again.')
     } finally {
