@@ -17,8 +17,10 @@ export default async function FinancingDetail({ params }) {
 
   const fields = [
     // Personal
-    { label: 'Full Name',           value: `${a.firstName} ${a.middleName || ''} ${a.lastName}`.trim() },
-    { label: 'Date of Birth',       value: a.dob },
+    { label: 'First Name',          value: a.firstName },
+    { label: 'Middle Name',         value: a.middleName },
+    { label: 'Last Name',           value: a.lastName },
+    { label: 'Date of Birth',       value: a.dob ? (() => { const [y,m,d] = String(a.dob).split('T')[0].split('-'); return `${m}/${d}/${y}` })() : null },
     { label: 'Cell Phone',          value: a.phone },
     { label: 'Home Phone',          value: a.homePhone },
     { label: 'Email',               value: a.email },
@@ -29,13 +31,17 @@ export default async function FinancingDetail({ params }) {
     { label: 'ID Expiration',       value: a.idExpiration },
     { label: 'State of Issuance',   value: a.stateIssuance },
     // Residence
-    { label: 'Address',             value: [a.address, a.city, a.state, a.zip].filter(Boolean).join(', ') },
+    { label: 'Street Address',       value: a.address },
+    { label: 'City, State ZIP',     value: [a.city, a.state, a.zip].filter(Boolean).join(', ') },
     { label: 'Time at Address',     value: a.timeAtAddressYr != null ? `${a.timeAtAddressYr} yr ${a.timeAtAddressMo || 0} mo` : a.timeAtAddress },
     { label: 'Housing Status',      value: a.housingStatus },
     { label: 'Monthly Rent',        value: a.monthlyRent ? `$${a.monthlyRent}` : null },
     { label: 'Landlord Name',       value: a.landlordName },
     { label: 'Landlord Phone',      value: a.landlordPhone },
-    { label: 'Previous Address',    value: [a.prevAddress, a.prevCity, a.prevState, a.prevZip].filter(Boolean).join(', ') || null },
+    { label: 'Prev Street Address',  value: a.prevAddress || null },
+    { label: 'Prev City, State ZIP', value: [a.prevCity, a.prevState, a.prevZip].filter(Boolean).join(', ') || null },
+    { label: 'Time at Prev Address', value: a.prevTimeAtAddressYr != null ? `${a.prevTimeAtAddressYr} yr ${a.prevTimeAtAddressMo || 0} mo` : null },
+    { label: 'Prev Monthly Rent',    value: a.prevMonthlyRent ? `$${a.prevMonthlyRent}` : null },
     // Employment
     { label: 'Employment Status',   value: a.employmentStatus },
     { label: 'Occupation',          value: a.occupation || a.jobTitle },

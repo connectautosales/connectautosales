@@ -38,6 +38,7 @@ const EMPTY_FORM = {
   housingStatus:'', monthlyRent:'',
   landlordName:'', landlordPhone:'',
   prevAddress:'', prevCity:'', prevState:'', prevZip:'',
+  prevTimeAtAddressYr:'0', prevTimeAtAddressMo:'0', prevMonthlyRent:'',
   // Step 3
   employmentStatus:'', incomeSource:'', incomeAmount:'', incomeFrequency:'', hoursPerWeek:'',
   occupation:'', employer:'', employerCity:'', employerState:'', employerPhone:'', supervisor:'',
@@ -428,6 +429,19 @@ export default function FinancingPage() {
                             </select>
                           </Field>
                           <Field label="ZIP" req error={errors.prevZip}><input name="prevZip" value={form.prevZip} onChange={upd} placeholder="ZIP" className={errors.prevZip ? styles.inputError : ''} /></Field>
+                          <Field label="Years at Previous Address">
+                            <select name="prevTimeAtAddressYr" value={form.prevTimeAtAddressYr} onChange={upd}>
+                              {YEARS_AT.map(y => <option key={y} value={y}>{y} year{y !== '1' ? 's' : ''}</option>)}
+                            </select>
+                          </Field>
+                          <Field label="Months">
+                            <select name="prevTimeAtAddressMo" value={form.prevTimeAtAddressMo} onChange={upd}>
+                              {MONTHS_AT.map(m => <option key={m} value={m}>{m} month{m !== '1' ? 's' : ''}</option>)}
+                            </select>
+                          </Field>
+                          <Field label="Monthly Rent / Mortgage at Previous Address">
+                            <input name="prevMonthlyRent" value={form.prevMonthlyRent} onChange={upd} placeholder="$0" />
+                          </Field>
                         </div>
                       </>
                     )}
