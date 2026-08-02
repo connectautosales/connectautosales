@@ -45,9 +45,9 @@ export default async function FinancingDetail({ params }) {
     // Employment
     { label: 'Employment Status',   value: a.employmentStatus },
     { label: 'Occupation',          value: a.occupation || a.jobTitle },
-    { label: 'Employer',            value: a.employer },
-    { label: 'Employer City',       value: a.employerCity },
-    { label: 'Employer State',      value: a.employerState },
+    { label: 'Employer',             value: a.employer },
+    { label: 'Employer Street',      value: a.employerAddress },
+    { label: 'Employer City, State ZIP', value: [a.employerCity, a.employerState, a.employerZip].filter(Boolean).join(', ') },
     { label: 'Employer Phone',      value: a.employerPhone },
     { label: 'Supervisor',          value: a.supervisor },
     { label: 'Time Employed',       value: a.timeEmployedYr != null ? `${a.timeEmployedYr} yr ${a.timeEmployedMo || 0} mo` : a.timeEmployed },

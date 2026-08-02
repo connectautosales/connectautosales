@@ -41,7 +41,7 @@ const EMPTY_FORM = {
   prevTimeAtAddressYr:'0', prevTimeAtAddressMo:'0', prevMonthlyRent:'',
   // Step 3
   employmentStatus:'', incomeSource:'', incomeAmount:'', incomeFrequency:'', hoursPerWeek:'',
-  occupation:'', employer:'', employerCity:'', employerState:'', employerPhone:'', supervisor:'',
+  occupation:'', employer:'', employerAddress:'', employerCity:'', employerState:'', employerZip:'', employerPhone:'', supervisor:'',
   timeEmployedYr:'0', timeEmployedMo:'0',
   jobTitle:'', monthlyIncome:'',
   prevEmployer:'',
@@ -510,6 +510,7 @@ export default function FinancingPage() {
                             <div className={styles.grid3}>
                               <Field label="Occupation" req error={errors.occupation}><input name="occupation" value={form.occupation} onChange={upd} placeholder="Job Title / Occupation" className={errors.occupation ? styles.inputError : ''} /></Field>
                               <Field label="Employer Name" req error={errors.employer}><input name="employer" value={form.employer} onChange={upd} placeholder="Employer Name" className={errors.employer ? styles.inputError : ''} /></Field>
+                              <Field label="Employer Street Address" col3><input name="employerAddress" value={form.employerAddress} onChange={upd} placeholder="Street Address" /></Field>
                               <Field label="Employer City" req error={errors.employerCity}><input name="employerCity" value={form.employerCity} onChange={upd} placeholder="City" className={errors.employerCity ? styles.inputError : ''} /></Field>
                               <Field label="Employer State" req error={errors.employerState}>
                                 <select name="employerState" value={form.employerState} onChange={upd} className={errors.employerState ? styles.inputError : ''}>
@@ -517,6 +518,7 @@ export default function FinancingPage() {
                                   {US_STATES.map(s => <option key={s}>{s}</option>)}
                                 </select>
                               </Field>
+                              <Field label="Employer ZIP" error={errors.employerZip}><input name="employerZip" value={form.employerZip} onChange={upd} placeholder="ZIP Code" className={errors.employerZip ? styles.inputError : ''} /></Field>
                               <Field label="Employer Phone" req error={errors.employerPhone}><input name="employerPhone" value={form.employerPhone} onChange={upd} placeholder="(000) 000-0000" className={errors.employerPhone ? styles.inputError : ''} /></Field>
                               <Field label="Supervisor Name" req error={errors.supervisor}><input name="supervisor" value={form.supervisor} onChange={upd} placeholder="Supervisor Name" className={errors.supervisor ? styles.inputError : ''} /></Field>
                             </div>
