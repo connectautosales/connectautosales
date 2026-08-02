@@ -12,6 +12,7 @@ export default async function FinancingDetail({ params }) {
 
   const { id } = await params
   const rows = await prisma.$queryRaw`SELECT * FROM financingapplication WHERE id = ${parseInt(id)} LIMIT 1`
+
   const a = rows[0]
   if (!a) notFound()
 
@@ -88,10 +89,11 @@ export default async function FinancingDetail({ params }) {
   return (
     <DetailView
       type="financing"
-      item={a}
+      item={{ ...a, id: Number(a.id) }}
       fields={fields}
       title={`Financing — ${a.firstName} ${a.lastName}`}
       backHref="/admin/financing"
+      showPriority={true}
       statusOptions={[
         { value: 'new',       label: 'New' },
         { value: 'reviewed',  label: 'Reviewed' },

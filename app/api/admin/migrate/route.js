@@ -68,6 +68,7 @@ export async function POST(req) {
     [`ALTER TABLE financingapplication ADD COLUMN prevCity VARCHAR(100) NULL`,          'prevCity'],
     [`ALTER TABLE financingapplication ADD COLUMN prevState VARCHAR(50) NULL`,          'prevState'],
     [`ALTER TABLE financingapplication ADD COLUMN prevZip VARCHAR(20) NULL`,            'prevZip'],
+    [`ALTER TABLE financingapplication ADD COLUMN priority VARCHAR(20) NULL`,           'priority'],
     [`ALTER TABLE financingapplication ADD COLUMN prevTimeAtAddressYr VARCHAR(10) NULL`, 'prevTimeAtAddressYr'],
     [`ALTER TABLE financingapplication ADD COLUMN prevTimeAtAddressMo VARCHAR(10) NULL`, 'prevTimeAtAddressMo'],
     [`ALTER TABLE financingapplication ADD COLUMN prevMonthlyRent VARCHAR(50) NULL`,     'prevMonthlyRent'],

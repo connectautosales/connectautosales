@@ -3,9 +3,16 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import styles from './DetailView.module.css'
 
-export default function DetailView({ type, item, fields, statusOptions, title, backHref }) {
+const PRIORITY_CONFIG = {
+  high:   { label: 'High Priority',   color: '#15803d', bg: '#dcfce7' },
+  medium: { label: 'Medium Priority', color: '#1d4ed8', bg: '#dbeafe' },
+  low:    { label: 'Low Priority',    color: '#7c3aed', bg: '#ede9fe' },
+}
+
+export default function DetailView({ type, item, fields, statusOptions, title, backHref, showPriority }) {
   const router = useRouter()
   const [status, setStatus] = useState(item.status || '')
+  const [priority, setPriorityState] = useState(item.priority || '')
   const [notes, setNotes] = useState(item.adminNotes || '')
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
@@ -17,6 +24,13 @@ export default function DetailView({ type, item, fields, statusOptions, title, b
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type, id: item.id, status, adminNotes: notes, isRead: status !== 'unread' }),
     })
+    if (showPriority) {
+      await fetch(`/api/admin/financing/${item.id}/priority`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priority: priority || null }),
+      })
+    }
     setSaving(false)
     setSaved(true)
     setTimeout(() => setSaved(false), 2500)
@@ -96,6 +110,37 @@ export default function DetailView({ type, item, fields, statusOptions, title, b
                     <option key={s.value} value={s.value}>{s.label}</option>
                   ))}
                 </select>
+              </div>
+            )}
+
+            {showPriority && status === 'approved' && (
+              <div className={styles.field}>
+                <label><i className="fa-solid fa-flag" /> Priority</label>
+                <select
+                  value={priority}
+                  onChange={e => setPriorityState(e.target.value)}
+                  style={priority && PRIORITY_CONFIG[priority] ? {
+                    background: PRIORITY_CONFIG[priority].bg,
+                    color: PRIORITY_CONFIG[priority].color,
+                    fontWeight: 700,
+                    border: `1.5px solid ${PRIORITY_CONFIG[priority].color}`,
+                  } : {}}
+                >
+                  <option value="">No Priority</option>
+                  <option value="high">High Priority</option>
+                  <option value="medium">Medium Priority</option>
+                  <option value="low">Low Priority</option>
+                </select>
+                {priority && PRIORITY_CONFIG[priority] && (
+                  <div style={{
+                    marginTop: 8, padding: '6px 10px', borderRadius: 6,
+                    background: PRIORITY_CONFIG[priority].bg,
+                    color: PRIORITY_CONFIG[priority].color,
+                    fontWeight: 700, fontSize: 13, display: 'inline-block',
+                  }}>
+                    {PRIORITY_CONFIG[priority].label}
+                  </div>
+                )}
               </div>
             )}
 
