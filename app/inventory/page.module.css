@@ -287,4 +287,5 @@
   .carsGrid { grid-template-columns: 1fr; }
   .statsInner { gap: 10px; flex-direction: column; align-items: flex-start; }
   .statDivider { display: none; }
+  .statsBar { display: none; }
 }

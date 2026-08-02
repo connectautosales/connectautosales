@@ -29,7 +29,7 @@ export default async function FinancingDetail({ params }) {
     // ID
     { label: 'ID Type',             value: a.idType },
     { label: "Driver's License / ID #", value: a.driversLicense },
-    { label: 'ID Expiration',       value: a.idExpiration },
+    { label: 'ID Expiration',       value: a.idExpiration ? (() => { const [y,m,d] = String(a.idExpiration).split('T')[0].split('-'); return `${m}/${d}/${y}` })() : null },
     { label: 'State of Issuance',   value: a.stateIssuance },
     // Residence
     { label: 'Street Address',       value: a.address },
