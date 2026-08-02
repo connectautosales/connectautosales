@@ -185,6 +185,9 @@ export default function FinancingPage() {
       }
     }
     if (s === 4) {
+      if (!form.vehicleYear.trim())  errs.vehicleYear  = 'Year is required.'
+      if (!form.vehicleMake.trim())  errs.vehicleMake  = 'Make is required.'
+      if (!form.vehicleModel.trim()) errs.vehicleModel = 'Model is required.'
       if (form.tradeIn === 'yes') {
         if (!form.tradeInPaidOff) errs.tradeInPaidOff = 'Please select if trade-in is paid off.'
         if (!form.tradeInVin.trim())     errs.tradeInVin     = 'VIN is required for trade-in.'
@@ -488,7 +491,7 @@ export default function FinancingPage() {
                               <option value="other">Other</option>
                             </select>
                           </Field>
-                          <Field label="Income Amount" req error={errors.monthlyIncome}><input name="monthlyIncome" value={form.monthlyIncome} onChange={upd} placeholder="$0" className={errors.monthlyIncome ? styles.inputError : ''} /></Field>
+                          <Field label="Income Amount ($)" req error={errors.monthlyIncome}><input name="monthlyIncome" value={form.monthlyIncome} onChange={upd} placeholder="$0" className={errors.monthlyIncome ? styles.inputError : ''} /></Field>
                           <Field label="Income Frequency" req>
                             <select name="incomeFrequency" value={form.incomeFrequency} onChange={upd}>
                               <option value="">Select</option>
@@ -535,7 +538,6 @@ export default function FinancingPage() {
                                   {MONTHS_AT.map(m => <option key={m} value={m}>{m} month{m !== '1' ? 's' : ''}</option>)}
                                 </select>
                               </Field>
-                              <Field label="Previous Employer (if any)"><input name="prevEmployer" value={form.prevEmployer} onChange={upd} placeholder="Previous Employer" /></Field>
                             </div>
                           </>
                         )}
@@ -572,9 +574,9 @@ export default function FinancingPage() {
                   <>
                     <h3 className={styles.stepTitle}>Desired Vehicle</h3>
                     <div className={styles.grid3}>
-                      <Field label="Year"><input name="vehicleYear" value={form.vehicleYear} onChange={upd} placeholder="e.g. 2022" /></Field>
-                      <Field label="Make"><input name="vehicleMake" value={form.vehicleMake} onChange={upd} placeholder="e.g. Toyota" /></Field>
-                      <Field label="Model"><input name="vehicleModel" value={form.vehicleModel} onChange={upd} placeholder="e.g. Camry" /></Field>
+                      <Field label="Year" req error={errors.vehicleYear}><input name="vehicleYear" value={form.vehicleYear} onChange={upd} placeholder="e.g. 2022" className={errors.vehicleYear ? styles.inputError : ''} /></Field>
+                      <Field label="Make" req error={errors.vehicleMake}><input name="vehicleMake" value={form.vehicleMake} onChange={upd} placeholder="e.g. Toyota" className={errors.vehicleMake ? styles.inputError : ''} /></Field>
+                      <Field label="Model" req error={errors.vehicleModel}><input name="vehicleModel" value={form.vehicleModel} onChange={upd} placeholder="e.g. Camry" className={errors.vehicleModel ? styles.inputError : ''} /></Field>
                       <Field label="Mileage"><input name="vehicleMileage" value={form.vehicleMileage} onChange={upd} placeholder="e.g. 45,000" /></Field>
                       <Field label="Stock Number"><input name="stockNumber" value={form.stockNumber} onChange={upd} placeholder="Stock #" /></Field>
                     </div>
