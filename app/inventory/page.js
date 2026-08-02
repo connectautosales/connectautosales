@@ -51,7 +51,6 @@ export default function InventoryPage() {
     <>
       <section className={styles.hero}>
         <div className="container">
-          <p className={styles.heroLabel}>CONNECT AUTO SALES</p>
           <h1 className={styles.heroTitle}>BROWSE OUR INVENTORY</h1>
           <p className={styles.heroSub}>Quality pre-owned vehicles with financing &amp; warranty options available.</p>
         </div>
