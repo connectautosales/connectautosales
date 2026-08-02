@@ -1,7 +1,7 @@
 /* ── Hero ───────────────────────────────────────── */
 .hero {
-  background: linear-gradient(135deg, #0f172a 0%, #7a0000 50%, #e50202 100%);
-  padding: 52px 0 48px;
+  background: #020300;
+  padding: 28px 0 24px;
   text-align: center;
 }
 
