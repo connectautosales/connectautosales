@@ -537,20 +537,20 @@ export default function CarForm({ car }) {
 
                       {/* Plain photo upload */}
                       <div
-                        style={{
-                          border: '2px dashed #fca5a5', borderRadius: 8, padding: '24px 16px',
-                          textAlign: 'center', cursor: 'pointer', background: '#fff',
-                          marginBottom: 14,
-                        }}
+                        className={styles.dropZone}
                         onClick={() => genInputRef.current.click()}
+                        onDragOver={e => e.preventDefault()}
+                        onDrop={e => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f) { handleGenFileChange({ target: { files: [f] } }); } }}
+                        style={{ marginBottom: 14 }}
                       >
                         {genPreview ? (
                           /* eslint-disable-next-line @next/next/no-img-element */
                           <img src={genPreview} alt="preview" style={{ maxHeight: 160, maxWidth: '100%', borderRadius: 6, objectFit: 'contain' }} />
                         ) : (
                           <>
-                            <i className="fa-solid fa-image" style={{ fontSize: 28, color: '#fca5a5', marginBottom: 8, display: 'block' }} />
-                            <span style={{ fontSize: '0.84rem', color: '#64748b' }}>Click to select a plain car photo</span>
+                            <i className="fa-solid fa-cloud-arrow-up" />
+                            <span>Click or drag a plain car photo here</span>
+                            <small>JPG, PNG, WEBP</small>
                           </>
                         )}
                       </div>

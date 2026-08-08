@@ -85,7 +85,9 @@ function FileUpload({ label, icon, name, hasError, onFileChange, maxFiles = 1 })
         <div style={{width:'100%',display:'flex',flexDirection:'column',gap:4,margin:'4px 0'}}>
           {files.map((f, i) => (
             <div key={i} style={{display:'flex',alignItems:'center',gap:6,justifyContent:'space-between'}}>
-              <span className={styles.uploadFileName} style={{flex:1,textAlign:'left',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{f.name}</span>
+              <span className={styles.uploadFileName} style={{flex:1,textAlign:'left',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',maxWidth:'100%',display:'block'}} title={f.name}>
+                {f.name.length > 22 ? f.name.slice(0, 10) + '...' + f.name.slice(-8) : f.name}
+              </span>
               <button type="button" onClick={() => removeFile(i)} style={{background:'none',border:'none',color:'#9ca3af',cursor:'pointer',padding:'0 2px',fontSize:14,lineHeight:1,flexShrink:0}}>&#10005;</button>
             </div>
           ))}
