@@ -104,6 +104,7 @@ export default function FinancingPage() {
   const [openFaq, setOpenFaq]   = useState(null)
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState('')
   const [signature, setSignature] = useState('')
   const [form, setForm]         = useState(EMPTY_FORM)
   const [errors, setErrors]     = useState({})
@@ -231,7 +232,11 @@ export default function FinancingPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...form, signature, recaptchaToken }),
       })
-      if (!res.ok) throw new Error('Failed')
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}))
+        throw new Error(errData.error || 'Submission failed. Please try again.')
+      }
+      setSubmitError('')
       setSubmitted(true)
       setTimeout(() => {
         const el = successRef.current
@@ -240,7 +245,7 @@ export default function FinancingPage() {
         window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
       }, 100)
     } catch {
-      alert('Something went wrong. Please try again.')
+      setSubmitError(err?.message || 'Something went wrong. Please try again.')
     } finally {
       setSubmitting(false)
     }
@@ -690,7 +695,14 @@ export default function FinancingPage() {
                   )}
                   {step < 6
                     ? <button type="button" onClick={goNext} className={styles.nextBtn}>NEXT STEP <span style={{fontSize:'1.1em',lineHeight:1}}>&#8250;</span></button>
-                    : <button type="submit" className={styles.nextBtn} disabled={submitting}>{submitting ? <><span className="btn-spinner" />SUBMITTING...</> : 'SUBMIT APPLICATION'}</button>
+                    : <>
+                        {submitError && (
+                          <div style={{background:'#fef2f2',border:'1px solid #fecaca',borderRadius:6,padding:'12px 16px',marginBottom:12,fontSize:13,color:'#991b1b',fontWeight:500,textAlign:'center'}}>
+                            {submitError}
+                          </div>
+                        )}
+                        <button type="submit" className={styles.nextBtn} disabled={submitting}>{submitting ? <><span className="btn-spinner" />SUBMITTING...</> : 'SUBMIT APPLICATION'}</button>
+                      </>
                   }
                 </div>
               </form>
