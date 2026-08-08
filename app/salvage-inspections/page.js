@@ -116,6 +116,7 @@ export default function SalvageInspectionsPage() {
   const [noMajorParts, setNoMajorParts] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const [errors, setErrors] = useState({});
   const [salvageFiles, setSalvageFiles] = useState([]);
   const [idFiles, setIdFiles] = useState([]);
@@ -162,8 +163,8 @@ export default function SalvageInspectionsPage() {
         const fd = new FormData();
         fd.append('file', file);
         const res = await fetch('/api/upload', { method: 'POST', body: fd });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Upload failed');
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(`File upload failed: ${data.error || file.name}`);
         return data.url;
       };
 
@@ -196,14 +197,18 @@ export default function SalvageInspectionsPage() {
           recaptchaToken,
         }),
       });
-      if (!res.ok) throw new Error('Failed');
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || 'Submission failed. Please try again.');
+      }
       setSubmitted(true);
+      setSubmitError('');
       setErrors({});
       scrollToSuccess();
       setForm({ firstName: '', lastName: '', phone: '', email: '', notes: '' });
       setTimeout(() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
-    } catch {
-      alert('Something went wrong. Please try again.');
+    } catch (err) {
+      setSubmitError(err?.message || 'Something went wrong. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -427,6 +432,11 @@ export default function SalvageInspectionsPage() {
                     placeholder="Describe the major parts changed and repairs completed..."
                     rows={10}
                   />
+                  {submitError && (
+                    <div style={{background:'#fef2f2',border:'1px solid #fecaca',borderRadius:6,padding:'12px 16px',marginBottom:12,fontSize:13,color:'#991b1b',fontWeight:500}}>
+                      {submitError}
+                    </div>
+                  )}
                   <button type="submit" className={styles.submitBtn} disabled={submitting}>
                     {submitting
                       ? <><span className="btn-spinner" />SUBMITTING...</>
