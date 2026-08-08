@@ -66,6 +66,7 @@ export default function InventoryList({ initialCars }) {
   const [deleting, setDeleting] = useState(null)
   const [duplicating, setDuplicating] = useState(null)
   const [markingSold, setMarkingSold] = useState(null)
+  const [togglingFeatured, setTogglingFeatured] = useState(null)
   const [dialog, setDialog] = useState(null) // { type, message, onConfirm? }
 
   const showDialog = (type, message, onConfirm) => setDialog({ type, message, onConfirm })
@@ -132,6 +133,25 @@ export default function InventoryList({ initialCars }) {
     }
   }
 
+  async function handleToggleFeatured(car) {
+    if (togglingFeatured) return
+    setTogglingFeatured(car.id)
+    const newFeatured = !car.featured
+    try {
+      const res = await fetch(`/api/admin/cars/${car.id}/featured`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ featured: newFeatured }),
+      })
+      if (!res.ok) throw new Error('Failed')
+      setCars(prev => prev.map(c => c.id === car.id ? { ...c, featured: newFeatured } : c))
+    } catch {
+      showDialog('error', 'Failed to update featured status.')
+    } finally {
+      setTogglingFeatured(null)
+    }
+  }
+
   async function handleDuplicate(car) {
     setDuplicating(car.id)
     try {
@@ -165,8 +185,10 @@ export default function InventoryList({ initialCars }) {
         />
         <select className={styles.sortSelect} value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
           <option value="all">All Status</option>
-          <option value="available">Available Only</option>
-          <option value="sold">Sold Only</option>
+          <option value="available">Available</option>
+          <option value="pending">Pending</option>
+          <option value="sold">Sold</option>
+          <option value="hidden">Hidden</option>
         </select>
         <select className={styles.sortSelect} value={sortBy} onChange={e => setSortBy(e.target.value)}>
           <option value="newest">Newest First</option>
@@ -191,12 +213,13 @@ export default function InventoryList({ initialCars }) {
               <th>Mileage</th>
               <th>Title</th>
               <th>Status</th>
+              <th>Featured</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {filtered.length === 0 && (
-              <tr><td colSpan={7} className={styles.empty}>No vehicles found.</td></tr>
+              <tr><td colSpan={8} className={styles.empty}>No vehicles found.</td></tr>
             )}
             {filtered.map(car => (
               <tr key={car.id}>
@@ -211,6 +234,23 @@ export default function InventoryList({ initialCars }) {
                 </td>
                 <td>
                   <span className={`${styles.badge} ${styles[car.status]}`}>{car.status}</span>
+                </td>
+                <td>
+                  <button
+                    onClick={() => handleToggleFeatured(car)}
+                    disabled={togglingFeatured === car.id}
+                    title={car.featured ? 'Remove from homepage' : 'Add to homepage'}
+                    style={{
+                      background: car.featured ? '#0a1628' : '#fff',
+                      color: car.featured ? '#fff' : '#6b7280',
+                      border: `1.5px solid ${car.featured ? '#0a1628' : '#d1d5db'}`,
+                      borderRadius: 6, padding: '4px 10px', fontSize: 12,
+                      fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap',
+                      transition: 'all 0.15s',
+                    }}
+                  >
+                    {togglingFeatured === car.id ? '...' : car.featured ? '★ On' : '☆ Off'}
+                  </button>
                 </td>
                 <td className={styles.actions}>
                   <Link href={`/admin/inventory/${car.id}`} className={styles.editBtn}>

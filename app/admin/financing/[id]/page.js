@@ -96,10 +96,10 @@ export default async function FinancingDetail({ params }) {
       showPriority={true}
       statusOptions={[
         { value: 'new',       label: 'New' },
-        { value: 'reviewed',  label: 'Reviewed' },
-        { value: 'contacted', label: 'Contacted' },
+        { value: 'open',      label: 'Open' },
         { value: 'approved',  label: 'Approved' },
         { value: 'rejected',  label: 'Rejected' },
+        { value: 'completed', label: 'Completed' },
       ]}
     />
   )

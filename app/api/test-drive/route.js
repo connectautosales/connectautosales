@@ -25,7 +25,7 @@ export async function POST(req) {
       }),
       sendMail({
         to: process.env.NOTIFY_EMAIL,
-        subject: `New Test Drive Request — ${d.firstName} ${d.lastName}`,
+        subject: `New Test Drive Request — ${d.firstName} ${d.lastName}${d.vehicle ? ` | ${d.vehicle}` : ''}`,
         html: testDriveAdmin(d),
       }),
     ])

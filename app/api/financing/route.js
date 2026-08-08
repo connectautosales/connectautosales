@@ -64,7 +64,7 @@ export async function POST(req) {
       }),
       sendMail({
         to: process.env.NOTIFY_EMAIL,
-        subject: `New Financing Application — ${d.firstName} ${d.lastName}`,
+        subject: `New Financing Application — ${d.firstName} ${d.lastName}${d.vehicleYear || d.vehicleMake ? ` | ${[d.vehicleYear, d.vehicleMake, d.vehicleModel].filter(Boolean).join(' ')}` : ''}`,
         html: financingAdmin(d),
       }),
     ])

@@ -8,11 +8,8 @@ export async function POST(req, { params }) {
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { id } = await params
-  const { status } = await req.json()
+  const { featured } = await req.json()
 
-  const allowed = ['available', 'pending', 'sold', 'hidden']
-  if (!allowed.includes(status)) return NextResponse.json({ error: 'Invalid status' }, { status: 400 })
-
-  await prisma.$executeRawUnsafe(`UPDATE car SET status = ? WHERE id = ?`, status, parseInt(id))
-  return NextResponse.json({ ok: true, status })
+  await prisma.$executeRawUnsafe(`UPDATE car SET featured = ? WHERE id = ?`, featured ? 1 : 0, parseInt(id))
+  return NextResponse.json({ ok: true, featured })
 }

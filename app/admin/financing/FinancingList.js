@@ -12,10 +12,10 @@ const PRIORITY_CONFIG = {
 
 const STATUS_CONFIG = {
   new:       { color: '#92400e', bg: '#fef3c7' },
-  reviewed:  { color: '#374151', bg: '#f1f5f9' },
-  contacted: { color: '#0f172a', bg: '#e2e8f0' },
+  open:      { color: '#0369a1', bg: '#e0f2fe' },
   approved:  { color: '#15803d', bg: '#dcfce7' },
   rejected:  { color: '#dc2626', bg: '#fee2e2' },
+  completed: { color: '#ffffff', bg: '#0a1628' },
 }
 
 function fmtFreq(freq) {
@@ -93,10 +93,10 @@ export default function FinancingList({ initialRows }) {
         <select className={styles.sortSelect} value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
           <option value="all">All Status</option>
           <option value="new">New</option>
-          <option value="reviewed">Reviewed</option>
-          <option value="contacted">Contacted</option>
+          <option value="open">Open</option>
           <option value="approved">Approved</option>
           <option value="rejected">Rejected</option>
+          <option value="completed">Completed</option>
         </select>
         <select className={styles.sortSelect} value={priorityFilter} onChange={e => setPriorityFilter(e.target.value)}>
           <option value="all">All Priorities</option>
