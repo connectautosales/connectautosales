@@ -265,6 +265,14 @@ export default function VehicleDetail({ car, settings }) {
                       padding: '3px 8px', zIndex: 2,
                     }}>Click to expand</div>
                   )}
+                  {car.status === 'pending' && (
+                    <span style={{
+                      position: 'absolute', top: 10, right: 10, zIndex: 3,
+                      background: '#f59e0b', color: '#fff',
+                      fontSize: 11, fontWeight: 800, letterSpacing: '0.8px',
+                      padding: '4px 9px', borderRadius: 3, textTransform: 'uppercase',
+                    }}>PENDING</span>
+                  )}
                 </div>
 
                 <div className={styles.photoLabel}>
