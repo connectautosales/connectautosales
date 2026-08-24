@@ -19,14 +19,16 @@ export default function CarCard({ car }) {
   return (
     <div className={styles.card}>
       <Link href={`/inventory/${car.stock || car.slug || car.id}`} className={styles.imageWrap}>
-        {(car.isNewArrival || car.newArrival) && (
+        {(car.isNewArrival || car.newArrival) && car.status !== 'coming_soon' && (
           <span className={styles.newArrivalBadge}>NEW ARRIVAL</span>
         )}
         {car.status === 'pending' && (
           <span className={styles.pendingBadge}>PENDING</span>
         )}
         {car.status === 'coming_soon' && (
-          <span className={styles.comingSoonBadge}>COMING SOON</span>
+          <div className={styles.comingSoonOverlay}>
+            <span className={styles.comingSoonBadge}>COMING SOON</span>
+          </div>
         )}
         {imgSrc ? (
           <Image
