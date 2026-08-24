@@ -823,6 +823,7 @@ export default function CarForm({ car }) {
                 <select name="status" value={form.status} onChange={set}>
                   <option value="available">Available</option>
                   <option value="pending">Pending</option>
+                  <option value="coming_soon">Coming Soon</option>
                   <option value="sold">Sold</option>
                   <option value="hidden">Hidden</option>
                 </select>

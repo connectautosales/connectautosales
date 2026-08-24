@@ -187,6 +187,7 @@ export default function InventoryList({ initialCars }) {
           <option value="all">All Status</option>
           <option value="available">Available</option>
           <option value="pending">Pending</option>
+          <option value="coming_soon">Coming Soon</option>
           <option value="sold">Sold</option>
           <option value="hidden">Hidden</option>
         </select>

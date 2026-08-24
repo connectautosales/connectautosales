@@ -122,7 +122,8 @@
 .rebuilt   { background: #fef9c3; color: #854d0e; }
 .active    { background: #dbeafe; color: #1d4ed8; }
 .available { background: #dcfce7; color: #166534; }
-.pending   { background: #fef3c7; color: #92400e; }
+.pending      { background: #fef3c7; color: #92400e; }
+.coming_soon  { background: #dbeafe; color: #1d4ed8; }
 .soldBtn { background: #f59e0b; color: #fff; border: none; border-radius: 6px; padding: 5px 10px; font-size: 12px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
 .sold      { background: #f1f5f9; color: #64748b; }
 .hidden    { background: #fee2e2; color: #991b1b; }

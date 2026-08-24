@@ -267,11 +267,21 @@ export default function VehicleDetail({ car, settings }) {
                   )}
                   {car.status === 'pending' && (
                     <span style={{
-                      position: 'absolute', top: 10, right: 10, zIndex: 3,
+                      position: 'absolute', top: 0, left: 0, right: 0, zIndex: 3,
                       background: '#f59e0b', color: '#fff',
-                      fontSize: 11, fontWeight: 800, letterSpacing: '0.8px',
-                      padding: '4px 9px', borderRadius: 3, textTransform: 'uppercase',
-                    }}>PENDING</span>
+                      fontSize: 13, fontWeight: 900, letterSpacing: '1.5px',
+                      padding: '8px 12px', textTransform: 'uppercase',
+                      textAlign: 'center', boxShadow: '0 2px 8px rgba(245,158,11,0.4)',
+                    }}>PENDING — Sale In Progress</span>
+                  )}
+                  {car.status === 'coming_soon' && (
+                    <span style={{
+                      position: 'absolute', top: 0, left: 0, right: 0, zIndex: 3,
+                      background: '#2563eb', color: '#fff',
+                      fontSize: 13, fontWeight: 900, letterSpacing: '1.5px',
+                      padding: '8px 12px', textTransform: 'uppercase',
+                      textAlign: 'center', boxShadow: '0 2px 8px rgba(37,99,235,0.4)',
+                    }}>COMING SOON — Stay Tuned!</span>
                   )}
                 </div>
 

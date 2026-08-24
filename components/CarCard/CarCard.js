@@ -25,6 +25,9 @@ export default function CarCard({ car }) {
         {car.status === 'pending' && (
           <span className={styles.pendingBadge}>PENDING</span>
         )}
+        {car.status === 'coming_soon' && (
+          <span className={styles.comingSoonBadge}>COMING SOON</span>
+        )}
         {imgSrc ? (
           <Image
             src={imgSrc}
