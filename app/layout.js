@@ -33,6 +33,25 @@ export default async function RootLayout({ children }) {
           src={`https://www.google.com/recaptcha/api.js?render=6LdhzWYtAAAAAOSA8uZed4Bxb2aFKTm75YA1L2UY`}
           strategy="afterInteractive"
         />
+        {/* Meta Pixel */}
+        <Script id="meta-pixel" strategy="afterInteractive">{`
+          !function(f,b,e,v,n,t,s)
+          {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+          n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+          if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+          n.queue=[];t=b.createElement(e);t.async=!0;
+          t.src=v;s=b.getElementsByTagName(e)[0];
+          s.parentNode.insertBefore(t,s)}(window, document,'script',
+          'https://connect.facebook.net/en_US/fbevents.js');
+          fbq('init', '145080567456088');
+          fbq('track', 'PageView');
+        `}</Script>
+        <noscript>
+          <img height="1" width="1" style={{display:'none'}}
+            src="https://www.facebook.com/tr?id=145080567456088&ev=PageView&noscript=1"
+            alt=""
+          />
+        </noscript>
         <SessionWrapper>
           <SettingsProvider>
             <VisitorTracker />
