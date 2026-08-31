@@ -109,6 +109,14 @@ export default function VehicleDetail({ car, settings }) {
   const thumbStripRef = useRef(null)
 
   useEffect(() => {
+    if (typeof fbq !== 'undefined') fbq('track', 'ViewContent', {
+      content_name: `${car.year} ${car.make} ${car.model}`,
+      content_ids: [String(car.id)],
+      content_type: 'vehicle',
+    })
+  }, [car.id])
+
+  useEffect(() => {
     if (!thumbStripRef.current) return
     const strip = thumbStripRef.current
     const activeThumb = strip.children[photoIndex]

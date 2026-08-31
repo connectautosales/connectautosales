@@ -13,6 +13,7 @@ export default function InventoryPage() {
   const [sortBy, setSortBy] = useState('default')
 
   useEffect(() => {
+    if (typeof fbq !== 'undefined') fbq('track', 'ViewContent', { content_name: 'Inventory Page' })
     fetch('/api/cars')
       .then(r => r.json())
       .then(data => { setCars(data); setLoading(false) })

@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import styles from './page.module.css';
 
@@ -63,6 +63,10 @@ const whyItems = [
 
 export default function WarrantyPage() {
   const [openFaq, setOpenFaq] = useState(null);
+
+  useEffect(() => {
+    if (typeof fbq !== 'undefined') fbq('track', 'ViewContent', { content_name: 'Warranty Page' })
+  }, [])
 
   return (
     <main>
