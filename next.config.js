@@ -9,11 +9,11 @@ const securityHeaders = [
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ https://connect.facebook.net https://www.facebook.com",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com data:",
       "img-src 'self' data: blob: https://*.public.blob.vercel-storage.com https://connectautosales.com https://lh3.googleusercontent.com https://maps.googleapis.com https://maps.gstatic.com",
-      "connect-src 'self' https://*.vercel-storage.com https://hook.eu1.make.com https://www.google.com/recaptcha/ https://www.recaptcha.net/",
+      "connect-src 'self' https://*.vercel-storage.com https://hook.eu1.make.com https://www.google.com/recaptcha/ https://www.recaptcha.net/ https://www.facebook.com https://connect.facebook.net",
       "frame-src 'self' https://www.google.com https://maps.google.com https://www.recaptcha.net/",
       "object-src 'none'",
       "base-uri 'self'",
