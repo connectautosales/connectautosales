@@ -33,7 +33,7 @@ export default async function RootLayout({ children }) {
           src={`https://www.google.com/recaptcha/api.js?render=6LdhzWYtAAAAAOSA8uZed4Bxb2aFKTm75YA1L2UY`}
           strategy="afterInteractive"
         />
-        {/* Meta Pixel */}
+        {/* Meta Pixel — business page + personal marketplace */}
         <Script id="meta-pixel" strategy="afterInteractive">{`
           !function(f,b,e,v,n,t,s)
           {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -44,11 +44,16 @@ export default async function RootLayout({ children }) {
           s.parentNode.insertBefore(t,s)}(window, document,'script',
           'https://connect.facebook.net/en_US/fbevents.js');
           fbq('init', '145080567456088');
+          fbq('init', '622117261774143');
           fbq('track', 'PageView');
         `}</Script>
         <noscript>
           <img height="1" width="1" style={{display:'none'}}
             src="https://www.facebook.com/tr?id=145080567456088&ev=PageView&noscript=1"
+            alt=""
+          />
+          <img height="1" width="1" style={{display:'none'}}
+            src="https://www.facebook.com/tr?id=622117261774143&ev=PageView&noscript=1"
             alt=""
           />
         </noscript>

@@ -79,6 +79,7 @@ export default function TestDriveModal({ isOpen, onClose, vehicle = '' }) {
       })
       if (!res.ok) throw new Error()
       setSubmitted(true)
+      if (typeof fbq !== 'undefined') fbq('track', 'Lead')
       setTimeout(() => {
         const el = successRef.current
         if (!el) return

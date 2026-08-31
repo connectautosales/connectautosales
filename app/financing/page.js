@@ -238,6 +238,7 @@ export default function FinancingPage() {
       }
       setSubmitError('')
       setSubmitted(true)
+      if (typeof fbq !== 'undefined') fbq('track', 'Lead')
       setTimeout(() => {
         const el = successRef.current
         if (!el) return

@@ -204,6 +204,7 @@ export default function SalvageInspectionsPage() {
         throw new Error(errData.error || 'Submission failed. Please try again.');
       }
       setSubmitted(true);
+      if (typeof fbq !== 'undefined') fbq('track', 'Lead')
       setSubmitError('');
       setErrors({});
       scrollToSuccess();

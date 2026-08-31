@@ -181,6 +181,7 @@ export default function AuctionServicesPage() {
       });
       if (!res.ok) throw new Error('Failed');
       setSubmitted(true);
+      if (typeof fbq !== 'undefined') fbq('track', 'Lead')
       setForm({ firstName: '', lastName: '', phone: '', email: '', auctionLink: '', lotNumber: '', notes: '' });
       setErrors({});
       scrollToSuccess();

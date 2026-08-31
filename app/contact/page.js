@@ -79,6 +79,7 @@ export default function ContactPage() {
     } catch {}
     setSubmitting(false)
     setSubmitted(true)
+    if (typeof fbq !== 'undefined') fbq('track', 'Lead')
     setForm({ firstName: '', phone: '', email: '', topic: '', message: '' })
     setErrors({})
     scrollToSuccess()
