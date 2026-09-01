@@ -9,11 +9,11 @@ const securityHeaders = [
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ https://connect.facebook.net https://www.facebook.com",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ https://connect.facebook.net https://www.facebook.com https://www.googletagmanager.com",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com data:",
       "img-src 'self' data: blob: https://*.public.blob.vercel-storage.com https://connectautosales.com https://lh3.googleusercontent.com https://maps.googleapis.com https://maps.gstatic.com https://www.facebook.com",
-      "connect-src 'self' https://*.vercel-storage.com https://hook.eu1.make.com https://www.google.com/recaptcha/ https://www.recaptcha.net/ https://www.facebook.com https://connect.facebook.net https://*.on.aws https://*.run.app https://graph.facebook.com https://api.facebook.com",
+      "connect-src 'self' https://*.vercel-storage.com https://hook.eu1.make.com https://www.google.com/recaptcha/ https://www.recaptcha.net/ https://www.facebook.com https://connect.facebook.net https://*.on.aws https://*.run.app https://graph.facebook.com https://api.facebook.com https://www.googletagmanager.com https://www.google-analytics.com https://region1.google-analytics.com",
       "frame-src 'self' https://www.google.com https://maps.google.com https://www.recaptcha.net/ https://www.facebook.com",
       "object-src 'none'",
       "base-uri 'self'",

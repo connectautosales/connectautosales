@@ -29,6 +29,17 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={outfit.className} suppressHydrationWarning>
+        {/* Google Analytics GA4 */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-4BGMGDC39K"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">{`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-4BGMGDC39K');
+        `}</Script>
         <Script
           src={`https://www.google.com/recaptcha/api.js?render=6LdhzWYtAAAAAOSA8uZed4Bxb2aFKTm75YA1L2UY`}
           strategy="afterInteractive"
