@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Used Cars for Sale in Dearborn Heights, MI',
+  title: 'Browse Our Used Car Inventory in Dearborn Heights, MI',
   description: 'Browse our full inventory of quality used cars, trucks and SUVs in Dearborn Heights, Michigan. Clean and rebuilt titles, financing available for all credit types, warranty options.',
   alternates: { canonical: '/inventory' },
   openGraph: {
