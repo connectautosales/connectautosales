@@ -1,0 +1,234 @@
+.hero {
+  background: #020300;
+  padding: 28px 0 24px;
+  text-align: center;
+}
+
+.heroLabel {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #e50202;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.heroTitle {
+  font-size: clamp(28px, 4vw, 46px);
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 1px;
+  margin: 0 0 14px;
+}
+
+.heroSub {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 0;
+}
+
+/* ── Stats Bar ──────────────────────────────────── */
+.statsBar {
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 14px 0;
+}
+
+.statsInner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.statItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  color: #4b5563;
+}
+
+.statItem svg {
+  color: #e50202;
+  flex-shrink: 0;
+}
+
+.statItem strong {
+  color: #020300;
+  font-weight: 800;
+}
+
+.statDivider {
+  width: 1px;
+  height: 20px;
+  background: #e5e7eb;
+}
+
+/* ── Inventory Grid ─────────────────────────────── */
+.inventorySection {
+  padding: 32px 0 40px;
+}
+
+.carsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.noResults {
+  text-align: center;
+  padding: 48px 20px;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.noResults p {
+  font-size: 17px;
+  font-weight: 700;
+  color: #020300;
+  margin: 0 0 10px;
+}
+
+.noResultsSub {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: #6b7280 !important;
+  line-height: 1.7;
+  margin: 0 0 24px !important;
+}
+
+.noResultsActions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ── CTA Band ───────────────────────────────────── */
+.ctaBand {
+  background: #fff8f8;
+  border-top: 1px solid #fecdd3;
+  border-bottom: 1px solid #fecdd3;
+  padding: 32px 0;
+}
+
+.ctaInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+
+.ctaTitle {
+  font-size: 19px;
+  font-weight: 800;
+  color: #020300;
+  margin: 0 0 8px;
+}
+
+.ctaText {
+  font-size: 13.5px;
+  color: #4b5563;
+  line-height: 1.7;
+  margin: 0;
+  max-width: 560px;
+}
+
+.ctaActions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.primaryBtn {
+  display: inline-block;
+  background: #e50202;
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 12px 24px;
+  border-radius: 5px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.primaryBtn:hover {
+  background: #c40101;
+}
+
+.secondaryBtn {
+  display: inline-block;
+  background: #fff;
+  color: #020300;
+  border: 1px solid #d1d5db;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 12px 24px;
+  border-radius: 5px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.secondaryBtn:hover {
+  border-color: #e50202;
+  color: #e50202;
+}
+
+/* ── Browse More ────────────────────────────────── */
+.browseMore {
+  padding: 32px 0 44px;
+}
+
+.browseTitle {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #020300;
+  margin: 0 0 16px;
+  text-align: center;
+}
+
+.browseLinks {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.browseLink {
+  display: inline-block;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  color: #4b5563;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.browseLink:hover {
+  background: #fff;
+  border-color: #e50202;
+  color: #e50202;
+}
+
+@media (max-width: 640px) {
+  .ctaInner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .carsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+  }
+}

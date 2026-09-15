@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import { BODY_TYPES } from '@/lib/bodyTypes'
 
 const BASE_URL = 'https://www.connectautosales.com'
 
@@ -28,6 +29,21 @@ export default async function sitemap() {
     priority,
   }))
 
+  const bodyTypes = [
+    {
+      url: `${BASE_URL}/body-type`,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    },
+    ...Object.keys(BODY_TYPES).map((slug) => ({
+      url: `${BASE_URL}/body-type/${slug}`,
+      lastModified: now,
+      changeFrequency: 'daily',
+      priority: 0.85,
+    })),
+  ]
+
   let dynamics = []
   try {
     const cars = await prisma.$queryRaw`
@@ -43,5 +59,5 @@ export default async function sitemap() {
     }))
   } catch {}
 
-  return [...statics, ...dynamics]
+  return [...statics, ...bodyTypes, ...dynamics]
 }

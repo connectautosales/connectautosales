@@ -30,8 +30,6 @@ const nextConfig = {
     return [
       { source: '/contact-us', destination: '/contact', permanent: true },
       { source: '/about-us', destination: '/about', permanent: true },
-      { source: '/body-type', destination: '/inventory', permanent: true },
-      { source: '/body-type/:slug*', destination: '/inventory', permanent: true },
       { source: '/vehicle/:slug*', destination: '/inventory', permanent: true },
       { source: '/detail/:slug*', destination: '/inventory', permanent: true },
       { source: '/category/:slug*', destination: '/inventory', permanent: true },

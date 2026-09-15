@@ -1,0 +1,152 @@
+.hero {
+  background: #020300;
+  padding: 28px 0 24px;
+  text-align: center;
+}
+
+.heroLabel {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #e50202;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.heroTitle {
+  font-size: clamp(28px, 4vw, 46px);
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 1px;
+  margin: 0 0 14px;
+}
+
+.heroSub {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 0;
+}
+
+.grid {
+  padding: 36px 0 40px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 22px 20px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+}
+
+.card:hover {
+  background: #fff;
+  border-color: #e50202;
+  transform: translateY(-2px);
+}
+
+.cardLabel {
+  font-size: 16px;
+  font-weight: 800;
+  color: #020300;
+}
+
+.cardCount {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.card:hover .cardCount {
+  color: #e50202;
+}
+
+.ctaBand {
+  background: #fff8f8;
+  border-top: 1px solid #fecdd3;
+  border-bottom: 1px solid #fecdd3;
+  padding: 32px 0;
+}
+
+.ctaInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+
+.ctaTitle {
+  font-size: 19px;
+  font-weight: 800;
+  color: #020300;
+  margin: 0 0 8px;
+}
+
+.ctaText {
+  font-size: 13.5px;
+  color: #4b5563;
+  line-height: 1.7;
+  margin: 0;
+  max-width: 560px;
+}
+
+.ctaActions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.primaryBtn {
+  display: inline-block;
+  background: #e50202;
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 12px 24px;
+  border-radius: 5px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.primaryBtn:hover {
+  background: #c40101;
+}
+
+.secondaryBtn {
+  display: inline-block;
+  background: #fff;
+  color: #020300;
+  border: 1px solid #d1d5db;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 12px 24px;
+  border-radius: 5px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.secondaryBtn:hover {
+  border-color: #e50202;
+  color: #e50202;
+}
+
+@media (max-width: 640px) {
+  .ctaInner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
