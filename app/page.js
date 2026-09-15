@@ -195,12 +195,16 @@ export default function HomePage() {
                 REVIEWS <span className={styles.reviewsDash}>—</span>
               </h2>
               <div className={styles.ratingRow}>
-                {rating != null && <span className={styles.ratingNumber}>{rating}</span>}
-                <div className={styles.ratingStars}>
-                  <StarRating value={rating ?? 0} />
-                </div>
-                {reviewCount != null && (
-                  <span className={styles.ratingCount}>Based on {reviewCount} Google reviews</span>
+                {rating != null && (
+                  <>
+                    <span className={styles.ratingNumber}>{rating}</span>
+                    <div className={styles.ratingStars}>
+                      <StarRating value={rating} />
+                    </div>
+                    {reviewCount != null && (
+                      <span className={styles.ratingCount}>Based on {reviewCount} Google reviews</span>
+                    )}
+                  </>
                 )}
                 <div className={styles.googleBadge}>
                   <svg width="18" height="18" viewBox="0 0 24 24">
