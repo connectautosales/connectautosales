@@ -238,6 +238,26 @@ export default function SettingsPage() {
         </section>
 
 
+        {/* Google Reviews */}
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}><i className="fa-brands fa-google" /> Google Reviews</h2>
+          <div className={styles.grid2}>
+            <div className={styles.field}>
+              <label>Google Place ID</label>
+              <input value={form.googlePlaceId || ''} onChange={e => set('googlePlaceId', e.target.value)} placeholder="ChIJbTWMJ1FLO4gRomxNnuLtc68" />
+            </div>
+            <div className={styles.field}>
+              <label>Google API Key</label>
+              <input type="password" value={form.googleApiKey || ''} onChange={e => set('googleApiKey', e.target.value)} placeholder="AIza..." />
+            </div>
+          </div>
+          <p style={{marginTop:10,fontSize:12,color:'#6b7280'}}>
+            Pulls the live star rating and review count onto the website. The key needs
+            <strong> Places API (New)</strong> enabled in Google Cloud, and must not be restricted
+            to HTTP referrers — the site calls Google from the server, not the browser.
+          </p>
+        </section>
+
         {/* Salvage Inspection Fees */}
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}><i className="fa-solid fa-car-burst" /> Salvage Inspection Fees</h2>
