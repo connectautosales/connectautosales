@@ -46,7 +46,7 @@ export async function generateMetadata({ params }) {
     'Financing and warranty options available. Call (313) 413-3400.',
   ].join(' ')
 
-  const canonical = `/inventory/${car.slug || car.stock || car.id}`
+  const canonical = `/inventory/${car.stock || car.slug || car.id}`
   const images = carImages(car)
 
   return {
@@ -73,9 +73,9 @@ export default async function VehicleDetailPage({ params }) {
 
   if (!car) notFound()
 
-  // Canonicalize on the descriptive slug — it carries the year/make/model keywords
-  if (car.slug && slug !== car.slug) {
-    permanentRedirect(`/inventory/${car.slug}`)
+  // Canonicalize on the stock number so each vehicle has exactly one indexable URL
+  if (car.stock && slug !== String(car.stock)) {
+    permanentRedirect(`/inventory/${car.stock}`)
   }
 
   const settings = settingsRows[0] || null
@@ -102,7 +102,7 @@ export default async function VehicleDetailPage({ params }) {
       mileageFromOdometer: { '@type': 'QuantitativeValue', value: Number(car.mileage), unitCode: 'SMI' },
     }),
     ...(images.length && { image: images.map((i) => (i.startsWith('http') ? i : `${SITE}${i}`)) }),
-    url: `${SITE}/inventory/${car.slug || car.stock}`,
+    url: `${SITE}/inventory/${car.stock || car.slug}`,
     offers: {
       '@type': 'Offer',
       price: Number(car.price),

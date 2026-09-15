@@ -18,7 +18,7 @@ export default function CarCard({ car }) {
 
   return (
     <div className={styles.card}>
-      <Link href={`/inventory/${car.slug || car.stock || car.id}`} className={styles.imageWrap}>
+      <Link href={`/inventory/${car.stock || car.slug || car.id}`} className={styles.imageWrap}>
         {(car.isNewArrival || car.newArrival) && car.status !== 'coming_soon' && (
           <span className={styles.newArrivalBadge}>NEW ARRIVAL</span>
         )}
@@ -55,7 +55,7 @@ export default function CarCard({ car }) {
           {car.price ? `$${car.price.toLocaleString()}` : 'Call for Price'}
         </div>
 
-        <Link href={`/inventory/${car.slug || car.stock || car.id}`} className={styles.viewBtn}>
+        <Link href={`/inventory/${car.stock || car.slug || car.id}`} className={styles.viewBtn}>
           VIEW DETAILS
         </Link>
       </div>

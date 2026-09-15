@@ -31,12 +31,12 @@ export default async function sitemap() {
   let dynamics = []
   try {
     const cars = await prisma.$queryRaw`
-      SELECT slug, updatedAt FROM car
+      SELECT stock, slug, id, updatedAt FROM car
       WHERE status IN ('available', 'pending', 'coming_soon')
       ORDER BY createdAt DESC
     `
     dynamics = cars.map((car) => ({
-      url: `${BASE_URL}/inventory/${car.slug}`,
+      url: `${BASE_URL}/inventory/${car.stock || car.slug || car.id}`,
       lastModified: car.updatedAt ?? now,
       changeFrequency: 'weekly',
       priority: 0.8,
