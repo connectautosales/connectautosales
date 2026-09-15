@@ -13,12 +13,75 @@ import { headers } from 'next/headers'
 const outfit = Outfit({ subsets: ['latin'], display: 'swap' })
 
 export const metadata = {
-  title: 'Connect Auto Sales - Quality Used Cars in Dearborn Heights, MI',
-  description: 'Find your dream car at Connect Auto Sales. Quality used vehicles, easy financing, and warranty options in Dearborn Heights, Michigan.',
+  metadataBase: new URL('https://www.connectautosales.com'),
+  title: {
+    default: 'Used Cars for Sale in Dearborn Heights, MI | Connect Auto Sales',
+    template: '%s | Connect Auto Sales',
+  },
+  description: 'Quality used cars, trucks and SUVs for sale in Dearborn Heights, Michigan. Financing available for all credit types, extended warranty options, clean and rebuilt titles.',
+  alternates: { canonical: '/' },
+  openGraph: {
+    type: 'website',
+    siteName: 'Connect Auto Sales',
+    locale: 'en_US',
+    url: '/',
+    title: 'Used Cars for Sale in Dearborn Heights, MI | Connect Auto Sales',
+    description: 'Quality used cars, trucks and SUVs for sale in Dearborn Heights, Michigan. Financing available for all credit types, extended warranty options.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },
+  },
   icons: {
     icon: '/favicon.ico',
     apple: '/favicon.ico',
   },
+}
+
+const businessSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'AutoDealer',
+  '@id': 'https://www.connectautosales.com/#dealer',
+  name: 'Connect Auto Sales',
+  url: 'https://www.connectautosales.com',
+  logo: 'https://www.connectautosales.com/images/logo.png',
+  image: 'https://www.connectautosales.com/images/logo.png',
+  telephone: '+1-313-413-3400',
+  priceRange: '$$',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '4413 S Beech Daly St',
+    addressLocality: 'Dearborn Heights',
+    addressRegion: 'MI',
+    postalCode: '48125',
+    addressCountry: 'US',
+  },
+  geo: { '@type': 'GeoCoordinates', latitude: 42.2917, longitude: -83.2663 },
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+      opens: '10:00',
+      closes: '18:00',
+    },
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: 'Saturday',
+      opens: '10:00',
+      closes: '16:00',
+    },
+  ],
+  sameAs: [
+    'https://facebook.com/connectautosales',
+    'https://instagram.com/connectautosales',
+  ],
+  areaServed: [
+    { '@type': 'City', name: 'Dearborn Heights' },
+    { '@type': 'City', name: 'Dearborn' },
+    { '@type': 'City', name: 'Detroit' },
+    { '@type': 'State', name: 'Michigan' },
+  ],
 }
 
 export default async function RootLayout({ children }) {
@@ -29,6 +92,12 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={outfit.className} suppressHydrationWarning>
+        {!isAdmin && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(businessSchema) }}
+          />
+        )}
         {/* Google Analytics GA4 */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-4BGMGDC39K"
