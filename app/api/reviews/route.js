@@ -100,7 +100,6 @@ export async function GET() {
       reviews,
       rating: live?.rating ?? null,
       count: live?.count ?? null,
-      ...(live?.failed && { syncError: live.failed }),
     })
   } catch (e) {
     console.error('[reviews] route failed —', e.message)
