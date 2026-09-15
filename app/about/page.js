@@ -242,13 +242,15 @@ export default function AboutPage() {
                 <li>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#4285F4"/><path d="M12 6.5c1.38 0 2.63.56 3.54 1.46l2.65-2.65A8.46 8.46 0 0 0 12 3.5c-3.36 0-6.27 1.96-7.72 4.82l3.08 2.39C8.06 8.34 9.9 6.5 12 6.5z" fill="#EA4335"/><path d="M20.5 12c0-.63-.06-1.25-.17-1.84H12v3.5h4.77a4.07 4.07 0 0 1-1.77 2.67l2.78 2.16C19.36 17.07 20.5 14.69 20.5 12z" fill="#4285F4"/><path d="M7.36 14.71A8.5 8.5 0 0 1 3.5 12c0-.97.17-1.9.47-2.78L.89 6.83A11.48 11.48 0 0 0 0 12c0 2.1.56 4.06 1.55 5.75l3.08-2.39-.27-.65z" fill="#FBBC05"/><path d="M12 20.5c2.43 0 4.47-.8 5.96-2.17l-2.78-2.16c-.82.55-1.87.88-3.18.88-2.1 0-3.94-1.84-4.64-3.34l-3.08 2.39C5.73 18.54 8.64 20.5 12 20.5z" fill="#34A853"/></svg>
                   <span>
-                    {googleRating || '4.9'}{' '}
+                    {googleRating ? `${googleRating} ` : ''}
                     {[...Array(5)].map((_, i) => (
-                      <svg key={i} width="13" height="13" viewBox="0 0 24 24" fill="#F59E0B" style={{verticalAlign:'middle'}}>
+                      <svg key={i} width="13" height="13" viewBox="0 0 24 24"
+                        fill={googleRating && i + 1 <= Math.round(googleRating) ? '#F59E0B' : '#E5E7EB'}
+                        style={{verticalAlign:'middle'}}>
                         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                       </svg>
                     ))}{' '}
-                    Google Rating{googleCount ? ` (${googleCount}+ reviews)` : ''}
+                    Google Rating{googleCount ? ` (${googleCount} reviews)` : ''}
                   </span>
                 </li>
               </ul>

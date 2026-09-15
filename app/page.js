@@ -61,16 +61,32 @@ const whyItems = [
   },
 ]
 
-const fallbackReviews = [
-  { id: 'f1', authorName: 'Mike R.', text: 'Great experience! The staff was very helpful and made the whole process easy. Highly recommend Connect Auto Sales!', rating: 5 },
-  { id: 'f2', authorName: 'Sarah M.', text: 'Honest dealership with quality vehicles. They provided all the information needed. Will buy from them again!', rating: 5 },
-  { id: 'f3', authorName: 'Jessica T.', text: 'Financing was quick and easy. The team was professional and answered all my questions.', rating: 5 },
-]
+function StarRating({ value, size = 22 }) {
+  const pct = Math.max(0, Math.min(1, value / 5)) * 100
+  const star = (fill) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={fill}>
+      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+    </svg>
+  )
+  return (
+    <span style={{ position: 'relative', display: 'inline-flex', lineHeight: 0 }}>
+      <span style={{ display: 'inline-flex' }}>
+        {[...Array(5)].map((_, i) => <span key={i}>{star('#E5E7EB')}</span>)}
+      </span>
+      <span
+        style={{ position: 'absolute', inset: 0, width: `${pct}%`, overflow: 'hidden', display: 'inline-flex' }}
+        aria-hidden="true"
+      >
+        {[...Array(5)].map((_, i) => <span key={i}>{star('#F59E0B')}</span>)}
+      </span>
+    </span>
+  )
+}
 
 export default function HomePage() {
   const [featuredCars, setFeaturedCars] = useState([])
-  const [reviews, setReviews]           = useState(fallbackReviews)
-  const [rating, setRating]             = useState(4.9)
+  const [reviews, setReviews]           = useState([])
+  const [rating, setRating]             = useState(null)
   const [reviewCount, setReviewCount]   = useState(null)
   const [reviewPage, setReviewPage]     = useState(0)
   const REVIEWS_PER_PAGE = 3
@@ -179,15 +195,13 @@ export default function HomePage() {
                 REVIEWS <span className={styles.reviewsDash}>—</span>
               </h2>
               <div className={styles.ratingRow}>
-                <span className={styles.ratingNumber}>{rating}</span>
+                {rating != null && <span className={styles.ratingNumber}>{rating}</span>}
                 <div className={styles.ratingStars}>
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} width="22" height="22" viewBox="0 0 24 24" fill="#F59E0B">
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                    </svg>
-                  ))}
+                  <StarRating value={rating ?? 0} />
                 </div>
-                <span className={styles.ratingCount}>Based on {reviewCount ? `${reviewCount}+` : '200+'} reviews</span>
+                {reviewCount != null && (
+                  <span className={styles.ratingCount}>Based on {reviewCount} Google reviews</span>
+                )}
                 <div className={styles.googleBadge}>
                   <svg width="18" height="18" viewBox="0 0 24 24">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>

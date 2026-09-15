@@ -56,7 +56,7 @@ async function fetchFromGoogle(placeId, apiKey) {
   }
 
   console.error('[reviews] Google lookup failed —', attempts.join(' | '))
-  return null
+  return { failed: attempts.join(' | ') }
 }
 
 export async function GET() {
@@ -76,24 +76,31 @@ export async function GET() {
       live = await fetchFromGoogle(settings.googlePlaceId, settings.googleApiKey)
     }
 
+    // Google returns only the few most recent reviews, so add what is new and
+    // keep everything already collected rather than replacing the whole set.
     if (live?.reviews?.length) {
-      await prisma.$executeRaw`DELETE FROM review WHERE source = 'google'`
       for (const r of live.reviews) {
-        await prisma.$executeRaw`
-          INSERT INTO review (authorName, authorPhoto, rating, text, time, source)
-          VALUES (${r.authorName}, ${r.authorPhoto}, ${r.rating}, ${r.text}, ${r.time}, 'google')
+        const existing = await prisma.$queryRaw`
+          SELECT id FROM review WHERE authorName = ${r.authorName} AND time = ${r.time} LIMIT 1
         `
+        if (!existing.length) {
+          await prisma.$executeRaw`
+            INSERT INTO review (authorName, authorPhoto, rating, text, time, source)
+            VALUES (${r.authorName}, ${r.authorPhoto}, ${r.rating}, ${r.text}, ${r.time}, 'google')
+          `
+        }
       }
     }
 
     const reviews = await prisma.$queryRaw`SELECT * FROM review ORDER BY time DESC`
 
-    // Only report a rating Google actually returned. Averaging the handful of
-    // rows we cache locally would overstate both the score and the review count.
+    // Only report a rating Google actually returned. Averaging the rows we
+    // cache locally would overstate both the score and the review count.
     return NextResponse.json({
       reviews,
       rating: live?.rating ?? null,
       count: live?.count ?? null,
+      ...(live?.failed && { syncError: live.failed }),
     })
   } catch (e) {
     console.error('[reviews] route failed —', e.message)
