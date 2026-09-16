@@ -289,3 +289,40 @@
   .statDivider { display: none; }
   .statsBar { display: none; }
 }
+
+/* ── Shop by Body Type ──────────────────────────── */
+.typeNav {
+  padding: 14px 0 0;
+}
+
+.typeNavInner {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+
+.typeNavLabel {
+  font-size: 13px;
+  font-weight: 700;
+  color: #4b5563;
+}
+
+.typeNavLink {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4b5563;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  padding: 7px 16px;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.typeNavLink:hover {
+  background: #fff;
+  border-color: #e50202;
+  color: #e50202;
+}

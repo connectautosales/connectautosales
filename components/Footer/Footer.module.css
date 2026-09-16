@@ -185,3 +185,47 @@
     gap: 16px;
   }
 }
+
+/* ── Shop by Body Type ──────────────────────────── */
+.bodyTypeRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  padding: 0 0 28px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 24px;
+}
+
+.bodyTypeLabel {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: rgba(255, 255, 255, 0.55);
+  text-transform: uppercase;
+}
+
+.bodyTypeLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.bodyTypeLink {
+  display: inline-block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 6px 14px;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.bodyTypeLink:hover {
+  color: #fff;
+  background: rgba(229, 2, 2, 0.18);
+  border-color: #e50202;
+}

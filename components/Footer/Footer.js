@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useSettings } from '@/context/SettingsContext'
 import { useState, useEffect } from 'react'
+import { BODY_TYPES } from '@/lib/bodyTypes'
 import styles from './Footer.module.css'
 
 const quickLinks = [
@@ -134,6 +135,17 @@ export default function Footer() {
             </div>
           </div>
 
+        </div>
+
+        <div className={styles.bodyTypeRow}>
+          <span className={styles.bodyTypeLabel}>Shop by body type:</span>
+          <div className={styles.bodyTypeLinks}>
+            {Object.entries(BODY_TYPES).map(([slug, t]) => (
+              <Link key={slug} href={`/body-type/${slug}`} className={styles.bodyTypeLink}>
+                {t.label}
+              </Link>
+            ))}
+          </div>
         </div>
 
         <div className={styles.footerBottom}>

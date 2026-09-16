@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect } from 'react'
 import CarCard from '@/components/CarCard/CarCard'
 import styles from './page.module.css'
 import Link from 'next/link'
+import { BODY_TYPES } from '@/lib/bodyTypes'
 
 export default function InventoryClient({ cars }) {
   const [search, setSearch] = useState('')
@@ -89,6 +90,19 @@ export default function InventoryClient({ cars }) {
                 <option value="mileage-asc">Mileage: Lowest First</option>
               </select>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.typeNav}>
+        <div className="container">
+          <div className={styles.typeNavInner}>
+            <span className={styles.typeNavLabel}>Shop by type:</span>
+            {Object.entries(BODY_TYPES).map(([slug, t]) => (
+              <Link key={slug} href={`/body-type/${slug}`} className={styles.typeNavLink}>
+                {t.label}
+              </Link>
+            ))}
           </div>
         </div>
       </section>
