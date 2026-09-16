@@ -33,7 +33,7 @@ export default function CarCard({ car }) {
             src={imgSrc}
             alt={`${car.year} ${car.make} ${car.model}`}
             fill
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 20vw"
             style={{ objectFit: 'contain' }}
           />
         ) : (
