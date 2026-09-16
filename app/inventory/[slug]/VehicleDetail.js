@@ -244,8 +244,9 @@ export default function VehicleDetail({ car, settings }) {
                       src={currentPhoto}
                       alt={`${car.year} ${car.make} ${car.model}`}
                       fill
+                      sizes="(max-width: 1024px) 100vw, 60vw"
+                      priority
                       style={{ objectFit: 'contain' }}
-                      unoptimized
                     />
                   ) : (
                     <div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:'100%' }}>
@@ -308,7 +309,7 @@ export default function VehicleDetail({ car, settings }) {
                           className={`${styles.thumb} ${photoIndex === i ? styles.thumbActive : ''}`}
                           onClick={() => setPhotoIndex(i)}
                         >
-                          <Image src={src} alt="" fill style={{ objectFit: 'cover' }} unoptimized />
+                          <Image src={src} alt="" fill sizes="80px" style={{ objectFit: 'cover' }} />
                         </button>
                       ))}
                     </div>
@@ -397,7 +398,7 @@ export default function VehicleDetail({ car, settings }) {
                         style={{ cursor: 'zoom-in' }}
                         onClick={() => openLightbox(damagePhotos, i)}
                       >
-                        <Image src={photo} alt={`Damage photo ${i + 1}`} fill style={{ objectFit: 'cover' }} unoptimized />
+                        <Image src={photo} alt={`Damage photo ${i + 1}`} fill sizes="(max-width: 640px) 50vw, 200px" style={{ objectFit: 'cover' }} />
                       </div>
                     ))}
                   </div>
