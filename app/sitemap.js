@@ -12,6 +12,7 @@ const staticRoutes = [
   { url: '/salvage-inspections',priority: 0.7,  changeFrequency: 'monthly' },
   { url: '/buy-direct',         priority: 0.7,  changeFrequency: 'monthly' },
   { url: '/transportation',     priority: 0.7,  changeFrequency: 'monthly' },
+  { url: '/buy-here-pay-here',  priority: 0.8,  changeFrequency: 'monthly' },
   { url: '/rebuilt-title',      priority: 0.6,  changeFrequency: 'monthly' },
   { url: '/contact',            priority: 0.6,  changeFrequency: 'monthly' },
   { url: '/about',              priority: 0.5,  changeFrequency: 'monthly' },

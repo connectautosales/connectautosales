@@ -1,0 +1,297 @@
+.hero {
+  background: #020300;
+  padding: 36px 0 32px;
+  text-align: center;
+}
+
+.heroLabel {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #e50202;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.heroTitle {
+  font-size: clamp(26px, 3.6vw, 42px);
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 1px;
+  margin: 0 0 14px;
+}
+
+.heroSub {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.7;
+  margin: 0 auto 22px;
+  max-width: 620px;
+}
+
+.heroActions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ── Intro ──────────────────────────────────────── */
+.intro {
+  padding: 40px 0 8px;
+}
+
+.introGrid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.sectionTitle {
+  font-size: 19px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  color: #020300;
+  margin: 0 0 10px;
+}
+
+.titleLine {
+  width: 48px;
+  height: 3px;
+  background: #e50202;
+  margin-bottom: 18px;
+}
+
+.body {
+  font-size: 14.5px;
+  color: #4b5563;
+  line-height: 1.85;
+  margin: 0 0 16px;
+}
+
+.sideCard {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 22px;
+}
+
+.sideTitle {
+  font-size: 15px;
+  font-weight: 800;
+  color: #020300;
+  margin: 0 0 14px;
+}
+
+.checkList {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+}
+
+.checkList li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.6;
+  margin-bottom: 9px;
+}
+
+.checkList li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #e50202;
+}
+
+.sideNote {
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.7;
+  margin: 0;
+  padding-top: 14px;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* ── Steps ──────────────────────────────────────── */
+.steps {
+  padding: 34px 0 8px;
+}
+
+.stepGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.step {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 22px 20px;
+}
+
+.stepNum {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e50202;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.stepTitle {
+  font-size: 15px;
+  font-weight: 800;
+  color: #020300;
+  margin: 0 0 8px;
+}
+
+.stepBody {
+  font-size: 13.5px;
+  color: #4b5563;
+  line-height: 1.75;
+  margin: 0;
+}
+
+/* ── FAQ ────────────────────────────────────────── */
+.faqSection {
+  padding: 34px 0 40px;
+}
+
+.faqList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 22px 40px;
+}
+
+.faqItem {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 16px;
+}
+
+.faqQ {
+  font-size: 15px;
+  font-weight: 800;
+  color: #020300;
+  margin: 0 0 8px;
+}
+
+.faqA {
+  font-size: 13.5px;
+  color: #4b5563;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* ── CTA ────────────────────────────────────────── */
+.ctaBand {
+  background: #fff8f8;
+  border-top: 1px solid #fecdd3;
+  border-bottom: 1px solid #fecdd3;
+  padding: 32px 0;
+}
+
+.ctaInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+
+.ctaTitle {
+  font-size: 19px;
+  font-weight: 800;
+  color: #020300;
+  margin: 0 0 8px;
+}
+
+.ctaText {
+  font-size: 13.5px;
+  color: #4b5563;
+  line-height: 1.7;
+  margin: 0;
+  max-width: 540px;
+}
+
+.ctaActions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ── Buttons ────────────────────────────────────── */
+.primaryBtn {
+  display: inline-block;
+  background: #e50202;
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 13px 26px;
+  border-radius: 5px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.primaryBtn:hover {
+  background: #c40101;
+}
+
+.secondaryBtn {
+  display: inline-block;
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 13px 26px;
+  border-radius: 5px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.secondaryBtn:hover {
+  border-color: #e50202;
+  background: rgba(229, 2, 2, 0.12);
+}
+
+.ctaActions .secondaryBtn {
+  background: #fff;
+  color: #020300;
+  border-color: #d1d5db;
+}
+
+.ctaActions .secondaryBtn:hover {
+  border-color: #e50202;
+  color: #e50202;
+}
+
+@media (max-width: 860px) {
+  .introGrid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+
+@media (max-width: 640px) {
+  .ctaInner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

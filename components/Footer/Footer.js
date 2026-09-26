@@ -10,6 +10,7 @@ const quickLinks = [
   { label: 'Home',                href: '/' },
   { label: 'Inventory',           href: '/inventory' },
   { label: 'Financing',           href: '/financing' },
+  { label: 'Buy Here Pay Here',   href: '/buy-here-pay-here' },
   { label: 'Warranty',            href: '/warranty' },
   { label: 'Auction Services',    href: '/auction-services' },
   { label: 'Salvage Inspections', href: '/salvage-inspections' },
