@@ -56,6 +56,10 @@ export default function Hero() {
   }, [next])
 
   const slide = slides[current]
+  // Only the first slide carries the page heading. The others are decorative
+  // slider copy, and letting them become the h1 every five seconds would leave
+  // the page without one stable heading.
+  const Heading = current === 0 ? 'h1' : 'div'
 
   return (
     <section className={styles.hero}>
@@ -80,7 +84,7 @@ export default function Hero() {
       {/* Content */}
       <div className={styles.content}>
         <div className={styles.redLine} />
-        <h1 className={styles.title}>
+        <Heading className={styles.title}>
           {slide.title.map((word, i) => (
             <span
               key={i}
@@ -89,7 +93,7 @@ export default function Hero() {
               {word}{i < slide.title.length - 1 ? ' ' : ''}
             </span>
           ))}
-        </h1>
+        </Heading>
         <Link href={slide.btn.href} className={styles.btn}>
           {slide.btn.text}
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">

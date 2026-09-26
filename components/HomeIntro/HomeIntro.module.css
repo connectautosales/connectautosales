@@ -129,3 +129,39 @@
     gap: 30px;
   }
 }
+
+/* ── FAQ ────────────────────────────────────────── */
+.faqBlock {
+  margin-top: 44px;
+  padding-top: 36px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.faqHeading {
+  font-size: clamp(17px, 2vw, 21px);
+  font-weight: 900;
+  letter-spacing: 0.3px;
+  color: #020300;
+  margin: 0 0 10px;
+}
+
+.faqGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 24px 44px;
+  margin-top: 6px;
+}
+
+.faqQ {
+  font-size: 15px;
+  font-weight: 800;
+  color: #020300;
+  margin: 0 0 8px;
+}
+
+.faqA {
+  font-size: 13.5px;
+  color: #4b5563;
+  line-height: 1.8;
+  margin: 0;
+}
