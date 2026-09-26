@@ -50,6 +50,7 @@ export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [errors, setErrors] = useState({})
+  const [submitError, setSubmitError] = useState('')
 
   const phoneRe = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/
   const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -69,6 +70,7 @@ export default function ContactPage() {
     if (form.phone.trim() && !phoneRe.test(form.phone.trim())) errs.phone = 'Enter a valid phone number.'
     if (Object.keys(errs).length) { setErrors(errs); scrollToFirstError(errs); return }
     setSubmitting(true)
+    setSubmitError('')
     try {
       const recaptchaToken = await getToken('contact')
       const res = await fetch('/api/contact', {
@@ -77,7 +79,13 @@ export default function ContactPage() {
         body: JSON.stringify({ ...form, recaptchaToken }),
       })
       if (!res.ok) throw new Error('Failed')
-    } catch {}
+    } catch {
+      // Keep what they typed so they can retry, and never report a send that
+      // did not happen — the message would be lost and counted as a lead.
+      setSubmitting(false)
+      setSubmitError('Your message could not be sent. Please try again, or call us at (313) 413-3400.')
+      return
+    }
     setSubmitting(false)
     setSubmitted(true)
     trackEvent('contact_submit')
@@ -290,6 +298,12 @@ export default function ContactPage() {
                     </div>
                     {errors.message && <span className={styles.fieldError}>{errors.message}</span>}
                   </div>
+
+                  {submitError && (
+                    <div style={{background:'#fef2f2',border:'1px solid #fecaca',borderRadius:6,padding:'12px 16px',marginBottom:12,fontSize:13,color:'#991b1b',fontWeight:500,textAlign:'center'}}>
+                      {submitError}
+                    </div>
+                  )}
 
                   <button type="submit" className={styles.submitBtn} disabled={submitting}>
                     {submitting

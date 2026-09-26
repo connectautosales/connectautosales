@@ -253,7 +253,7 @@ export default function FinancingPage() {
         const top = el.getBoundingClientRect().top + window.pageYOffset - 80
         window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
       }, 100)
-    } catch {
+    } catch (err) {
       setSubmitError(err?.message || 'Something went wrong. Please try again.')
     } finally {
       setSubmitting(false)
