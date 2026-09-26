@@ -3,6 +3,10 @@ import { BODY_TYPES } from '@/lib/bodyTypes'
 
 const BASE_URL = 'https://www.connectautosales.com'
 
+// Inventory turns over during the week, so regenerate rather than freezing the
+// vehicle list at build time.
+export const revalidate = 3600
+
 const staticRoutes = [
   { url: '/',                   priority: 1.0,  changeFrequency: 'weekly' },
   { url: '/inventory',          priority: 0.9,  changeFrequency: 'daily'  },
