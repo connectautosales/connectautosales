@@ -271,7 +271,7 @@ export default function FinancingPage() {
       <section className={styles.hero}>
         <div className={styles.heroOverlay} />
         <div className={styles.heroContent}>
-          <h1>FINANCING <span className={styles.red}>MADE EASY</span></h1>
+          <h1>AUTO FINANCING IN DEARBORN HEIGHTS <span className={styles.red}>ALL CREDIT WELCOME</span></h1>
           <p>Simple process. Fast approvals. Drive home today.</p>
         </div>
       </section>

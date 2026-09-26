@@ -47,7 +47,7 @@ export default function InventoryClient({ cars }) {
     <>
       <section className={styles.hero}>
         <div className="container">
-          <h1 className={styles.heroTitle}>BROWSE OUR INVENTORY</h1>
+          <h1 className={styles.heroTitle}>USED CARS, TRUCKS &amp; SUVS FOR SALE IN DEARBORN HEIGHTS</h1>
           <p className={styles.heroSub}>Quality pre-owned vehicles with financing &amp; warranty options available.</p>
         </div>
       </section>

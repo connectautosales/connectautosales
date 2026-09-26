@@ -93,7 +93,7 @@ export default function ContactPage() {
         <div className={styles.heroOverlay} />
         <div className="container">
           <p className={styles.heroLabel}>CONNECT AUTO SALES</p>
-          <h1 className={styles.heroTitle}>CONTACT <span>US</span></h1>
+          <h1 className={styles.heroTitle}>CONTACT CONNECT AUTO SALES <span>DEARBORN HEIGHTS, MI</span></h1>
           <p className={styles.heroSub}>We&apos;re here to help — reach out anytime.</p>
         </div>
       </section>
