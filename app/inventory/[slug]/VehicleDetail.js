@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import styles from './page.module.css'
 import TestDriveModal from '@/app/components/TestDriveModal'
+import { trackEvent, vehicleParams } from '@/lib/analytics'
 
 function parseImages(val) {
   if (!val) return []
@@ -370,15 +371,15 @@ export default function VehicleDetail({ car, settings }) {
               })()}
 
               <div className={styles.ctaRow}>
-                <a href={`tel:${phone}`} className={styles.ctaCall}>
+                <a href={`tel:${phone}`} className={styles.ctaCall} onClick={() => trackEvent('phone_click', { location: 'vehicle_detail', ...vehicleParams(car) })}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.58 3.44 2 2 0 0 1 3.56 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.5a16 16 0 0 0 5.55 5.55l.86-.86a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                   CALL (313) 413-3400
                 </a>
-                <a href={`sms:${phone}`} className={styles.ctaText}>
+                <a href={`sms:${phone}`} className={styles.ctaText} onClick={() => trackEvent('sms_click', { location: 'vehicle_detail', ...vehicleParams(car) })}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                   TEXT US
                 </a>
-                <button onClick={() => setTestDriveOpen(true)} className={styles.ctaSchedule}>
+                <button onClick={() => { trackEvent('test_drive_click', vehicleParams(car)); setTestDriveOpen(true) }} className={styles.ctaSchedule}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                   SCHEDULE A TEST DRIVE
                 </button>
@@ -484,11 +485,11 @@ export default function VehicleDetail({ car, settings }) {
                 )}
 
                 <div className={styles.contactQuick}>
-                  <a href={`tel:${phone}`} className={styles.quickCall}>
+                  <a href={`tel:${phone}`} className={styles.quickCall} onClick={() => trackEvent('phone_click', { location: 'vehicle_sticky', ...vehicleParams(car) })}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.58 3.44 2 2 0 0 1 3.56 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.5a16 16 0 0 0 5.55 5.55l.86-.86a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                     (313) 413-3400
                   </a>
-                  <a href={`sms:${phone}`} className={styles.quickText}>
+                  <a href={`sms:${phone}`} className={styles.quickText} onClick={() => trackEvent('sms_click', { location: 'vehicle_sticky', ...vehicleParams(car) })}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                     Text Us
                   </a>

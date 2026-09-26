@@ -4,6 +4,7 @@ import { useState, useRef } from 'react'
 import Link from 'next/link'
 import { useRecaptcha } from '@/hooks/useRecaptcha'
 import styles from './page.module.css'
+import { trackEvent } from '@/lib/analytics'
 
 const US_STATES = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming']
 const YEARS_AT  = ['0','1','2','3','4','5','6','7','8','9','10+']
@@ -101,6 +102,7 @@ export default function FinancingPage() {
   const { getToken } = useRecaptcha()
   const successRef = useRef(null)
   const [step, setStep]         = useState(1)
+  const startTracked            = useRef(false)
   const [openFaq, setOpenFaq]   = useState(null)
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -210,6 +212,10 @@ export default function FinancingPage() {
     const errs = validateStep(step)
     if (Object.keys(errs).length) { setErrors(errs); scrollToFirstError(errs); return }
     setErrors({})
+    if (step === 1 && !startTracked.current) {
+      startTracked.current = true
+      trackEvent('finance_start')
+    }
     setStep(s => s + 1)
     setTimeout(scrollToForm, 50)
   }
@@ -238,6 +244,7 @@ export default function FinancingPage() {
       }
       setSubmitError('')
       setSubmitted(true)
+      trackEvent('finance_submit')
       if (typeof fbq !== 'undefined') { fbq('track', 'Lead'); fbq('track', 'SubmitApplication') }
       setTimeout(() => {
         const el = successRef.current

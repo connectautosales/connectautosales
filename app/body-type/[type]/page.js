@@ -132,13 +132,16 @@ export default async function BodyTypePage({ params }) {
 
       <section className={styles.browseMore}>
         <div className="container">
-          <h2 className={styles.browseTitle}>BROWSE BY BODY TYPE</h2>
+          <h2 className={styles.browseTitle}>
+            <Link href="/body-type" className={styles.browseTitleLink}>BROWSE BY BODY TYPE</Link>
+          </h2>
           <div className={styles.browseLinks}>
             {others.map(([slug, o]) => (
               <Link key={slug} href={`/body-type/${slug}`} className={styles.browseLink}>
                 {o.label}
               </Link>
             ))}
+            <Link href="/used-cars-under-10000" className={styles.browseLink}>Under $10,000</Link>
             <Link href="/inventory" className={styles.browseLink}>All Inventory</Link>
           </div>
         </div>

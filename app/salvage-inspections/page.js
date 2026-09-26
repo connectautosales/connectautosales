@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useRecaptcha } from '@/hooks/useRecaptcha';
 import { useFormScroll } from '@/hooks/useFormScroll';
 import styles from './page.module.css';
+import { trackEvent } from '@/lib/analytics'
 
 const faqs = [
   { q: 'Do I need an appointment?', a: 'Yes. An appointment is required. Please submit your documents through the website first. Connect Auto Sales will review your paperwork and contact you with an available inspection date and time.' },
@@ -204,6 +205,7 @@ export default function SalvageInspectionsPage() {
         throw new Error(errData.error || 'Submission failed. Please try again.');
       }
       setSubmitted(true);
+      trackEvent('inspection_request')
       if (typeof fbq !== 'undefined') { fbq('track', 'Lead'); fbq('track', 'SubmitApplication') }
       setSubmitError('');
       setErrors({});

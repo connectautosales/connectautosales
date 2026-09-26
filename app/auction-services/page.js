@@ -3,6 +3,7 @@ import { useState, useRef } from 'react';
 import { useRecaptcha } from '@/hooks/useRecaptcha';
 import { useFormScroll } from '@/hooks/useFormScroll';
 import styles from './page.module.css';
+import { trackEvent } from '@/lib/analytics'
 
 const steps = [
   {
@@ -181,6 +182,7 @@ export default function AuctionServicesPage() {
       });
       if (!res.ok) throw new Error('Failed');
       setSubmitted(true);
+      trackEvent('auction_request')
       if (typeof fbq !== 'undefined') fbq('track', 'Lead')
       setForm({ firstName: '', lastName: '', phone: '', email: '', auctionLink: '', lotNumber: '', notes: '' });
       setErrors({});

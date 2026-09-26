@@ -6,6 +6,7 @@ import { useSettings } from '@/context/SettingsContext'
 import { useRecaptcha } from '@/hooks/useRecaptcha'
 import { useFormScroll } from '@/hooks/useFormScroll'
 import styles from './page.module.css'
+import { trackEvent } from '@/lib/analytics'
 
 const faqs = [
   {
@@ -79,6 +80,7 @@ export default function ContactPage() {
     } catch {}
     setSubmitting(false)
     setSubmitted(true)
+    trackEvent('contact_submit')
     if (typeof fbq !== 'undefined') fbq('track', 'Lead')
     setForm({ firstName: '', phone: '', email: '', topic: '', message: '' })
     setErrors({})
@@ -102,7 +104,7 @@ export default function ContactPage() {
       <section className={styles.contactCards}>
         <div className="container">
           <div className={styles.cardsGrid}>
-            <a href={`tel:${phone}`} className={styles.card}>
+            <a href={`tel:${phone}`} className={styles.card} onClick={() => trackEvent('phone_click', { location: 'contact_card' })}>
               <div className={styles.cardIcon}>
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
@@ -112,7 +114,7 @@ export default function ContactPage() {
               <div className={styles.cardValue}>{phone.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3')}</div>
             </a>
 
-            <a href={`sms:${phone}`} className={styles.card}>
+            <a href={`sms:${phone}`} className={styles.card} onClick={() => trackEvent('sms_click', { location: 'contact_card' })}>
               <div className={styles.cardIcon}>
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>

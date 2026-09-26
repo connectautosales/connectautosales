@@ -232,3 +232,12 @@
     gap: 14px;
   }
 }
+
+.browseTitleLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.browseTitleLink:hover {
+  color: #e50202;
+}
