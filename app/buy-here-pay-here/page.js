@@ -17,15 +17,15 @@ export const metadata = {
 const steps = [
   {
     title: 'Tell us your situation',
-    body: 'Call us or start an application online. We will ask about your income, how much you have to put down, and what you are looking for in a vehicle.',
+    body: "Call us or start an application online. We'll ask about your income, what you have to put down, and what you're looking for in a vehicle.",
   },
   {
     title: 'We find the right path',
-    body: 'Most buyers go through our outside lender network, which often means better terms. For some buyers and some vehicles, in-house financing is the better fit. We will tell you honestly which one applies to you.',
+    body: "In-house financing works for some buyers and some vehicles. For others, our outside lender network gets better terms. We'll tell you straight which one fits you.",
   },
   {
     title: 'Pick your vehicle',
-    body: 'Once we know your budget, we will show you what you can actually get approved on, instead of vehicles that waste your time.',
+    body: "Once we know your budget, we'll point you at the vehicles you can actually get approved on, so you spend your time on real options.",
   },
   {
     title: 'Drive it home',
@@ -40,11 +40,11 @@ const faqs = [
   },
   {
     q: 'Do you work with bad credit?',
-    a: 'Yes. We work with buyers across all credit situations, including bad credit, no credit and first-time buyers. Many of them are approved through our outside lender network rather than in-house financing.',
+    a: 'Yes. We work with buyers across all credit situations, including bad credit, no credit and first-time buyers. Some are approved in-house, and many go through our outside lender network, which often gets better terms.',
   },
   {
     q: 'What do I need to bring?',
-    a: 'A valid driver license, proof of income, proof of residence and proof of insurance. Call us first and we will confirm exactly what applies to your situation.',
+    a: "A valid driver license, proof of income, proof of residence and proof of insurance. Call us first and we'll confirm exactly what applies to your situation.",
   },
   {
     q: 'Can I get financing on a rebuilt title vehicle?',
@@ -52,7 +52,7 @@ const faqs = [
   },
   {
     q: 'How do I find out what I qualify for?',
-    a: 'Call (313) 413-3400 or submit a financing application. We will go through your options with you before you come in.',
+    a: "Call (313) 413-3400 or submit a financing application. We'll go through your options with you before you come in.",
   },
 ]
 
@@ -96,20 +96,21 @@ export default function BuyHerePayHerePage() {
               <h2 className={styles.sectionTitle}>HOW FINANCING WORKS HERE</h2>
               <div className={styles.titleLine} />
               <p className={styles.body}>
-                Most buyers who walk through our door get financed through our outside lender
-                network. That is usually the better deal, and it is where we start. For some
-                buyers and some vehicles, in-house financing makes more sense, and we offer
-                that on select vehicles for qualified buyers.
+                We offer in-house financing on select vehicles for qualified buyers. We also
+                work with an outside lender network, which often gets you better terms than
+                financing through the dealership. Which one makes sense depends on your
+                situation, and we&apos;ll tell you which is which.
               </p>
               <p className={styles.body}>
-                We are not going to pretend everyone qualifies for everything. Tell us your
-                income and what you can put down, and we will tell you straight which vehicles
-                are realistic for you. That saves you a trip and saves us both time.
+                Tell us your income and what you can put down, and we&apos;ll show you what
+                you can realistically get approved on before you drive out here. One phone
+                call usually settles it.
               </p>
               <p className={styles.body}>
                 We serve Dearborn Heights, Dearborn, Detroit and the surrounding Metro Detroit
                 area, and we work with buyers who have bad credit, no credit history, or are
-                buying their first vehicle.
+                buying their first vehicle. Our inventory runs from around $4,000 up, with
+                clean and rebuilt titles available.
               </p>
             </div>
             <div className={styles.sideCard}>
@@ -122,8 +123,8 @@ export default function BuyHerePayHerePage() {
                 <li>Whatever you plan to put down</li>
               </ul>
               <p className={styles.sideNote}>
-                Not sure if you have everything? Call first and we will tell you what applies to
-                your situation before you drive out.
+                Not sure you have everything? Call first and we&apos;ll tell you what actually
+                applies to your situation.
               </p>
             </div>
           </div>
@@ -167,8 +168,8 @@ export default function BuyHerePayHerePage() {
             <div>
               <h2 className={styles.ctaTitle}>Find out what you qualify for</h2>
               <p className={styles.ctaText}>
-                One phone call tells you more than an hour of guessing. We will go through your
-                options before you come in.
+                One phone call tells you more than an hour of guessing. We&apos;ll go through
+                your options before you come in.
               </p>
             </div>
             <div className={styles.ctaActions}>
