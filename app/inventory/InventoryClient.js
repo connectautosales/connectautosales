@@ -103,6 +103,7 @@ export default function InventoryClient({ cars }) {
                 {t.label}
               </Link>
             ))}
+            <Link href="/used-cars-under-10000" className={styles.typeNavLink}>Under $10,000</Link>
           </div>
         </div>
       </section>

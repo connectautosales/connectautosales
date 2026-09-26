@@ -96,6 +96,7 @@ export default function HomeIntro() {
               <Link href="/body-type/truck" className={styles.chip}>Trucks</Link>
               <Link href="/body-type/van" className={styles.chip}>Vans &amp; Minivans</Link>
               <Link href="/body-type/hatchback" className={styles.chip}>Hatchbacks</Link>
+              <Link href="/used-cars-under-10000" className={styles.chip}>Under $10,000</Link>
             </div>
 
             <div className={styles.divider} />
