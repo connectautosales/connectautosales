@@ -1,0 +1,131 @@
+.section {
+  padding: 44px 0 40px;
+  background: #ffffff;
+  border-top: 1px solid #f0f1f3;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.7fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.title {
+  font-size: clamp(18px, 2.2vw, 23px);
+  font-weight: 900;
+  letter-spacing: 0.3px;
+  color: #020300;
+  margin: 0 0 10px;
+}
+
+.line {
+  width: 48px;
+  height: 3px;
+  background: #e50202;
+  margin-bottom: 20px;
+}
+
+.sub {
+  font-size: 16px;
+  font-weight: 800;
+  color: #020300;
+  margin: 26px 0 10px;
+}
+
+.body {
+  font-size: 14.5px;
+  color: #4b5563;
+  line-height: 1.85;
+  margin: 0 0 14px;
+}
+
+.link {
+  color: #e50202;
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(229, 2, 2, 0.3);
+  transition: border-color 0.2s;
+}
+
+.link:hover {
+  border-bottom-color: #e50202;
+}
+
+/* ── Sidebar ────────────────────────────────────── */
+.side {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 24px 22px;
+}
+
+.sideTitle {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  color: #020300;
+  margin: 0 0 14px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4b5563;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  padding: 7px 15px;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.chip:hover {
+  border-color: #e50202;
+  color: #e50202;
+}
+
+.divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 22px 0;
+}
+
+.sideText {
+  font-size: 13.5px;
+  color: #4b5563;
+  line-height: 1.75;
+  margin: 0 0 14px;
+}
+
+.callBtn {
+  display: block;
+  text-align: center;
+  background: #e50202;
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 12px 18px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.callBtn:hover {
+  background: #c40101;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+}

@@ -9,8 +9,8 @@ const slides = [
   {
     image: '/images/banner-1.webp',
     label: 'Quality Pre-Owned Vehicles',
-    title: ['QUALITY', 'PRE-OWNED', 'VEHICLES'],
-    titleColors: ['white', 'red', 'white'],
+    title: ['QUALITY USED CARS', 'IN DEARBORN HEIGHTS'],
+    titleColors: ['white', 'red'],
     btn: { text: 'BROWSE INVENTORY', href: '/inventory' },
   },
   {
@@ -86,7 +86,7 @@ export default function Hero() {
               key={i}
               className={slide.titleColors[i] === 'red' ? styles.red : styles.white}
             >
-              {word}
+              {word}{i < slide.title.length - 1 ? ' ' : ''}
             </span>
           ))}
         </h1>

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import Hero from '@/components/Hero/Hero'
+import HomeIntro from '@/components/HomeIntro/HomeIntro'
 import CarCard from '@/components/CarCard/CarCard'
 import styles from './page.module.css'
 
@@ -184,6 +185,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <HomeIntro />
 
       {/* ── Reviews ───────────────────────────── */}
       <section className={styles.reviewsSection}>
