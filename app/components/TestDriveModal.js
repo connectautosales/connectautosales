@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import { useRecaptcha } from '@/hooks/useRecaptcha'
+import { trackEvent, trackLead } from '@/lib/analytics'
 import styles from './TestDriveModal.module.css'
 
 const phoneRe = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/
@@ -79,6 +80,8 @@ export default function TestDriveModal({ isOpen, onClose, vehicle = '' }) {
       })
       if (!res.ok) throw new Error()
       setSubmitted(true)
+      trackEvent('test_drive_submit', { vehicle_name: vehicle })
+      trackLead('test_drive', { vehicle_name: vehicle })
       if (typeof fbq !== 'undefined') fbq('track', 'Lead')
       setTimeout(() => {
         const el = successRef.current

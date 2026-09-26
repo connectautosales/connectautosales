@@ -6,7 +6,7 @@ import { useSettings } from '@/context/SettingsContext'
 import { useRecaptcha } from '@/hooks/useRecaptcha'
 import { useFormScroll } from '@/hooks/useFormScroll'
 import styles from './page.module.css'
-import { trackEvent } from '@/lib/analytics'
+import { trackEvent, trackLead } from '@/lib/analytics'
 
 const faqs = [
   {
@@ -81,6 +81,7 @@ export default function ContactPage() {
     setSubmitting(false)
     setSubmitted(true)
     trackEvent('contact_submit')
+    trackLead('contact')
     if (typeof fbq !== 'undefined') fbq('track', 'Lead')
     setForm({ firstName: '', phone: '', email: '', topic: '', message: '' })
     setErrors({})
