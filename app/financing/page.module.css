@@ -406,6 +406,9 @@
   line-height: 1.65;
   padding-bottom: 14px;
   margin: 0;
+  max-height: 600px;
+  opacity: 1;
+  transition: max-height .25s ease, opacity .2s ease, padding-bottom .25s ease;
 }
 
 /* ── Success ── */
@@ -474,4 +477,12 @@
 .inputError {
   border-color: #c00 !important;
   background: #fff5f5 !important;
+}
+
+.faqACollapsed {
+  max-height: 0;
+  overflow: hidden;
+  padding-bottom: 0;
+  opacity: 0;
+  transition: max-height .25s ease, opacity .2s ease, padding-bottom .25s ease;
 }

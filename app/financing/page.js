@@ -265,8 +265,22 @@ export default function FinancingPage() {
     )
   }
 
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: FAQS.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  }
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       {/* Hero */}
       <section className={styles.hero}>
         <div className={styles.heroOverlay} />
@@ -741,7 +755,7 @@ export default function FinancingPage() {
                       {openFaq === i ? <line x1="5" y1="12" x2="19" y2="12"/> : <><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></>}
                     </svg>
                   </button>
-                  {openFaq === i && <p className={styles.faqA}>{f.a}</p>}
+                  <p className={`${styles.faqA} ${openFaq === i ? '' : styles.faqACollapsed}`}>{f.a}</p>
                 </div>
               ))}
             </div>
