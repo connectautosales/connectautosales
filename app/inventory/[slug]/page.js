@@ -1,10 +1,18 @@
+import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { notFound, permanentRedirect } from 'next/navigation'
+import CarCard from '@/components/CarCard/CarCard'
+import { BODY_TYPES } from '@/lib/bodyTypes'
 import VehicleDetail from './VehicleDetail'
+import styles from './page.module.css'
 
 const SITE = 'https://www.connectautosales.com'
 
-async function getCar(slug) {
+// Only these statuses are public. Sold and hidden vehicles must 404 — the
+// client does not want sold inventory visible anywhere on the site.
+const LIVE = ['available', 'pending', 'coming_soon']
+
+async function findCar(slug) {
   // Try by stock first (works for numeric and alphanumeric like "1755A")
   const byStock = await prisma.$queryRawUnsafe(`SELECT * FROM car WHERE stock = ? LIMIT 1`, slug)
   if (byStock[0]) return byStock[0]
@@ -16,6 +24,34 @@ async function getCar(slug) {
   // Fall back to slug column
   const rows = await prisma.$queryRaw`SELECT * FROM car WHERE slug = ${slug} LIMIT 1`
   return rows[0] || null
+}
+
+async function getCar(slug) {
+  const car = await findCar(slug)
+  return car && LIVE.includes(car.status) ? car : null
+}
+
+// Other live vehicles to link from this page: same body type first, then
+// nearest in price. Gives every vehicle page crawlable links to the rest of
+// the inventory, which previously only the listing pages provided.
+async function getSimilar(car) {
+  try {
+    const rows = await prisma.$queryRawUnsafe(
+      `SELECT * FROM car WHERE status IN (${LIVE.map(() => '?').join(',')}) AND id <> ?
+       ORDER BY (type = ?) DESC, ABS(price - ?) ASC LIMIT 4`,
+      ...LIVE,
+      car.id,
+      car.type || '',
+      Number(car.price) || 0
+    )
+    return JSON.parse(JSON.stringify(rows, (_, v) => (typeof v === 'bigint' ? Number(v) : v)))
+  } catch {
+    return []
+  }
+}
+
+function bodyTypeFor(type) {
+  return Object.entries(BODY_TYPES).find(([, cfg]) => cfg.types.includes(type)) || null
 }
 
 function carName(car) {
@@ -79,6 +115,8 @@ export default async function VehicleDetailPage({ params }) {
   }
 
   const settings = settingsRows[0] || null
+  const similar = await getSimilar(car)
+  const bodyType = bodyTypeFor(car.type)
 
   const serialized = JSON.parse(JSON.stringify(car, (_, v) =>
     typeof v === 'bigint' ? Number(v) : v
@@ -120,6 +158,23 @@ export default async function VehicleDetailPage({ params }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
       <VehicleDetail car={serialized} settings={settings} />
+      {similar.length > 0 && (
+        <section className={styles.similarSection}>
+          <div className="container">
+            <h2 className={styles.sectionTitle}>Similar Vehicles</h2>
+            <div className={styles.sectionLine} />
+            <div className={styles.similarGrid}>
+              {similar.map((c) => <CarCard key={c.id} car={c} />)}
+            </div>
+            <div className={styles.similarLinks}>
+              {bodyType && (
+                <Link href={`/body-type/${bodyType[0]}`}>All used {bodyType[1].label.toLowerCase()}</Link>
+              )}
+              <Link href="/inventory">View all inventory</Link>
+            </div>
+          </div>
+        </section>
+      )}
     </>
   )
 }

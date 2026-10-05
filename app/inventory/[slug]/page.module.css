@@ -990,3 +990,38 @@
   .damageGrid { grid-template-columns: repeat(2, 1fr); }
   .estimatorRow { grid-template-columns: 1fr; }
 }
+
+/* ── Similar vehicles ── */
+.similarSection {
+  background: #fff;
+  padding: 8px 0 48px;
+}
+
+.similarGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.similarLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.similarLinks a {
+  color: #e50202;
+  text-decoration: none;
+}
+
+.similarLinks a:hover { text-decoration: underline; }
+
+@media (max-width: 640px) {
+  .similarGrid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+  }
+}
