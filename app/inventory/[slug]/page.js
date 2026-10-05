@@ -70,7 +70,7 @@ function carImages(car) {
 export async function generateMetadata({ params }) {
   const { slug } = await params
   const car = await getCar(slug)
-  if (!car) return { title: 'Vehicle Not Found' }
+  if (!car) return { title: 'Vehicle No Longer Available', robots: { index: false } }
 
   const name = carName(car)
   const price = car.price ? `$${Number(car.price).toLocaleString('en-US')}` : null
