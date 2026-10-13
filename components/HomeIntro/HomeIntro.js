@@ -52,10 +52,11 @@ export default function HomeIntro() {
             <div className={styles.line} />
 
             <p className={styles.body}>
-              Connect Auto Sales is a family-owned dealership on S Beech Daly Street in
-              Dearborn Heights, serving buyers across Dearborn, Detroit and the wider Metro
-              Detroit area. We stock used cars, trucks, SUVs and minivans, most of them priced
-              from around $4,000 to $17,000.
+              Connect Auto Sales is a family-owned used car dealership on S Beech Daly Street
+              in Dearborn Heights, a short drive from Dearborn, Inkster, Taylor, Westland and
+              Garden City, and we serve buyers across Detroit and the wider Metro Detroit area.
+              We stock used cars, trucks, SUVs and minivans, most of them priced from around
+              $4,000 to $17,000.
             </p>
 
             <p className={styles.body}>

@@ -8,8 +8,8 @@ import styles from './Hero.module.css'
 const slides = [
   {
     image: '/images/banner-1.webp',
-    label: 'Quality Pre-Owned Vehicles',
-    title: ['QUALITY USED CARS', 'IN DEARBORN HEIGHTS'],
+    label: 'Used car dealership in Dearborn Heights',
+    title: ['USED CAR DEALERSHIP', 'IN DEARBORN HEIGHTS'],
     titleColors: ['white', 'red'],
     btn: { text: 'BROWSE INVENTORY', href: '/inventory' },
   },

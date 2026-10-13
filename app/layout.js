@@ -15,18 +15,18 @@ const outfit = Outfit({ subsets: ['latin'], display: 'swap' })
 export const metadata = {
   metadataBase: new URL('https://www.connectautosales.com'),
   title: {
-    default: 'Used Cars for Sale in Dearborn Heights, MI | Connect Auto Sales',
+    default: 'Used Car Dealership in Dearborn Heights, MI | Connect Auto Sales',
     template: '%s | Connect Auto Sales',
   },
-  description: 'Quality used cars, trucks and SUVs for sale in Dearborn Heights, Michigan. Financing available for all credit types, extended warranty options, clean and rebuilt titles.',
+  description: 'Family-owned used car dealership in Dearborn Heights, MI, near Dearborn, Inkster and Taylor. Used cars, trucks and SUVs, financing for all credit types.',
   alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
     siteName: 'Connect Auto Sales',
     locale: 'en_US',
     url: '/',
-    title: 'Used Cars for Sale in Dearborn Heights, MI | Connect Auto Sales',
-    description: 'Quality used cars, trucks and SUVs for sale in Dearborn Heights, Michigan. Financing available for all credit types, extended warranty options.',
+    title: 'Used Car Dealership in Dearborn Heights, MI | Connect Auto Sales',
+    description: 'Family-owned used car dealership in Dearborn Heights, MI. Used cars, trucks and SUVs, financing for all credit types and warranty options.',
   },
   robots: {
     index: true,
@@ -79,6 +79,10 @@ const businessSchema = {
   areaServed: [
     { '@type': 'City', name: 'Dearborn Heights' },
     { '@type': 'City', name: 'Dearborn' },
+    { '@type': 'City', name: 'Inkster' },
+    { '@type': 'City', name: 'Taylor' },
+    { '@type': 'City', name: 'Westland' },
+    { '@type': 'City', name: 'Garden City' },
     { '@type': 'City', name: 'Detroit' },
     { '@type': 'State', name: 'Michigan' },
   ],

@@ -10,18 +10,14 @@ async function getFeaturedCars() {
                 mileage, titleType, type, images, status, isNewArrival, featured, createdAt`
   const placeholders = LIVE.map(() => '?').join(',')
   try {
-    let rows = await prisma.$queryRawUnsafe(
-      `SELECT ${cols} FROM car WHERE status IN (${placeholders}) AND featured = 1
-       ORDER BY createdAt DESC LIMIT 6`,
+    // Cars the admin marked featured come first; the newest arrivals fill the
+    // rest, so the homepage links a dozen vehicles even when only a few are
+    // featured.
+    const rows = await prisma.$queryRawUnsafe(
+      `SELECT ${cols} FROM car WHERE status IN (${placeholders})
+       ORDER BY featured DESC, createdAt DESC LIMIT 12`,
       ...LIVE
     )
-    if (!rows.length) {
-      rows = await prisma.$queryRawUnsafe(
-        `SELECT ${cols} FROM car WHERE status IN (${placeholders})
-         ORDER BY createdAt DESC LIMIT 6`,
-        ...LIVE
-      )
-    }
     return JSON.parse(JSON.stringify(rows, (_, v) => (typeof v === 'bigint' ? Number(v) : v)))
   } catch {
     return []
