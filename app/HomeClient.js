@@ -135,7 +135,16 @@ export default function HomeClient({ featuredCars = [] }) {
             </Link>
           </div>
 
-          <div className={styles.carsGrid}>
+          {/* One column per featured car (up to the breakpoint's maximum), so
+              the cards fill the row whether the owner features 2 cars or 6. */}
+          <div
+            className={styles.carsGrid}
+            style={{
+              '--cols-lg': Math.max(1, Math.min(featuredCars.length, 6)),
+              '--cols-md': Math.max(1, Math.min(featuredCars.length, 3)),
+              '--cols-sm': Math.max(1, Math.min(featuredCars.length, 2)),
+            }}
+          >
             {featuredCars.map(car => (
               <CarCard key={car.id} car={car} />
             ))}
