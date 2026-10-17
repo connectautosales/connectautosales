@@ -602,3 +602,51 @@
   border-color: #c00 !important;
   background: #fff5f5 !important;
 }
+
+.faqA[hidden] { display: none; }
+
+/* ── About the service (server-rendered SEO copy) ── */
+.aboutSection {
+  background: #fff;
+  padding: 56px 0 8px;
+}
+
+.aboutInner {
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.aboutInner p {
+  font-size: 15px;
+  color: #374151;
+  line-height: 1.75;
+  margin: 0 0 16px;
+}
+
+.aboutInner a {
+  color: #e50202;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.aboutInner a:hover { text-decoration: underline; }
+
+.aboutTitle {
+  font-size: 24px;
+  font-weight: 900;
+  color: #020300;
+  margin: 0 0 8px;
+}
+
+.aboutSub {
+  font-size: 17px;
+  font-weight: 800;
+  color: #020300;
+  margin: 24px 0 8px;
+}
+
+.aboutLinks {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 16px;
+  margin-top: 24px !important;
+}
