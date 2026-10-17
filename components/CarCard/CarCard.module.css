@@ -17,7 +17,10 @@
 .imageWrap {
   position: relative;
   display: block;
-  height: 270px;
+  /* Listing photos are square, so a square box shows the whole photo edge to
+     edge at any card width: no side bars, no crop, no stretch. A non-square
+     photo still fits whole thanks to object-fit: contain. */
+  aspect-ratio: 1 / 1;
   background: #f8f8f8;
   overflow: hidden;
   flex-shrink: 0;
@@ -168,8 +171,3 @@
   background: #333;
 }
 
-@media (max-width: 768px) {
-  .imageWrap {
-    height: 367px;
-  }
-}
