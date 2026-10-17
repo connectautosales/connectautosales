@@ -55,6 +55,15 @@ export async function POST(req) {
     }
   }
 
+  // Vehicle color on salvage inspection requests (the inspection API also
+  // adds this on first use if it is missing)
+  try {
+    await prisma.$executeRaw`ALTER TABLE salvageinspection ADD COLUMN vehicleColor VARCHAR(50) NULL`
+    results.push('Added vehicleColor to salvageinspection')
+  } catch (e) {
+    results.push(e.message?.includes('Duplicate column') ? 'vehicleColor already exists' : `vehicleColor error: ${e.message}`)
+  }
+
   // Ensure all financing application columns exist
   const financingCols = [
     [`ALTER TABLE financingapplication ADD COLUMN homePhone VARCHAR(30) NULL`,          'homePhone'],

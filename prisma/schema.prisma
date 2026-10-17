@@ -206,6 +206,7 @@ model SalvageInspection {
   lastName      String?
   phone         String?
   email         String?
+  vehicleColor  String?  @db.VarChar(50)
   salvageTitle  String?  // file path/url
   validId       String?  // file path/url
   receipts      String?  // file path/url

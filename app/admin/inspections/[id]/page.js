@@ -17,6 +17,7 @@ export default async function InspectionDetail({ params }) {
     { label: 'Name',         value: `${i.firstName || ''} ${i.lastName || ''}`.trim() || null },
     { label: 'Phone',        value: i.phone },
     { label: 'Email',        value: i.email },
+    { label: 'Vehicle Color', value: i.vehicleColor || null },
     { label: 'Salvage Title', value: i.salvageTitle || null, type: 'file' },
     { label: 'Valid ID',     value: i.validId || null,      type: 'file' },
     { label: 'Receipts',     value: i.receipts || null,     type: 'file' },

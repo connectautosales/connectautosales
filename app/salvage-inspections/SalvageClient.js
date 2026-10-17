@@ -105,7 +105,7 @@ export default function SalvageClient({ initialFees, faqs, children }) {
   const { successRef, scrollToFirstError, scrollToSuccess } = useFormScroll();
   const [openFaq, setOpenFaq] = useState(null);
   const [showPartsModal, setShowPartsModal] = useState(false);
-  const [form, setForm] = useState({ firstName: '', lastName: '', phone: '', email: '', notes: '' });
+  const [form, setForm] = useState({ firstName: '', lastName: '', phone: '', email: '', vehicleColor: '', notes: '' });
   const [noMajorParts, setNoMajorParts] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -147,6 +147,7 @@ export default function SalvageClient({ initialFees, faqs, children }) {
     else if (!phoneRe.test(form.phone.trim())) errs.phone = 'Enter a valid phone number.';
     if (!form.email.trim())     errs.email     = 'Email cannot be blank.';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) errs.email = 'Enter a valid email address.';
+    if (!form.vehicleColor.trim()) errs.vehicleColor = 'Vehicle Color cannot be blank.';
     if (salvageFiles.length === 0)  errs.salvageTitle = 'Please upload your Salvage Title.';
     if (idFiles.length === 0)       errs.validId      = 'Please upload a Valid ID.';
     if (!noMajorParts && receiptFiles.length === 0) errs.receipts = 'Please upload Receipts for Major Parts.';
@@ -184,6 +185,7 @@ export default function SalvageClient({ initialFees, faqs, children }) {
           lastName: form.lastName.trim(),
           phone: form.phone.trim(),
           email: form.email.trim(),
+          vehicleColor: form.vehicleColor.trim(),
           partsChanged: form.notes,
           salvageTitle: salvageTitleUrl,
           validId: validIdUrl,
@@ -202,7 +204,7 @@ export default function SalvageClient({ initialFees, faqs, children }) {
       setSubmitError('');
       setErrors({});
       scrollToSuccess();
-      setForm({ firstName: '', lastName: '', phone: '', email: '', notes: '' });
+      setForm({ firstName: '', lastName: '', phone: '', email: '', vehicleColor: '', notes: '' });
       setTimeout(() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
     } catch (err) {
       setSubmitError(err?.message || 'Something went wrong. Please try again.');
@@ -356,6 +358,10 @@ export default function SalvageClient({ initialFees, faqs, children }) {
                   <div style={{marginBottom:12}}>
                     <input className={`${styles.input} ${errors.email ? styles.inputError : ''}`} name="email" value={form.email} onChange={handleChange} placeholder="Email Address *" />
                     {errors.email && <span className={styles.fieldError}>{errors.email}</span>}
+                  </div>
+                  <div style={{marginBottom:12}}>
+                    <input className={`${styles.input} ${errors.vehicleColor ? styles.inputError : ''}`} name="vehicleColor" value={form.vehicleColor} onChange={handleChange} placeholder="Vehicle Color *" maxLength={50} />
+                    {errors.vehicleColor && <span className={styles.fieldError}>{errors.vehicleColor}</span>}
                   </div>
 
                   <div className={styles.uploadsRow}>

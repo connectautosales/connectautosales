@@ -13,11 +13,34 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Bot detected. Please try again.' }, { status: 403 })
     }
     const { firstName = '', lastName = '', phone = '', email = '', partsChanged = '', salvageTitle = null, validId = null, receipts = null } = data
+    const vehicleColor = String(data.vehicleColor || '').trim().slice(0, 50)
+    if (!vehicleColor) {
+      return NextResponse.json({ error: 'Vehicle color is required.' }, { status: 400 })
+    }
 
-    await prisma.$executeRaw`
-      INSERT INTO salvageinspection (firstName, lastName, phone, email, partsChanged, salvageTitle, validId, receipts, status, createdAt)
-      VALUES (${firstName}, ${lastName}, ${phone}, ${email}, ${partsChanged}, ${salvageTitle}, ${validId}, ${receipts}, 'new', NOW())
+    const insert = () => prisma.$executeRaw`
+      INSERT INTO salvageinspection (firstName, lastName, phone, email, vehicleColor, partsChanged, salvageTitle, validId, receipts, status, createdAt)
+      VALUES (${firstName}, ${lastName}, ${phone}, ${email}, ${vehicleColor}, ${partsChanged}, ${salvageTitle}, ${validId}, ${receipts}, 'new', NOW())
     `
+    try {
+      await insert()
+    } catch (e) {
+      // The vehicleColor column was added after launch. If this database
+      // doesn't have it yet, add it once and retry instead of losing the lead.
+      if (!/Unknown column/i.test(e.message || '')) throw e
+      try {
+        await prisma.$executeRaw`ALTER TABLE salvageinspection ADD COLUMN vehicleColor VARCHAR(50) NULL`
+        await insert()
+      } catch (alterErr) {
+        // Last resort: keep the request and carry the color in the notes.
+        console.error('vehicleColor column unavailable:', alterErr.message)
+        const notes = `Vehicle color: ${vehicleColor}${partsChanged ? `\n\n${partsChanged}` : ''}`
+        await prisma.$executeRaw`
+          INSERT INTO salvageinspection (firstName, lastName, phone, email, partsChanged, salvageTitle, validId, receipts, status, createdAt)
+          VALUES (${firstName}, ${lastName}, ${phone}, ${email}, ${notes}, ${salvageTitle}, ${validId}, ${receipts}, 'new', NOW())
+        `
+      }
+    }
     const rows = await prisma.$queryRaw`SELECT * FROM salvageinspection ORDER BY id DESC LIMIT 1`
     const inspection = rows[0]
 
@@ -30,7 +53,7 @@ export async function POST(req) {
       sendMail({
         to: process.env.NOTIFY_EMAIL,
         subject: `New Inspection Request — ${firstName} ${lastName}`,
-        html: inspectionAdmin({ firstName, lastName, phone, email }),
+        html: inspectionAdmin({ firstName, lastName, phone, email, vehicleColor }),
       }),
     ])
 
