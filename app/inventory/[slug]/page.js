@@ -4,6 +4,7 @@ import { notFound, permanentRedirect } from 'next/navigation'
 import CarCard from '@/components/CarCard/CarCard'
 import { BODY_TYPES } from '@/lib/bodyTypes'
 import VehicleDetail from './VehicleDetail'
+import { OG_IMAGE } from '@/lib/seo'
 import styles from './page.module.css'
 
 const SITE = 'https://www.connectautosales.com'
@@ -94,7 +95,7 @@ export async function generateMetadata({ params }) {
       url: canonical,
       title: `${name} | Connect Auto Sales`,
       description,
-      images: images.length ? [images[0]] : undefined,
+      images: images.length ? [images[0]] : [OG_IMAGE],
     },
   }
 }

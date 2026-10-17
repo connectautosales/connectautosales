@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import styles from './page.module.css'
+import { OG_IMAGE } from '@/lib/seo'
 
 export const metadata = {
   title: 'Buy Here Pay Here in Dearborn Heights, MI',
@@ -7,6 +8,7 @@ export const metadata = {
     'In-house financing available on select vehicles for qualified buyers at Connect Auto Sales in Dearborn Heights. We also work with outside lenders for all credit situations. Call (313) 413-3400.',
   alternates: { canonical: '/buy-here-pay-here' },
   openGraph: {
+    images: [OG_IMAGE],
     url: '/buy-here-pay-here',
     title: 'Buy Here Pay Here in Dearborn Heights, MI | Connect Auto Sales',
     description:

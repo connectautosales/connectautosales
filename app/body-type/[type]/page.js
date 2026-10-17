@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import CarCard from '@/components/CarCard/CarCard'
 import { BODY_TYPES, resolveBodyType } from '@/lib/bodyTypes'
 import styles from './page.module.css'
+import { OG_IMAGE } from '@/lib/seo'
 
 const LIVE = ['available', 'pending', 'coming_soon']
 
@@ -35,6 +36,7 @@ export async function generateMetadata({ params }) {
     description: cfg.description,
     alternates: { canonical: `/body-type/${key}` },
     openGraph: {
+      images: [OG_IMAGE],
       url: `/body-type/${key}`,
       title: `${cfg.title} | Connect Auto Sales`,
       description: cfg.description,

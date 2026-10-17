@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import CarCard from '@/components/CarCard/CarCard'
 import styles from './page.module.css'
+import { OG_IMAGE } from '@/lib/seo'
 
 const LIVE = ['available', 'pending', 'coming_soon']
 const CAP = 10000
@@ -12,6 +13,7 @@ export const metadata = {
     'Affordable used cars under $10,000 for sale in Dearborn Heights, Michigan. Financing available for bad credit and first-time buyers, warranty options, clean and rebuilt titles.',
   alternates: { canonical: '/used-cars-under-10000' },
   openGraph: {
+    images: [OG_IMAGE],
     url: '/used-cars-under-10000',
     title: 'Used Cars Under $10,000 in Dearborn Heights, MI | Connect Auto Sales',
     description:

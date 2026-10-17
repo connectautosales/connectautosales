@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { BODY_TYPES } from '@/lib/bodyTypes'
 import styles from './page.module.css'
+import { OG_IMAGE } from '@/lib/seo'
 
 const LIVE = ['available', 'pending', 'coming_soon']
 
@@ -11,6 +12,7 @@ export const metadata = {
     'Shop our used inventory by body type — SUVs, sedans, trucks, minivans and hatchbacks for sale in Dearborn Heights, Michigan. Financing and warranty options available.',
   alternates: { canonical: '/body-type' },
   openGraph: {
+    images: [OG_IMAGE],
     url: '/body-type',
     title: 'Shop Used Cars by Body Type | Connect Auto Sales',
     description: 'Shop SUVs, sedans, trucks, minivans and hatchbacks for sale in Dearborn Heights, Michigan.',

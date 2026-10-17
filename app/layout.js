@@ -9,6 +9,7 @@ import { SettingsProvider } from '@/context/SettingsContext'
 import VisitorTracker from '@/app/components/VisitorTracker'
 import PageTransition from '@/app/components/PageTransition'
 import { headers } from 'next/headers'
+import { OG_IMAGE } from '@/lib/seo'
 
 const outfit = Outfit({ subsets: ['latin'], display: 'swap' })
 
@@ -21,6 +22,7 @@ export const metadata = {
   description: 'Family-owned used car dealership in Dearborn Heights, MI, near Dearborn, Inkster and Taylor. Used cars, trucks and SUVs, financing for all credit types.',
   alternates: { canonical: '/' },
   openGraph: {
+    images: [OG_IMAGE],
     type: 'website',
     siteName: 'Connect Auto Sales',
     locale: 'en_US',
@@ -28,6 +30,7 @@ export const metadata = {
     title: 'Used Car Dealership in Dearborn Heights, MI | Connect Auto Sales',
     description: 'Family-owned used car dealership in Dearborn Heights, MI. Used cars, trucks and SUVs, financing for all credit types and warranty options.',
   },
+  twitter: { card: 'summary_large_image' },
   robots: {
     index: true,
     follow: true,
