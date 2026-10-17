@@ -3,7 +3,7 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
 import { sendMail } from '@/lib/mailer'
-import { statusUpdateCustomer } from '@/lib/emailTemplates'
+import { buildStatusEmail } from '@/lib/statusEmail'
 
 const TABLE_MAP = {
   financing:  'financingapplication',
@@ -17,56 +17,11 @@ const TABLE_MAP = {
 // ContactMessage has no status column
 const HAS_ISREAD = new Set(['contact'])
 
-const STATUS_LABELS = {
-  new:                'Received',
-  reviewed:           'Under Review',
-  contacted:          'We Have Contacted You',
-  approved:           'Approved',
-  rejected:           'Not Approved',
-  scheduled:          'Scheduled',
-  completed:          'Completed',
-  closed:             'Closed',
-  'documents-reviewed': 'Documents Reviewed',
-  confirmed:          'Confirmed',
-  cancelled:          'Cancelled',
-}
-
-const TYPE_LABELS = {
-  financing:  'Financing Application',
-  auction:    'Auction Request',
-  inspection: 'Salvage Inspection Request',
-  contact:    'Contact Message',
-  transport:  'Transport Quote Request',
-  testDrive:  'Test Drive Request',
-}
-
-const NOTIFY_STATUSES = new Set([
-  'reviewed', 'contacted', 'approved', 'rejected',
-  'scheduled', 'completed', 'documents-reviewed', 'confirmed', 'cancelled',
-])
-
-async function sendStatusEmail({ type, record, status, adminNotes }) {
-  const email = record.email
-  if (!email || !NOTIFY_STATUSES.has(status)) return
-
-  const firstName = record.firstName || record.name || 'there'
-  const typeLabel = TYPE_LABELS[type] || 'Request'
-  const statusLabel = STATUS_LABELS[status] || status
-
-  await sendMail({
-    to: email,
-    subject: `${typeLabel} Update — ${statusLabel} | Connect Auto Sales`,
-    html: statusUpdateCustomer({ firstName, type, status, adminNotes }),
-  })
-
-  console.log(`Status email sent to ${email} → ${type} #${record.id} [${status}]`)
-}
-
 export async function POST(req) {
   const session = await getServerSession(authOptions)
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { type, id, status, adminNotes, isRead } = await req.json()
+  const { type, id, status, adminNotes, isRead, notify, customerMessage } = await req.json()
 
   if (!(type in TABLE_MAP)) {
     return NextResponse.json({ error: 'Invalid type' }, { status: 400 })
@@ -105,11 +60,20 @@ export async function POST(req) {
   )
   const result = rows[0] || {}
 
-  if (status && !HAS_ISREAD.has(type)) {
-    await sendStatusEmail({ type, record: result, status, adminNotes }).catch(e =>
-      console.error('Status email error:', e.message)
-    )
+  // The customer is emailed only when the admin ticked "Email the customer",
+  // and the email carries only the message written for them, never the notes.
+  let emailed = false
+  if (notify && status && !HAS_ISREAD.has(type)) {
+    const mail = buildStatusEmail({ type, record: result, status, message: customerMessage })
+    if (mail) {
+      try {
+        await sendMail(mail)
+        emailed = true
+      } catch (e) {
+        console.error('Status email error:', e.message)
+      }
+    }
   }
 
-  return NextResponse.json(result)
+  return NextResponse.json({ ...result, emailed })
 }

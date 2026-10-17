@@ -28,6 +28,8 @@ export default function BulkTable({
   const [selected, setSelected] = useState(new Set())
   const [bulkStatus, setBulkStatus] = useState(statusOptions[1]?.value || statusOptions[0]?.value || '')
   const [applying, setApplying] = useState(false)
+  // Off by default: bulk changes only email customers when the admin asks.
+  const [bulkNotify, setBulkNotify] = useState(false)
   const [done, setDone] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
@@ -60,7 +62,7 @@ export default function BulkTable({
       await fetch('/api/admin/bulk-status', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type, ids: [...selected], status: bulkStatus }),
+        body: JSON.stringify({ type, ids: [...selected], status: bulkStatus, notify: !isContactType && bulkNotify }),
       })
       setDone(true)
       setSelected(new Set())
@@ -160,6 +162,12 @@ export default function BulkTable({
                 <option key={s.value} value={s.value}>{s.label}</option>
               ))}
             </select>
+            {!isContactType && (
+              <label className={styles.bulkNotify}>
+                <input type="checkbox" checked={bulkNotify} onChange={e => setBulkNotify(e.target.checked)} />
+                Email customers
+              </label>
+            )}
             <button
               onClick={applyBulk}
               disabled={applying || done}
