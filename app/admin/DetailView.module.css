@@ -340,3 +340,4 @@
 .previewClose { border: none; background: none; font-size: 1.1rem; color: #64748b; cursor: pointer; }
 .previewFrame { border: none; width: 100%; height: 70vh; }
 .previewError { padding: 20px; color: #b91c1c; font-weight: 600; }
+.blanksWarning { margin: 0; font-size: 0.78rem; font-weight: 700; color: #b45309; }

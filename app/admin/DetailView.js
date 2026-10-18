@@ -2,6 +2,7 @@
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { NOTIFY_STATUSES } from '@/lib/statusNotify'
+import { templateFor, unfilledBlanks } from '@/lib/customerMessageTemplates'
 import styles from './DetailView.module.css'
 
 function parseFileUrls(value) {
@@ -50,9 +51,13 @@ export default function DetailView({ type, item, fields, statusOptions, title, b
   const fileFields = fields.filter(f => f.type === 'file' && f.value)
   const [zipping, setZipping] = useState(false)
 
+  // Owner-written default message for this status, if any; the admin edits it.
+  const blanks = notify ? unfilledBlanks(customerMessage) : []
+
   const changeStatus = (value) => {
     setStatus(value)
     setNotifyChoice(null)
+    setCustomerMessage(templateFor(type, value))
   }
 
   const showPreview = async () => {
@@ -270,9 +275,14 @@ export default function DetailView({ type, item, fields, statusOptions, title, b
                     <textarea
                       value={customerMessage}
                       onChange={e => setCustomerMessage(e.target.value)}
-                      rows={3}
+                      rows={customerMessage.split('\n').length > 3 ? 10 : 4}
                       placeholder="Optional message to the customer, e.g. We'll call you to set a time."
                     />
+                    {blanks.length > 0 && (
+                      <p className={styles.blanksWarning}>
+                        Fill in {blanks.join(', ')} before sending.
+                      </p>
+                    )}
                     <button type="button" onClick={showPreview} disabled={previewing} className={styles.previewBtn}>
                       {previewing ? 'Building preview...' : <><i className="fa-regular fa-eye" /> Preview email</>}
                     </button>
@@ -295,7 +305,7 @@ export default function DetailView({ type, item, fields, statusOptions, title, b
               />
             </div>
 
-            <button onClick={handleSave} disabled={saving} className={styles.saveBtn}>
+            <button onClick={handleSave} disabled={saving || blanks.length > 0} className={styles.saveBtn}>
               {saving
                 ? <><i className="fa-solid fa-spinner fa-spin" /> Saving...</>
                 : saved
