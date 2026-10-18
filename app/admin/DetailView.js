@@ -275,7 +275,7 @@ export default function DetailView({ type, item, fields, statusOptions, title, b
                     <textarea
                       value={customerMessage}
                       onChange={e => setCustomerMessage(e.target.value)}
-                      rows={customerMessage.split('\n').length > 3 ? 10 : 4}
+                      rows={Math.min(14, Math.max(4, customerMessage.split('\n').length + Math.ceil(customerMessage.length / 38)))}
                       placeholder="Optional message to the customer, e.g. We'll call you to set a time."
                     />
                     {blanks.length > 0 && (
