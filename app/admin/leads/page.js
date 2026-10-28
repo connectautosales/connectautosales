@@ -85,7 +85,11 @@ export default async function LeadsReportPage() {
   const session = await getServerSession(authOptions)
   if (!session) redirect('/admin/login')
 
-  const today = new Date()
+  // "Today" is the dealership's date in Michigan, not the server's UTC date.
+  const [ty, tm, td] = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Detroit', year: 'numeric', month: '2-digit', day: '2-digit',
+  }).format(new Date()).split('-').map(Number)
+  const today = new Date(ty, tm - 1, td)
   const sixMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 5, 1)
   const counts = await loadCounts(sixMonthsAgo)
 
