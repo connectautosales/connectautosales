@@ -31,6 +31,8 @@ export const metadata = {
     description: 'Family-owned used car dealership in Dearborn Heights, MI. Used cars, trucks and SUVs, financing for all credit types and warranty options.',
   },
   twitter: { card: 'summary_large_image' },
+  // Bing Webmaster Tools ownership check (Bing also feeds ChatGPT search and Copilot)
+  verification: { other: { 'msvalidate.01': 'EE713AD8177BC7D021866B339A1533A4' } },
   robots: {
     index: true,
     follow: true,
