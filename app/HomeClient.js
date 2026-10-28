@@ -145,8 +145,8 @@ export default function HomeClient({ featuredCars = [] }) {
               '--cols-sm': Math.max(1, Math.min(featuredCars.length, 2)),
             }}
           >
-            {featuredCars.map(car => (
-              <CarCard key={car.id} car={car} />
+            {featuredCars.map((car, i) => (
+              <CarCard key={car.id} car={car} priority={i === 0} />
             ))}
           </div>
 

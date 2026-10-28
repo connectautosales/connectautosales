@@ -1,5 +1,6 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 import { useRecaptcha } from '@/hooks/useRecaptcha';
 import { useFormScroll } from '@/hooks/useFormScroll';
 import styles from './page.module.css';
@@ -220,7 +221,11 @@ export default function SalvageClient({ initialFees, faqs, children }) {
     <main>
       {/* ── Hero ── */}
       <section className={styles.hero}>
-        <div className={styles.heroOverlay} />
+        {/* A real image with priority (instead of a CSS background) so the
+            browser fetches it immediately; it is the page's largest element. */}
+        <div className={styles.heroOverlay}>
+          <Image src="/images/banner-3.webp" alt="" fill priority sizes="100vw" style={{ objectFit: 'cover' }} />
+        </div>
         <div className="container">
           <p className={styles.heroLabel}>DEARBORN HEIGHTS, MICHIGAN</p>
           <h1 className={styles.heroTitle}>SALVAGE VEHICLE <span>INSPECTIONS</span></h1>

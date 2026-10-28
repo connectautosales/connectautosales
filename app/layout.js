@@ -118,10 +118,7 @@ export default async function RootLayout({ children }) {
           gtag('js', new Date());
           gtag('config', 'G-4BGMGDC39K');
         `}</Script>
-        <Script
-          src={`https://www.google.com/recaptcha/api.js?render=6LdhzWYtAAAAAOSA8uZed4Bxb2aFKTm75YA1L2UY`}
-          strategy="afterInteractive"
-        />
+        {/* reCAPTCHA loads per form via hooks/useRecaptcha, not on every page */}
         {/* Meta Pixel — business page + personal marketplace */}
         <Script id="meta-pixel" strategy="afterInteractive">{`
           !function(f,b,e,v,n,t,s)

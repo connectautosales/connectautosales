@@ -14,7 +14,7 @@ const timeSlots = [
 ]
 
 export default function TestDriveModal({ isOpen, onClose, vehicle = '' }) {
-  const { getToken } = useRecaptcha()
+  const { getToken } = useRecaptcha({ preload: isOpen })
   const modalBodyRef = useRef(null)
   const successRef   = useRef(null)
   const [form, setForm] = useState({

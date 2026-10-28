@@ -13,7 +13,9 @@ function getFirstImage(car) {
   return null
 }
 
-export default function CarCard({ car }) {
+// priority: the first card on the homepage is the largest thing on a phone
+// screen, so it loads eagerly instead of lazily.
+export default function CarCard({ car, priority = false }) {
   const imgSrc = getFirstImage(car)
 
   return (
@@ -33,6 +35,7 @@ export default function CarCard({ car }) {
             src={imgSrc}
             alt={`${car.year} ${car.make} ${car.model}`}
             fill
+            priority={priority}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
             style={{ objectFit: 'contain' }}
           />
