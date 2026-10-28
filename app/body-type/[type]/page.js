@@ -5,6 +5,7 @@ import CarCard from '@/components/CarCard/CarCard'
 import { BODY_TYPES, resolveBodyType } from '@/lib/bodyTypes'
 import styles from './page.module.css'
 import { OG_IMAGE } from '@/lib/seo'
+import { getInventoryStats, formatPrice } from '@/lib/inventoryStats'
 
 const LIVE = ['available', 'pending', 'coming_soon']
 
@@ -31,8 +32,12 @@ export async function generateMetadata({ params }) {
   const key = resolveBodyType(type)
   if (!key) return { title: 'Inventory' }
   const cfg = BODY_TYPES[key]
+  const { count, minPrice } = await getInventoryStats({ types: cfg.types })
+  const title = count > 1 && minPrice
+    ? { absolute: `${count} Used ${cfg.label} for Sale in Dearborn Heights, MI from ${formatPrice(minPrice)}` }
+    : cfg.title
   return {
-    title: cfg.title,
+    title,
     description: cfg.description,
     alternates: { canonical: `/body-type/${key}` },
     openGraph: {

@@ -3,22 +3,30 @@ import { prisma } from '@/lib/prisma'
 import CarCard from '@/components/CarCard/CarCard'
 import styles from './page.module.css'
 import { OG_IMAGE } from '@/lib/seo'
+import { getInventoryStats, formatPrice } from '@/lib/inventoryStats'
 
 const LIVE = ['available', 'pending', 'coming_soon']
 const CAP = 10000
 
-export const metadata = {
-  title: 'Used Cars Under $10,000 in Dearborn Heights, MI',
-  description:
-    'Affordable used cars under $10,000 for sale in Dearborn Heights, Michigan. Financing available for bad credit and first-time buyers, warranty options, clean and rebuilt titles.',
-  alternates: { canonical: '/used-cars-under-10000' },
-  openGraph: {
-    images: [OG_IMAGE],
-    url: '/used-cars-under-10000',
-    title: 'Used Cars Under $10,000 in Dearborn Heights, MI | Connect Auto Sales',
-    description:
-      'Affordable used cars under $10,000 in Dearborn Heights. Financing for all credit situations and warranty options available.',
-  },
+export async function generateMetadata() {
+  const { count, minPrice } = await getInventoryStats({ maxPrice: CAP })
+  const title = count > 1
+    ? { absolute: `${count} Used Cars Under $10,000 in Dearborn Heights, MI` }
+    : 'Used Cars Under $10,000 in Dearborn Heights, MI'
+  const description = count && minPrice
+    ? `${count} used cars under $10,000 in Dearborn Heights, Michigan, starting at ${formatPrice(minPrice)}. Financing for bad credit and first-time buyers, warranty options, clean and rebuilt titles.`
+    : 'Affordable used cars under $10,000 for sale in Dearborn Heights, Michigan. Financing available for bad credit and first-time buyers, warranty options, clean and rebuilt titles.'
+  return {
+    title,
+    description,
+    alternates: { canonical: '/used-cars-under-10000' },
+    openGraph: {
+      images: [OG_IMAGE],
+      url: '/used-cars-under-10000',
+      title: 'Used Cars Under $10,000 in Dearborn Heights, MI | Connect Auto Sales',
+      description,
+    },
+  }
 }
 
 async function getCars() {

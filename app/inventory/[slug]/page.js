@@ -59,6 +59,16 @@ function carName(car) {
   return `${car.year} ${car.make} ${car.model}${car.trim ? ' ' + car.trim : ''}`
 }
 
+// For titles: collapse stray spaces and turn shouted words ("CIVIC SPORT")
+// into "Civic Sport", while leaving short trim codes such as SXT, LE, GT as
+// they are.
+function displayName(car) {
+  return carName(car)
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/\b([A-Z])([A-Z]{3,})\b/g, (_, first, rest) => first + rest.toLowerCase())
+}
+
 function carImages(car) {
   try {
     const parsed = JSON.parse(car.images || '[]')
@@ -73,14 +83,19 @@ export async function generateMetadata({ params }) {
   const car = await getCar(slug)
   if (!car) return { title: 'Vehicle No Longer Available', robots: { index: false } }
 
-  const name = carName(car)
+  const name = displayName(car)
   const price = car.price ? `$${Number(car.price).toLocaleString('en-US')}` : null
   const miles = car.mileage ? `${Number(car.mileage).toLocaleString('en-US')} miles` : null
-  const title = `${name} for Sale in Dearborn Heights, MI`
+  // The price is what a shopper scans for in search results, so it goes in the
+  // title. "absolute" skips the site-wide "| Connect Auto Sales" suffix to keep
+  // the title short enough not to be cut off.
+  const title = price
+    ? { absolute: `${name} - ${price} | Dearborn Heights, MI` }
+    : `${name} for Sale in Dearborn Heights, MI`
   const description = [
-    `${name} for sale at Connect Auto Sales in Dearborn Heights, Michigan.`,
-    [price, miles, car.titleType === 'rebuilt' ? 'rebuilt title' : 'clean title'].filter(Boolean).join(', ') + '.',
-    'Financing and warranty options available. Call (313) 413-3400.',
+    `${name} for sale in Dearborn Heights, MI${price ? ` for ${price}` : ''}.`,
+    [miles, car.titleType === 'rebuilt' ? 'rebuilt title' : 'clean title'].filter(Boolean).join(', ') + '.',
+    'Financing for all credit types and warranty options. Call (313) 413-3400.',
   ].join(' ')
 
   const canonical = `/inventory/${car.stock || car.slug || car.id}`
@@ -93,7 +108,7 @@ export async function generateMetadata({ params }) {
     openGraph: {
       type: 'website',
       url: canonical,
-      title: `${name} | Connect Auto Sales`,
+      title: price ? `${name} - ${price} | Connect Auto Sales` : `${name} | Connect Auto Sales`,
       description,
       images: images.length ? [images[0]] : [OG_IMAGE],
     },
