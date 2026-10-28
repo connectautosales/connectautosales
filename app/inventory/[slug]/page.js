@@ -78,6 +78,8 @@ const DRIVETRAIN_TEXT = {
   '4X4': 'four-wheel drive',
 }
 
+// "SUVs" stays as is; "Vans & Minivans" becomes "vans & minivans" mid-sentence.
+const labelText = (label) => (/^[A-Z]{2}/.test(label) ? label : label.toLowerCase())
 const money = (n) => `$${Number(n).toLocaleString('en-US')}`
 const titleCase = (s) => String(s).toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())
 
@@ -115,7 +117,7 @@ function BuyingThisVehicle({ car, name, bodyType }) {
           <div className={styles.sectionLine} />
           <p>
             This {color ? `${color.toLowerCase()} ` : ''}{name}
-            {specs.length ? ` comes with ${specs.join(', ').replace(/, ([^,]*)$/, ' and $1')}` : ''}.
+            {specs.length ? ` comes with ${specs.join(', ').replace(/, ([^,]*)$/, ' and $1')}` : ' is available now'}.
             {car.price ? (
               <> The price is {money(car.price)} when paid in full{car.financePrice && Number(car.financePrice) !== Number(car.price)
                 ? `, or ${money(car.financePrice)} with financing` : ''}.</>
@@ -140,7 +142,7 @@ function BuyingThisVehicle({ car, name, bodyType }) {
           <p>
             See it at our lot on S Beech Daly Street in Dearborn Heights, a short drive from Dearborn,
             Inkster, Taylor and Westland. Use the test drive button above to book a time
-            {bodyType ? <>, or browse more <Link href={`/body-type/${bodyType[0]}`}>used {bodyType[1].label.toLowerCase()}</Link></> : null}.
+            {bodyType ? <>, or browse more <Link href={`/body-type/${bodyType[0]}`}>used {labelText(bodyType[1].label)}</Link></> : null}.
           </p>
         </div>
       </div>
@@ -268,7 +270,7 @@ export default async function VehicleDetailPage({ params }) {
             </div>
             <div className={styles.similarLinks}>
               {bodyType && (
-                <Link href={`/body-type/${bodyType[0]}`}>All used {bodyType[1].label.toLowerCase()}</Link>
+                <Link href={`/body-type/${bodyType[0]}`}>All used {labelText(bodyType[1].label)}</Link>
               )}
               <Link href="/inventory">View all inventory</Link>
             </div>
