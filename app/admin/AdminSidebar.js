@@ -8,6 +8,7 @@ import styles from './AdminSidebar.module.css'
 
 const nav = [
   { href: '/admin',              label: 'Dashboard',         icon: 'fa-solid fa-gauge-high' },
+  { href: '/admin/leads',        label: 'Leads Report',      icon: 'fa-solid fa-chart-line' },
   { href: '/admin/inventory',    label: 'Inventory',         icon: 'fa-solid fa-car' },
   { href: '/admin/financing',    label: 'Financing Apps',    icon: 'fa-solid fa-file-invoice-dollar' },
   { href: '/admin/auction',      label: 'Auction Requests',  icon: 'fa-solid fa-gavel' },
