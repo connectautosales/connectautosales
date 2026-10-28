@@ -69,6 +69,85 @@ function displayName(car) {
     .replace(/\b([A-Z])([A-Z]{3,})\b/g, (_, first, rest) => first + rest.toLowerCase())
 }
 
+const DRIVETRAIN_TEXT = {
+  AWD: 'all-wheel drive',
+  'ALL WHEEL DRIVE': 'all-wheel drive',
+  FWD: 'front-wheel drive',
+  RWD: 'rear-wheel drive',
+  '4WD': 'four-wheel drive',
+  '4X4': 'four-wheel drive',
+}
+
+const money = (n) => `$${Number(n).toLocaleString('en-US')}`
+const titleCase = (s) => String(s).toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())
+
+function hasDamagePhotos(car) {
+  try {
+    const d = JSON.parse(car.damageImages || '[]')
+    return Array.isArray(d) && d.length > 0
+  } catch {
+    return false
+  }
+}
+
+// One short, factual paragraph per fact the shopper needs, built only from
+// this car's own data so every vehicle page reads differently.
+function BuyingThisVehicle({ car, name, bodyType }) {
+  const mileage = Number(car.mileage) || 0
+  const miles = mileage ? `${mileage.toLocaleString('en-US')} mile${mileage === 1 ? '' : 's'}` : null
+  const drive = DRIVETRAIN_TEXT[String(car.drivetrain || '').trim().toUpperCase()]
+  const fuel = { HYBRID: 'a hybrid powertrain', DIESEL: 'a diesel engine' }[String(car.fuelType || '').toUpperCase()]
+  const color = car.color ? titleCase(car.color.trim()) : null
+  // Trailers and campers have no powertrain worth describing.
+  const motorized = !['Camper', 'Trailer'].includes(car.type)
+
+  const transmission = car.transmission
+    ? `${/^[aeiou]/i.test(car.transmission) ? 'an' : 'a'} ${car.transmission.toLowerCase()} transmission`
+    : null
+  const specs = motorized ? [miles, drive, transmission, fuel].filter(Boolean) : []
+  const rebuilt = car.titleType === 'rebuilt'
+
+  return (
+    <section className={styles.buyingSection}>
+      <div className="container">
+        <div className={styles.buyingInner}>
+          <h2 className={styles.sectionTitle}>Buying This Vehicle</h2>
+          <div className={styles.sectionLine} />
+          <p>
+            This {color ? `${color.toLowerCase()} ` : ''}{name}
+            {specs.length ? ` comes with ${specs.join(', ').replace(/, ([^,]*)$/, ' and $1')}` : ''}.
+            {car.price ? (
+              <> The price is {money(car.price)} when paid in full{car.financePrice && Number(car.financePrice) !== Number(car.price)
+                ? `, or ${money(car.financePrice)} with financing` : ''}.</>
+            ) : null}
+          </p>
+          {rebuilt ? (
+            <p>
+              It has a rebuilt title, which means it was declared a total loss at some point, then
+              repaired and inspected before being retitled.
+              {hasDamagePhotos(car) ? ' The Previous Damage Photos above show the damage before the repair.' : ''}
+              {' '}Rebuilt title vehicles cost less than the same model with a clean title.{' '}
+              <Link href="/rebuilt-title">What a rebuilt title means in Michigan</Link>.
+            </p>
+          ) : (
+            <p>It has a clean title.</p>
+          )}
+          <p>
+            Financing is available for all credit types, including first-time buyers, and warranty
+            coverage can be added. <Link href="/financing">Apply for financing</Link> or{' '}
+            <Link href="/warranty">see warranty options</Link>.
+          </p>
+          <p>
+            See it at our lot on S Beech Daly Street in Dearborn Heights, a short drive from Dearborn,
+            Inkster, Taylor and Westland. Use the test drive button above to book a time
+            {bodyType ? <>, or browse more <Link href={`/body-type/${bodyType[0]}`}>used {bodyType[1].label.toLowerCase()}</Link></> : null}.
+          </p>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function carImages(car) {
   try {
     const parsed = JSON.parse(car.images || '[]')
@@ -157,6 +236,10 @@ export default async function VehicleDetailPage({ params }) {
     }),
     ...(images.length && { image: images.map((i) => (i.startsWith('http') ? i : `${SITE}${i}`)) }),
     url: `${SITE}/inventory/${car.stock || car.slug}`,
+    ...(car.description?.trim() && { description: car.description.trim().replace(/\s+/g, ' ').slice(0, 500) }),
+    ...(car.titleType === 'rebuilt' && {
+      knownVehicleDamages: 'Rebuilt title: previously declared a total loss, then repaired and inspected before being retitled.',
+    }),
     offers: {
       '@type': 'Offer',
       price: Number(car.price),
@@ -174,6 +257,7 @@ export default async function VehicleDetailPage({ params }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
       <VehicleDetail car={serialized} settings={settings} />
+      <BuyingThisVehicle car={car} name={displayName(car)} bodyType={bodyType} />
       {similar.length > 0 && (
         <section className={styles.similarSection}>
           <div className="container">
