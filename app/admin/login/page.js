@@ -7,7 +7,7 @@ import styles from './page.module.css'
 
 export default function AdminLogin() {
   const router = useRouter()
-  const [form, setForm] = useState({ email: '', password: '' })
+  const [form, setForm] = useState({ email: '', password: '', remember: true })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [showPass, setShowPass] = useState(false)
@@ -24,6 +24,7 @@ export default function AdminLogin() {
     const res = await signIn('credentials', {
       email: form.email,
       password: form.password,
+      remember: form.remember ? 'true' : 'false',
       redirect: false,
     })
     setLoading(false)
@@ -77,6 +78,8 @@ export default function AdminLogin() {
                 <i className="fa-regular fa-envelope" />
                 <input
                   type="email"
+                  name="email"
+                  autoComplete="username"
                   value={form.email}
                   onChange={e => setForm(p => ({ ...p, email: e.target.value }))}
                   placeholder="admin@connectautosales.com"
@@ -90,6 +93,8 @@ export default function AdminLogin() {
                 <i className="fa-solid fa-key" />
                 <input
                   type={showPass ? 'text' : 'password'}
+                  name="password"
+                  autoComplete="current-password"
                   value={form.password}
                   onChange={e => setForm(p => ({ ...p, password: e.target.value }))}
                   placeholder="••••••••"
@@ -100,6 +105,15 @@ export default function AdminLogin() {
                 </button>
               </div>
             </div>
+            <label className={styles.remember}>
+              <input
+                type="checkbox"
+                id="remember"
+                checked={form.remember}
+                onChange={e => setForm(p => ({ ...p, remember: e.target.checked }))}
+              />
+              Remember me for 30 days
+            </label>
             {error && (
               <div className={styles.errorBox}>
                 <i className="fa-solid fa-circle-exclamation" />
