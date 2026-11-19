@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { permanentRedirect } from 'next/navigation'
 import CarCard from '@/components/CarCard/CarCard'
 import styles from './page.module.css'
 import { OG_IMAGE } from '@/lib/seo'
@@ -56,7 +56,9 @@ export async function generateMetadata({ params }) {
 export default async function MakePage({ params }) {
   const { make: slug } = await params
   const data = await load(slug)
-  if (!data) notFound()
+  // Unknown makes used to redirect to the inventory (legacy /make/* URLs), so
+  // keep doing that rather than serving a 404.
+  if (!data) permanentRedirect('/inventory')
   const { cars, name } = data
 
   const prices = cars.map((c) => Number(c.price)).filter((p) => p > 0)

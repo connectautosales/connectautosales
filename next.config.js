@@ -34,7 +34,10 @@ const nextConfig = {
       { source: '/detail/:slug*', destination: '/inventory', permanent: true },
       { source: '/category/:slug*', destination: '/inventory', permanent: true },
       { source: '/cars/:slug*', destination: '/inventory', permanent: true },
-      { source: '/make/:slug*', destination: '/inventory', permanent: true },
+      // /make/[make] is a real page now. Only the bare path and deeper legacy
+      // paths (old /make/x/model URLs) still go to the inventory.
+      { source: '/make', destination: '/inventory', permanent: true },
+      { source: '/make/:slug/:rest+', destination: '/inventory', permanent: true },
     ]
   },
   serverExternalPackages: ['sharp'],
