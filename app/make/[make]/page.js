@@ -119,7 +119,9 @@ export default async function MakePage({ params }) {
               {n > 0 && (
                 <p className={styles.body}>
                   {`In stock right now: ${list(models)}.`}
-                  {years.length ? ` Model years ${range(years, String)}` : ''}
+                  {years.length
+                    ? ` Model ${Math.min(...years) === Math.max(...years) ? 'year' : 'years'} ${range(years, String)}`
+                    : ''}
                   {miles.length ? `, with ${range(miles, (m) => m.toLocaleString('en-US'))} miles` : ''}
                   {years.length || miles.length ? '.' : ''}
                   {clean && rebuilt
