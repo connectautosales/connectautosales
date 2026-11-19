@@ -5,8 +5,22 @@ import CarCard from '@/components/CarCard/CarCard'
 import styles from './page.module.css'
 import Link from 'next/link'
 import { BODY_TYPES } from '@/lib/bodyTypes'
+import { MIN_INDEXED, makeSlug, tidy } from '@/lib/makeUtils'
 
 export default function InventoryClient({ cars }) {
+  // Makes with their own indexed page (enough live stock), most stock first.
+  const makes = useMemo(() => {
+    const by = {}
+    for (const c of cars) {
+      const slug = makeSlug(c.make)
+      if (!slug) continue
+      by[slug] = by[slug] || { slug, name: tidy(c.make), count: 0 }
+      by[slug].count++
+    }
+    return Object.values(by)
+      .filter((m) => m.count >= MIN_INDEXED)
+      .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+  }, [cars])
   const [search, setSearch] = useState('')
   const [titleFilter, setTitleFilter] = useState('all')
   const [sortBy, setSortBy] = useState('default')
@@ -105,6 +119,16 @@ export default function InventoryClient({ cars }) {
             ))}
             <Link href="/used-cars-under-10000" className={styles.typeNavLink}>Under $10,000</Link>
           </div>
+          {makes.length > 0 && (
+            <div className={styles.typeNavInner}>
+              <span className={styles.typeNavLabel}>Shop by make:</span>
+              {makes.map((m) => (
+                <Link key={m.slug} href={`/make/${m.slug}`} className={styles.typeNavLink}>
+                  {m.name}
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

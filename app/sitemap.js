@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { BODY_TYPES } from '@/lib/bodyTypes'
 import { CITY_SLUGS } from '@/lib/cities'
+import { getLiveMakes, MIN_INDEXED } from '@/lib/makes'
 
 const BASE_URL = 'https://www.connectautosales.com'
 
@@ -58,6 +59,16 @@ export default async function sitemap() {
     priority: 0.8,
   }))
 
+  // Only makes with enough stock to be indexed; thinner ones are noindex.
+  const makes = (await getLiveMakes())
+    .filter((m) => m.count >= MIN_INDEXED)
+    .map((m) => ({
+      url: `${BASE_URL}/make/${m.slug}`,
+      lastModified: now,
+      changeFrequency: 'daily',
+      priority: 0.75,
+    }))
+
   let dynamics = []
   try {
     const cars = await prisma.$queryRaw`
@@ -73,5 +84,5 @@ export default async function sitemap() {
     }))
   } catch {}
 
-  return [...statics, ...bodyTypes, ...cities, ...dynamics]
+  return [...statics, ...bodyTypes, ...cities, ...makes, ...dynamics]
 }

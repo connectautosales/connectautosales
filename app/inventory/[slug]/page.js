@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { notFound, permanentRedirect } from 'next/navigation'
 import CarCard from '@/components/CarCard/CarCard'
 import { BODY_TYPES } from '@/lib/bodyTypes'
+import { getLiveMakes, makeSlug, MIN_INDEXED } from '@/lib/makes'
 import VehicleDetail from './VehicleDetail'
 import { OG_IMAGE } from '@/lib/seo'
 import styles from './page.module.css'
@@ -214,6 +215,8 @@ export default async function VehicleDetailPage({ params }) {
   const settings = settingsRows[0] || null
   const similar = await getSimilar(car)
   const bodyType = bodyTypeFor(car.type)
+  // Link the make's page only when it has enough stock to be indexed.
+  const makeInfo = (await getLiveMakes()).find((m) => m.slug === makeSlug(car.make) && m.count >= MIN_INDEXED) || null
 
   const serialized = JSON.parse(JSON.stringify(car, (_, v) =>
     typeof v === 'bigint' ? Number(v) : v
@@ -271,6 +274,9 @@ export default async function VehicleDetailPage({ params }) {
             <div className={styles.similarLinks}>
               {bodyType && (
                 <Link href={`/body-type/${bodyType[0]}`}>All used {labelText(bodyType[1].label)}</Link>
+              )}
+              {makeInfo && (
+                <Link href={`/make/${makeInfo.slug}`}>All used {makeInfo.make} ({makeInfo.count})</Link>
               )}
               <Link href="/inventory">View all inventory</Link>
             </div>
