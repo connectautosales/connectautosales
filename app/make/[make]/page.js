@@ -66,7 +66,9 @@ export default async function MakePage({ params }) {
   const miles = cars.map((c) => Number(c.mileage)).filter((m) => m > 0)
   const clean = cars.filter((c) => c.titleType === 'clean').length
   const rebuilt = cars.filter((c) => c.titleType === 'rebuilt').length
-  const models = cars.map((c) => `${c.year} ${tidy(c.model)}${c.trim ? ' ' + tidy(c.trim) : ''}`)
+  const label = (c) => `${c.year} ${tidy(c.model)}${c.trim ? ' ' + tidy(c.trim) : ''}`
+  const onLot = cars.filter((c) => c.status !== 'coming_soon').map(label)
+  const arriving = cars.filter((c) => c.status === 'coming_soon').map(label)
   const bodyTypes = Object.entries(BODY_TYPES).filter(([, cfg]) => cars.some((c) => cfg.types.includes(c.type)))
   const otherMakes = (await getLiveMakes()).filter((m) => m.slug !== slug && m.count >= MIN_INDEXED)
   const range = (arr, fmt) => {
@@ -85,7 +87,7 @@ export default async function MakePage({ params }) {
           <h1 className={styles.heroTitle}>{`USED ${name.toUpperCase()} FOR SALE IN DEARBORN HEIGHTS, MI`}</h1>
           <p className={styles.heroSub}>
             {n
-              ? `${n} used ${name} ${n === 1 ? 'vehicle' : 'vehicles'} in stock${prices.length ? `, priced ${range(prices, formatPrice)}` : ''}.`
+              ? `${n} used ${name} ${n === 1 ? 'vehicle' : 'vehicles'} for sale${prices.length ? `, priced ${range(prices, formatPrice)}` : ''}.`
               : `No used ${name} vehicles on the lot right now. Our inventory changes every week.`}
           </p>
         </div>
@@ -120,7 +122,8 @@ export default async function MakePage({ params }) {
               <div className={styles.line} />
               {n > 0 && (
                 <p className={styles.body}>
-                  {`In stock right now: ${list(models)}.`}
+                  {onLot.length ? `On the lot now: ${list(onLot)}.` : ''}
+                  {arriving.length ? ` Arriving soon: ${list(arriving)}.` : ''}
                   {years.length
                     ? ` Model ${Math.min(...years) === Math.max(...years) ? 'year' : 'years'} ${range(years, String)}`
                     : ''}

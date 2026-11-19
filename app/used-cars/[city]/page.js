@@ -99,7 +99,7 @@ export default async function CityPage({ params }) {
           <h1 className={styles.heroTitle}>USED CARS FOR SALE NEAR {city.name.toUpperCase()}, MI</h1>
           <p className={styles.heroSub}>
             {`Our lot in Dearborn Heights is ${city.miles} from ${city.name}, ${city.drive} by car.`}
-            {cheapest ? ` ${cars.length} vehicles in stock, with cars from ${formatPrice(cheapest)}.` : ''}
+            {cheapest ? ` ${cars.length} vehicles for sale, with cars from ${formatPrice(cheapest)}.` : ''}
           </p>
         </div>
       </section>
@@ -108,7 +108,7 @@ export default async function CityPage({ params }) {
         <div className="container">
           <div className={styles.statsInner}>
             <div className={styles.statItem}>
-              <span><strong>{cars.length}</strong> Vehicles In Stock</span>
+              <span><strong>{cars.length}</strong> Vehicles For Sale</span>
             </div>
             <div className={styles.statDivider} />
             <div className={styles.statItem}>
