@@ -102,6 +102,17 @@ export default function HomeIntro() {
 
             <div className={styles.divider} />
 
+            <h3 className={styles.sideTitle}>Areas we serve</h3>
+            <div className={styles.chips}>
+              <Link href="/used-cars/dearborn" className={styles.chip}>Dearborn</Link>
+              <Link href="/used-cars/inkster" className={styles.chip}>Inkster</Link>
+              <Link href="/used-cars/taylor" className={styles.chip}>Taylor</Link>
+              <Link href="/used-cars/westland" className={styles.chip}>Westland</Link>
+              <Link href="/used-cars/garden-city" className={styles.chip}>Garden City</Link>
+            </div>
+
+            <div className={styles.divider} />
+
             <h3 className={styles.sideTitle}>Visit us</h3>
             <p className={styles.sideText}>
               4413 S Beech Daly St<br />

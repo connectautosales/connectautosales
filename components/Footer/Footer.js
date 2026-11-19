@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useSettings } from '@/context/SettingsContext'
 import { useState, useEffect } from 'react'
 import { BODY_TYPES } from '@/lib/bodyTypes'
+import { CITIES } from '@/lib/cities'
 import styles from './Footer.module.css'
 import { trackEvent } from '@/lib/analytics'
 
@@ -145,6 +146,17 @@ export default function Footer() {
             {Object.entries(BODY_TYPES).map(([slug, t]) => (
               <Link key={slug} href={`/body-type/${slug}`} className={styles.bodyTypeLink}>
                 {t.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div className={styles.bodyTypeRow}>
+          <span className={styles.bodyTypeLabel}>Areas we serve:</span>
+          <div className={styles.bodyTypeLinks}>
+            {Object.entries(CITIES).map(([slug, c]) => (
+              <Link key={slug} href={`/used-cars/${slug}`} className={styles.bodyTypeLink}>
+                {c.name}
               </Link>
             ))}
           </div>

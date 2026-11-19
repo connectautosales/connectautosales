@@ -62,7 +62,8 @@ const businessSchema = {
     postalCode: '48125',
     addressCountry: 'US',
   },
-  geo: { '@type': 'GeoCoordinates', latitude: 42.2917, longitude: -83.2663 },
+  // OpenStreetMap geocode of 4413 S Beech Daly St (the old value was ~2 km off)
+  geo: { '@type': 'GeoCoordinates', latitude: 42.2775, longitude: -83.2897 },
   openingHoursSpecification: [
     {
       '@type': 'OpeningHoursSpecification',

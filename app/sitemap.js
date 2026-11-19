@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { BODY_TYPES } from '@/lib/bodyTypes'
+import { CITY_SLUGS } from '@/lib/cities'
 
 const BASE_URL = 'https://www.connectautosales.com'
 
@@ -50,6 +51,13 @@ export default async function sitemap() {
     })),
   ]
 
+  const cities = CITY_SLUGS.map((slug) => ({
+    url: `${BASE_URL}/used-cars/${slug}`,
+    lastModified: now,
+    changeFrequency: 'daily',
+    priority: 0.8,
+  }))
+
   let dynamics = []
   try {
     const cars = await prisma.$queryRaw`
@@ -65,5 +73,5 @@ export default async function sitemap() {
     }))
   } catch {}
 
-  return [...statics, ...bodyTypes, ...dynamics]
+  return [...statics, ...bodyTypes, ...cities, ...dynamics]
 }
