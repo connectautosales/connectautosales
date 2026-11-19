@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma'
 import CarCard from '@/components/CarCard/CarCard'
 import styles from './page.module.css'
 import { OG_IMAGE } from '@/lib/seo'
-import { getInventoryStats, formatPrice } from '@/lib/inventoryStats'
+import { getInventoryStats, formatPrice, MOTORCYCLE_MAKES } from '@/lib/inventoryStats'
 import { CITIES, CITY_SLUGS, DEALER_ADDRESS } from '@/lib/cities'
 
 const LIVE = ['available', 'pending', 'coming_soon']
@@ -63,7 +63,10 @@ export default async function CityPage({ params }) {
 
   const cars = await getCars()
   const shown = cars.slice(0, SHOW)
-  const prices = cars.map((c) => Number(c.price)).filter((p) => p > 0)
+  const prices = cars
+    .filter((c) => !MOTORCYCLE_MAKES.includes(c.make))
+    .map((c) => Number(c.price))
+    .filter((p) => p > 0)
   const cheapest = prices.length ? Math.min(...prices) : null
   const underTen = prices.filter((p) => p < 10000).length
   const directions = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(`${city.name}, MI`)}&destination=${encodeURIComponent(`Connect Auto Sales, ${DEALER_ADDRESS}`)}`
@@ -96,7 +99,7 @@ export default async function CityPage({ params }) {
           <h1 className={styles.heroTitle}>USED CARS FOR SALE NEAR {city.name.toUpperCase()}, MI</h1>
           <p className={styles.heroSub}>
             {`Our lot in Dearborn Heights is ${city.miles} from ${city.name}, ${city.drive} by car.`}
-            {cheapest ? ` ${cars.length} vehicles in stock from ${formatPrice(cheapest)}.` : ''}
+            {cheapest ? ` ${cars.length} vehicles in stock, with cars from ${formatPrice(cheapest)}.` : ''}
           </p>
         </div>
       </section>
